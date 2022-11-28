@@ -15,7 +15,7 @@ public class ChatEndpoint {
 
     Logger logger = LoggerFactory.getLogger(ChatEndpoint.class);
 
-    @MessageMapping("/chat/{channelID}")
+    @MessageMapping("/channel/{channelID}")
     @SendTo("/topic/channel/{channelID}")
     public String broadcast(@Payload String msg, Principal user, @DestinationVariable String channelID){
         logger.info("User: {} sent: {}", user.getName(), msg);

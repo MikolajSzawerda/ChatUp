@@ -24,7 +24,7 @@ public class MainController implements Initializable {
     private final String URL = "ws://localhost:8080/chat";
     private final SocketClient socketClient;
     private final LinkedList<String> topics = new LinkedList<>(){{
-       add("/topic/messages");
+       add("/topic/channel/all");
        add("/app/hello");
     }};
     private final MessageBuffer messageBuffer;
@@ -46,7 +46,7 @@ public class MainController implements Initializable {
     public void onSendMessage(){
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
-            socketClient.sendMessage("/app/exchange", message.getText());
+            socketClient.sendMessage("/app/channel/all", message.getText());
         }
     }
 
