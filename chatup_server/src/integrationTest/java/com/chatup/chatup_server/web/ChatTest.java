@@ -23,7 +23,7 @@ public class ChatTest extends BaseIntegrationTest {
         add("/topic/channel/"+channel);
     }};
 
-    private static final String BROADCAST_ENDPOINT = "/app/chat/"+channel;
+    private static final String BROADCAST_ENDPOINT = "/app/channel/"+channel;
 
     @BeforeEach
     void inintClient(){
@@ -62,7 +62,7 @@ public class ChatTest extends BaseIntegrationTest {
     void shouldReceiveOnlyWhenSubscribed(){
         String newTopic = "/topic/channel/def";
         client2.subscribe(newTopic);
-        client1.sendMessage("/app/chat/def", "Test");
+        client1.sendMessage("/app/channel/def", "Test");
         timedAssertEquals(1, client2.getMessages()::size);
         timedAssertEquals(0, client1.getMessages()::size);
     }
