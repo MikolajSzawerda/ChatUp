@@ -1,5 +1,16 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/chat
     username: postgres
     password: password
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+app:
+  jwt:
+    secretKey: cdrNaN7Ksz33GNDuNzWqLP0d
+    tokenPrefix: Bearer
+    daysExpire: 999999
