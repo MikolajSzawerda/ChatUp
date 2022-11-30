@@ -1,0 +1,81 @@
+image: gradle:alpine
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+build_server:
+  stage: build
+  tags: [test]
+  before_script:
+  - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
+  - export GRADLE_USER_HOME
+  script: 
+    - cd "$CI_PROJECT_DIR/chatup_server"
+    - gradle --build-cache assemble
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - chatup_server/build
+      - chatup_server/.gradle
+
+test_server:
+  services:
+  - postgres
+  variables:
+    POSTGRES_DB: chat
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: password
+    POSTGRES_HOST_AUTH_METHOD: trust
+  stage: test
+  tags: [test]
+  before_script:
+  - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
+  - export GRADLE_USER_HOME
+  script:
+    - cd "$CI_PROJECT_DIR/chatup_server" 
+    - gradle check
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - chatup_server/build
+      - chatup_server/.gradle
+  artifacts:
+    when: always
+    paths:
+      - chatup_server/build/test-results/test/TEST-com.chatup.chatup_server.ChatupServerApplicationTests.xml
+    reports:
+      junit: chatup_server/build/test-results/test/TEST-com.chatup.chatup_server.ChatupServerApplicationTests.xml
+
+build_client:
+  stage: build
+  tags: [test]
+  before_script:
+  - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
+  - export GRADLE_USER_HOME
+  script: 
+    - cd "$CI_PROJECT_DIR/chatup_client"
+    - gradle --build-cache assemble
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - chatup_client/build
+      - chatup_client/.gradle
+
+test_client:
+  stage: test
+  tags: [test]
+  before_script:
+  - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
+  - export GRADLE_USER_HOME
+  script:
+    - cd "$CI_PROJECT_DIR/chatup_client" 
+    - gradle check
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - chatup_client/build
+      - chatup_client/.gradle
