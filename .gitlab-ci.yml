@@ -5,7 +5,7 @@ variables:
 
 build_server:
   stage: build
-  tags: [test]
+  tags: [unittest]
   before_script:
   - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
   - export GRADLE_USER_HOME
@@ -28,7 +28,7 @@ test_server:
     POSTGRES_PASSWORD: password
     POSTGRES_HOST_AUTH_METHOD: trust
   stage: test
-  tags: [test]
+  tags: [unittest]
   before_script:
   - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
   - export GRADLE_USER_HOME
@@ -50,7 +50,7 @@ test_server:
 
 build_client:
   stage: build
-  tags: [test]
+  tags: [unittest]
   before_script:
   - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
   - export GRADLE_USER_HOME
@@ -66,7 +66,7 @@ build_client:
 
 test_client:
   stage: test
-  tags: [test]
+  tags: [unittest]
   before_script:
   - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
   - export GRADLE_USER_HOME
