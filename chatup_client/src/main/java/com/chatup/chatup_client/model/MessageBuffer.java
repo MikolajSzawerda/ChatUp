@@ -18,7 +18,7 @@ public class MessageBuffer {
 
     public MessageBuffer() {
         this.messages = FXCollections.observableArrayList();
-        messages.add(new Message("Dupa"));
+        messages.add(new Message("Great First message"));
 //        messages.addListener(listener);
     }
 

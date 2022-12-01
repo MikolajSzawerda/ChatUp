@@ -11,8 +11,9 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main/chat-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main/chatup-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Roboto+Slab");
         stage.setTitle("ChatUp");
         stage.setScene(scene);
         stage.show();
