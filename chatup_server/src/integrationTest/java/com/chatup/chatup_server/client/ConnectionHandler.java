@@ -1,5 +1,6 @@
 package com.chatup.chatup_server.client;
 
+import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -10,9 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ConnectionHandler implements StompSessionHandler{
-    private final List<String> messageBuffer;
+    private final List<OutgoingMessage> messageBuffer;
 
-    public List<String> getMessages() {
+    public List<OutgoingMessage> getMessages() {
         return messageBuffer;
     }
 
@@ -27,6 +28,11 @@ public class ConnectionHandler implements StompSessionHandler{
         topics.add(topic);
         if(this.session != null){
             this.session.subscribe(topic, this);
+            try {
+                Thread.sleep(2 * 1000);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
@@ -53,12 +59,14 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return String.class;
+        return OutgoingMessage.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        messageBuffer.add(payload.toString());
+        synchronized (this){
+            messageBuffer.add((OutgoingMessage)payload);
+        }
     }
 }
 

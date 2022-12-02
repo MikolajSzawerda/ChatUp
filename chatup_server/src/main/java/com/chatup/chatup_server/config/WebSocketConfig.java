@@ -20,12 +20,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat")
-                .setHandshakeHandler(new MyHandshakeHandler())
+                .setHandshakeHandler(new HandshakeHandler())
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
 
         registry.addEndpoint("/chat")
-                .setHandshakeHandler(new MyHandshakeHandler())
+                .setHandshakeHandler(new HandshakeHandler())
                 .setAllowedOrigins("*");
     }
 }
