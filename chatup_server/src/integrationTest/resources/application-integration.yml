@@ -1,16 +1,20 @@
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:postgresql:9.6.8:///chat?TC_TMPFS=/testtmpfs:rw
+    url: jdbc:tc:postgresql:11.1:///chat?TC_TMPFS=/testtmpfs:rw
     username: postgres
     password: password
   jpa:
-    database: postgresql
     show-sql: true
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 app:
   jwt:
     secretKey: cdrNaN7Ksz33GNDuNzWqLP0d
     tokenPrefix: Bearer
     daysExpire: 999999
+  feed:
+    pageSize: 5

@@ -30,6 +30,7 @@ public class Message{
     @Column(name="channel_id")
     private Long channelID;
     @ColumnDefault(value = "false")
+    @Column(name="is_deleted")
     private Boolean isDeleted;
 
     public Message() {

@@ -8,9 +8,21 @@ spring:
     database: postgresql
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+
 app:
   jwt:
     secretKey: cdrNaN7Ksz33GNDuNzWqLP0d
     tokenPrefix: Bearer
     daysExpire: 999999
+  feed:
+    pageSize: 10
+
