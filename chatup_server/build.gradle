@@ -30,11 +30,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+    implementation "com.fasterxml.jackson:jackson-bom"
+    testImplementation "org.mockito:mockito-core:4.7.0"
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
     testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:postgresql'
+    testImplementation "org.testcontainers:postgresql"
     testImplementation 'org.testcontainers:rabbitmq'
 }
 

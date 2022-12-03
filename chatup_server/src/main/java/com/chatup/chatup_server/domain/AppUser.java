@@ -64,6 +64,15 @@ public class AppUser implements UserDetails {
         this.isEnabled = isEnabled;
     }
 
+    public AppUser(String firstName, String lastName, String username, String password, String status, Boolean isEnabled) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.status = status;
+        this.isEnabled = isEnabled;
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

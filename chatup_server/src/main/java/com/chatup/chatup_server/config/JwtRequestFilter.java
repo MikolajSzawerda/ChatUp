@@ -2,7 +2,6 @@ package com.chatup.chatup_server.config;
 
 import java.io.IOException;
 
-import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.service.AppUserService;
 import com.chatup.chatup_server.service.JwtTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
