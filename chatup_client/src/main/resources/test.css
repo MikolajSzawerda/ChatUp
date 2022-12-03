@@ -1,0 +1,37 @@
+.split-pane *.split-pane-divider {
+	-fx-padding: 1 0 1 0;
+}
+
+.list-view, .split-pane{
+	-fx-background-insets: 0;
+	-fx-padding: 0;
+}
+
+.channels-list {
+	-fx-background-color: #7896cf;
+}
+
+.channels-list .list-cell{
+	-fx-background-color: #7896cf;
+	-fx-padding: 15 0 0 0;
+}
+
+.dm-list {
+	-fx-background-color: #7896cf;
+}
+
+.dm-list .list-cell{
+	-fx-background-color: #7896cf;
+	-fx-padding: 15 0 0 0;
+}
+
+.my-button{
+	-fx-pref-height: 45;
+
+}
+
+.message-list .list-cell {
+	-fx-background-color: #F4F4F4;
+	-fx-padding: 10;
+}
+
