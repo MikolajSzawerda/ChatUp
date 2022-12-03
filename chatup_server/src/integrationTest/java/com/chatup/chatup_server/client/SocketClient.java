@@ -1,6 +1,5 @@
 package com.chatup.chatup_server.client;
 
-import com.chatup.chatup_server.service.messaging.IncomingMessage;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 
 import java.util.List;

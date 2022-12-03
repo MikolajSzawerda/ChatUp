@@ -3,7 +3,6 @@ package com.chatup.chatup_server.service;
 import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

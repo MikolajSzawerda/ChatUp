@@ -1,9 +1,5 @@
 package com.chatup.chatup_server;
 
-import com.chatup.chatup_server.domain.AppUser;
-import com.chatup.chatup_server.repository.AppUserRepository;
-import org.junit.jupiter.api.BeforeAll;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql({"file:src/integrationTest/resources/cleanUp.sql", "file:src/integrationTest/resources/init.sql"})

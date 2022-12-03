@@ -2,7 +2,6 @@ package com.chatup.chatup_server.client;
 
 import com.chatup.chatup_server.service.messaging.IncomingMessage;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;

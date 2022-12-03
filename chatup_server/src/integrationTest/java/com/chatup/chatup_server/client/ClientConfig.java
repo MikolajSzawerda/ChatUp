@@ -2,7 +2,6 @@ package com.chatup.chatup_server.client;
 
 import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

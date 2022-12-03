@@ -1,6 +1,5 @@
 package com.chatup.chatup_server.config;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
