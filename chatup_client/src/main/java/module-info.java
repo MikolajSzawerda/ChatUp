@@ -7,6 +7,9 @@ module com.chatup.chatup_client {
     requires spring.websocket;
     requires spring.messaging;
     requires org.slf4j;
+    requires org.kordamp.ikonli.core;
+    requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.fontawesome;
 
 
     opens com.chatup.chatup_client to javafx.fxml;
