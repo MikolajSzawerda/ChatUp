@@ -22,6 +22,7 @@ public class Message{
     )
     @Column(name = "message_id")
     private Long ID;
+    @Column(length = 5000)
     private String content;
     @Column(name="time_created")
     private Instant timeCreated;
