@@ -1,5 +1,6 @@
-package com.chatup.chatup_client.model;
+package com.chatup.chatup_client.manager;
 
+import com.chatup.chatup_client.model.Message;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;

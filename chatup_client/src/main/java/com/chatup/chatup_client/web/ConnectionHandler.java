@@ -1,7 +1,7 @@
 package com.chatup.chatup_client.web;
 
 import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.model.MessageBuffer;
+import com.chatup.chatup_client.manager.MessageBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.stomp.StompCommand;

@@ -17,4 +17,5 @@ module com.chatup.chatup_client {
     exports com.chatup.chatup_client.controller;
     exports com.chatup.chatup_client.model;
     opens com.chatup.chatup_client.controller to javafx.fxml;
+    exports com.chatup.chatup_client.manager;
 }
