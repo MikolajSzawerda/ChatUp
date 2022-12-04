@@ -1,5 +1,6 @@
 package com.chatup.chatup_client.components;
 
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -23,8 +24,8 @@ public class MessageFactor {
         for (String part:parts){
             initials += part.charAt(0);
         }
-
-        StackPane avatar = AvatarFactory.createAvatar(initials, 25.0);
+        Insets padding = new Insets(0, 30, 0, 0);
+        StackPane avatar = AvatarFactory.createAvatar(initials, 25.0, padding);
         message.add(avatar, 0, 0, 1, 3);
         message.add(authorText, 1, 0, 1, 1);
         message.add(message_content, 1, 2, 1, 2);

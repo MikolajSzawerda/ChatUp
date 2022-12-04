@@ -10,15 +10,14 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 
 public class AvatarFactory {
-    public static StackPane createAvatar(String initials, Double radius){
+    public static StackPane createAvatar(String initials, Double radius, Insets padding){
         Circle circle = new Circle(radius);
         circle.setFill(Color.rgb(254, 213, 66));
         circle.setStroke(Color.rgb(0, 0, 0));
         Text initialsText  = new Text(initials);
         initialsText.setBoundsType(TextBoundsType.VISUAL);
-        initialsText.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+        initialsText.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, radius-5));
         StackPane avatar = new StackPane();
-        Insets padding = new Insets(0, 30, 0, 0);
         avatar.setPadding(padding);
         avatar.getChildren().addAll(circle, initialsText);
         return avatar;

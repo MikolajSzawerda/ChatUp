@@ -1,5 +1,8 @@
 package com.chatup.chatup_client.controller;
 
+import com.chatup.chatup_client.components.AvatarFactory;
+import com.chatup.chatup_client.components.ChangeChatButtonFactory;
+import com.chatup.chatup_client.components.ChannelIconFactory;
 import com.chatup.chatup_client.components.MessageFactor;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.manager.MessageBuffer;
@@ -13,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -113,49 +117,18 @@ public class ChatViewController implements Initializable {
                     setText(null);
                     setGraphic(null);
                 } else if (item != null) {
-                    Button chanellButton = new Button();
-                    Text chanelName = new Text(item);
-                    FontIcon icon = new FontIcon();
-                    Rectangle rect = new Rectangle();
-                    HBox layout = new HBox();
-                    StackPane stack = new StackPane();
-                    Insets padding = new Insets(0, 5, 0, 0);
-                    Text new_messages = new Text("34");
-                    chanelName.setFont(Font.font("Calibri", FontPosture.REGULAR, 15));
+                    Node channelIcon = new Button();
                     if(item.equals("Kanał drugi")) {
-                        icon.setFont(Font.font("Calibri", FontPosture.REGULAR, 40));
-                        icon.setIconLiteral("fa-lock");
-                        icon.setIconColor(Paint.valueOf("#6aba9c"));
-                        icon.setStroke(Paint.valueOf("#000000"));
-                        layout.getChildren().addAll(icon, chanelName);
+                        channelIcon = ChannelIconFactory.createChannelIcon(true, 12);
                     }
-                    else {
-                        rect.setHeight(30);
-                        rect.setWidth(30);
-                        rect.setStyle("-fx-padding: 0 5 0 0");
-                        rect.setStroke(Paint.valueOf("#000000"));
-                        rect.setFill(Paint.valueOf("#6aba9c"));
-
-
-                        stack.setPadding(padding);
-                        new_messages.setBoundsType(TextBoundsType.VISUAL);
-                        new_messages.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
-                        stack.getChildren().addAll(rect, new_messages);
-                        layout.getChildren().addAll(stack, chanelName);
+                    else{
+                        channelIcon = ChannelIconFactory.createChannelIcon(false, 12);
                     }
 
+                    Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
+                    channelButton.getStyleClass().add("my-button");
 
-
-
-                    layout.setAlignment(Pos.CENTER_LEFT);
-                    chanellButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    chanellButton.setGraphic(layout);
-                    chanellButton.setPrefWidth(param.getWidth());
-                    chanellButton.getStyleClass().add("my-button");
-
-                    chanellButton.setSkin(new MyButtonSkin(chanellButton));
-
-                    setGraphic(chanellButton);
+                    setGraphic(channelButton);
                 }
             }
         });
@@ -168,38 +141,15 @@ public class ChatViewController implements Initializable {
                     setText(null);
                     setGraphic(null);
                 } else if (item != null) {
-                    Button directMessageButton = new Button();
 
-                    Circle circle = new Circle(18);
-                    circle.setFill(Color.rgb(233, 100, 232));
-                    circle.setStroke(Color.rgb(0, 0, 0));
-                    Text initials = new Text("DK");
-                    initials.setBoundsType(TextBoundsType.VISUAL);
-                    initials.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 12));
-
-                    StackPane stack = new StackPane();
                     Insets padding = new Insets(0, 5, 0, 0);
-                    stack.setPadding(padding);
-                    stack.getChildren().addAll(circle, initials);
+                    StackPane avatar = AvatarFactory.createAvatar("DK", 18.0, padding);
+                    Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
 
-                    Text username = new Text(item);
-                    username.setFont(Font.font("Calibri", FontPosture.REGULAR, 15));
+//                    directMessageButton.setOnAction((ActionEvent e) -> {
+//
+//                    });
 
-                    directMessageButton.setPrefWidth(param.getWidth());
-                    directMessageButton.getStyleClass().add("my-button");
-
-                    HBox layout = new HBox();
-                    layout.getChildren().addAll(stack, username);
-                    layout.setAlignment(Pos.CENTER_LEFT);
-                    directMessageButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    directMessageButton.setGraphic(layout);
-
-                    directMessageButton.setOnAction((ActionEvent e) -> {
-
-                    });
-
-
-                    directMessageButton.setSkin(new MyButtonSkin(directMessageButton));
                     setGraphic(directMessageButton);
 
                 }
