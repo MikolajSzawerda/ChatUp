@@ -1,4 +1,4 @@
-package com.chatup.chatup_client.components;
+package com.chatup.chatup_client.component;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;

@@ -1,9 +1,9 @@
 package com.chatup.chatup_client.controller;
 
-import com.chatup.chatup_client.components.AvatarFactory;
-import com.chatup.chatup_client.components.ChangeChatButtonFactory;
-import com.chatup.chatup_client.components.ChannelIconFactory;
-import com.chatup.chatup_client.components.MessageFactor;
+import com.chatup.chatup_client.component.AvatarFactory;
+import com.chatup.chatup_client.component.ChangeChatButtonFactory;
+import com.chatup.chatup_client.component.ChannelIconFactory;
+import com.chatup.chatup_client.component.MessageFactor;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.manager.MessageBuffer;
 import com.chatup.chatup_client.web.ConnectionHandler;
@@ -11,24 +11,15 @@ import com.chatup.chatup_client.web.SocketClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.*;
-import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,10 +63,14 @@ public class ChatViewController implements Initializable {
     @FXML
     public void onSendMessage(){
         logger.info("Text: {}", message.getText());
+/*
+        handle of message send on current channel should be handled here
+
         if(!message.getText().equals("")){
             socketClient.sendMessage("/app/channel/all", message.getText());
             message.clear();
         }
+*/
     }
 
     @FXML
@@ -117,7 +112,7 @@ public class ChatViewController implements Initializable {
                     setText(null);
                     setGraphic(null);
                 } else if (item != null) {
-                    Node channelIcon = new Button();
+                    Node channelIcon;
                     if(item.equals("Kanał drugi")) {
                         channelIcon = ChannelIconFactory.createChannelIcon(true, 12);
                     }
@@ -146,10 +141,6 @@ public class ChatViewController implements Initializable {
                     StackPane avatar = AvatarFactory.createAvatar("DK", 18.0, padding);
                     Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
 
-//                    directMessageButton.setOnAction((ActionEvent e) -> {
-//
-//                    });
-
                     setGraphic(directMessageButton);
 
                 }
@@ -159,7 +150,7 @@ public class ChatViewController implements Initializable {
         messageBuffer.getMessages().addListener(new ListChangeListener<Message>() {
             @Override
             public void onChanged(Change<? extends Message> c) {
-                messages.scrollTo(messages.getItems().size()-3);
+                messages.scrollTo(messages.getItems().size()-1);
             }
         });
 

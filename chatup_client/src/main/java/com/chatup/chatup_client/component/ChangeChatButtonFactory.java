@@ -1,6 +1,6 @@
-package com.chatup.chatup_client.components;
+package com.chatup.chatup_client.component;
 
-import com.chatup.chatup_client.controller.MyButtonSkin;
+import com.chatup.chatup_client.component.skin.MyButtonSkin;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
