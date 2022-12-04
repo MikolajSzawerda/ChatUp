@@ -12,6 +12,9 @@ module com.chatup.chatup_client {
     requires org.kordamp.ikonli.fontawesome;
     requires spring.webflux;
     requires spring.web;
+    requires reactor.core;
+    requires com.fasterxml.jackson.annotation;
+    requires com.fasterxml.jackson.databind;
     opens com.chatup.chatup_client to javafx.fxml;
     exports com.chatup.chatup_client;
     exports com.chatup.chatup_client.controller;

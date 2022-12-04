@@ -15,26 +15,28 @@ import javax.websocket.WebSocketContainer;
 import java.util.concurrent.ExecutionException;
 
 public class SocketClient {
-
-    private final WebSocketStompClient webSocketStompClient;
+    private final String URL;
+    private final String token;
     private final ConnectionHandler connectionHandler;
     private StompSession session;
-    private final String URL;
+    private final WebSocketStompClient webSocketStompClient;
 
-    public SocketClient(String url, ConnectionHandler connectionHandler) {
+    public SocketClient(String url, String token, ConnectionHandler connectionHandler) {
         this.URL = url;
+        this.token = token;
+        this.connectionHandler = connectionHandler;
+
         WebSocketContainer webSocketContainer = new WsWebSocketContainer();
         WebSocketClient webSocketClient = new StandardWebSocketClient(webSocketContainer);
         this.webSocketStompClient = new WebSocketStompClient(webSocketClient);
         webSocketStompClient.setMessageConverter(new StringMessageConverter());
-        this.connectionHandler = connectionHandler;
         webSocketStompClient.start();
     }
 
     public void connect() throws ExecutionException, InterruptedException {
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
         StompHeaders stompHeaders = new StompHeaders();
-        headers.add("Authorization", "Bearer " + AuthClient.getToken());
+        headers.add("Authorization", "Bearer " + this.token);
         webSocketStompClient.connect(this.URL, headers, stompHeaders, this.connectionHandler).get();
         this.session = connectionHandler.getSession();
     }
