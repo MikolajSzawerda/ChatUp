@@ -7,7 +7,6 @@ import com.chatup.chatup_client.component.MessageFactor;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.manager.MessageBuffer;
 import com.chatup.chatup_client.web.ConnectionHandler;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
@@ -28,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+
 
 public class ChatViewController implements Initializable {
     Logger logger = LoggerFactory.getLogger(ChatViewController.class);
@@ -65,7 +65,11 @@ public class ChatViewController implements Initializable {
         System.out.println("Creating chat view controller");
         INSTANCE = this;
         this.messageManager = new MessageManager();
-        this.socketClient = new SocketClient(URL, new ConnectionHandler(this.messageManager, topics));
+        this.socketClient = new SocketClient(
+            URL,
+            token,
+            new ConnectionHandler(this.messageManager, topics)
+        );
         this.restClient = new RestClient(token);
     }
 

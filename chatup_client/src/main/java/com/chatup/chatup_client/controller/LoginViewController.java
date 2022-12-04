@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -18,22 +17,23 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
 public class LoginViewController implements Initializable {
     private static LoginViewController INSTANCE;
     @FXML
     public Text invalidCredentialsText;
-
     @FXML
     public Button loginButton;
-
     @FXML
     public TextField usernameField;
-
     @FXML
     public TextField passwordField;
 
+    private final AuthClient authClient;
+
     public LoginViewController() {
         INSTANCE = this;
+        authClient = new AuthClient();
     }
 
     public LoginViewController getInstance() {
@@ -42,15 +42,19 @@ public class LoginViewController implements Initializable {
 
     @FXML
     public void onLoginButtonClicked(ActionEvent e) throws IOException {
-        if(AuthClient.login(usernameField.getText().trim(), passwordField.getText().trim())) {
-            switchToChatView(e, AuthClient.getToken());
-        }
-        else {
-            invalidCredentialsText.setText("Invalid Credentials");
-            usernameField.clear();
-            passwordField.clear();
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText().trim();
+
+        String token = authClient.authenticate(username, password);
+
+        if(token != null) {
+            switchToChatView(e, token);
+            return;
         }
 
+        invalidCredentialsText.setText("Invalid credentials");
+        usernameField.clear();
+        passwordField.clear();
     }
     void switchToChatView(ActionEvent e, String token) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatup-view.fxml"));
