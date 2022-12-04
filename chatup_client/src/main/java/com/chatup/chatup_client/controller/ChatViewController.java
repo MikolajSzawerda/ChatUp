@@ -1,11 +1,10 @@
 package com.chatup.chatup_client.controller;
 
+import com.chatup.chatup_client.components.MessageFactor;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.manager.MessageBuffer;
 import com.chatup.chatup_client.web.ConnectionHandler;
 import com.chatup.chatup_client.web.SocketClient;
-import javafx.animation.FadeTransition;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -14,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -26,14 +24,12 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.*;
-import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 public class ChatViewController implements Initializable {
     Logger logger = LoggerFactory.getLogger(ChatViewController.class);
@@ -91,57 +87,23 @@ public class ChatViewController implements Initializable {
             @Override
             protected void updateItem(Message item, boolean empty) {
                 super.updateItem(item, empty);
-                FadeTransition ft;
-                {
-                    ft = new FadeTransition(Duration.millis(500), this);
-                    ft.setFromValue(0.1);
-                    ft.setToValue(1.0);
-                    ft.setCycleCount(Timeline.INDEFINITE);
-                    ft.setAutoReverse(true);
-                }
 
                 if (empty) {
                     setText(null);
                     setGraphic(null);
                 } else if (item != null) {
-                    ft.playFromStart();
                     setMaxWidth(param.getWidth());
                     setMinWidth(param.getWidth() - 100);
                     setPrefWidth(param.getWidth() - 100);
 
                     setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    Circle circle = new Circle(25);
-                    circle.setFill(Color.rgb(254, 213, 66));
-                    circle.setStroke(Color.rgb(0, 0, 0));
-                    Text initials = new Text("KR");
-                    initials.setBoundsType(TextBoundsType.VISUAL);
-                    initials.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+                    GridPane message = MessageFactor.createMessage(item.toString(), "Kajetan Rożej", param.getWidth());
 
-
-                    GridPane grid = new GridPane();
-                    StackPane stack = new StackPane();
-                    Insets padding = new Insets(0, 30, 0, 0);
-                    stack.setPadding(padding);
-                    Text author = new Text("Kajetan Rozej");
-
-                    author.setFont(Font.font("Calibri", FontWeight.EXTRA_BOLD, 15));
-                    Text message_content = new Text(item.toString());
-                    message_content.setFont(Font.font(12));
-                    message_content.setWrappingWidth(param.getWidth() - 120); //to change in future
-                    message_content.setTextOrigin(VPos.TOP);
-                    stack.getChildren().addAll(circle, initials);
-                    grid.add(stack, 0, 0, 1, 3);
-                    grid.add(author, 1, 0, 1, 1);
-                    grid.add(message_content, 1, 2, 1, 2);
-                    //to change in future
-                    if (message_content.getWrappingWidth() < message_content.getText().length() * 7)
-                        grid.setVgap(5);
-                    setGraphic(grid);
-                    ft.stop();
-                    setOpacity(1.0);
+                    setGraphic(message);
                 }
             }
         });
+
         channels.setCellFactory(param -> new ListCell<String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
