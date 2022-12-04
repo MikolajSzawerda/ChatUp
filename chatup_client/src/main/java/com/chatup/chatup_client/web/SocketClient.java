@@ -1,6 +1,8 @@
 package com.chatup.chatup_client.web;
 
 import org.apache.tomcat.websocket.WsWebSocketContainer;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -30,7 +32,10 @@ public class SocketClient {
     }
 
     public void connect() throws ExecutionException, InterruptedException {
-        webSocketStompClient.connect(this.URL, this.connectionHandler).get();
+        WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
+        StompHeaders stompHeaders = new StompHeaders();
+        headers.add("Authorization", "Bearer " + AuthClient.getToken());
+        webSocketStompClient.connect(this.URL, headers, stompHeaders, this.connectionHandler).get();
         this.session = connectionHandler.getSession();
     }
 

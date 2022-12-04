@@ -9,8 +9,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #7896cf;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.LoginViewController">
    <children>
-      <TextField layoutX="198.0" layoutY="216.0" />
-      <TextField layoutX="198.0" layoutY="278.0" />
+      <TextField fx:id="usernameField" layoutX="198.0" layoutY="216.0" />
+      <TextField fx:id="passwordField" layoutX="198.0" layoutY="278.0" />
       <Text layoutX="198.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Username:" />
       <Text layoutX="198.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Password:" />
       <Button fx:id="loginButton" layoutX="257.0" layoutY="338.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" text="Login" />

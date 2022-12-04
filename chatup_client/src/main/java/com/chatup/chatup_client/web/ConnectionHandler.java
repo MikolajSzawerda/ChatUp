@@ -1,5 +1,6 @@
 package com.chatup.chatup_client.web;
 
+import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.manager.MessageBuffer;
 import org.slf4j.Logger;
@@ -15,11 +16,11 @@ import java.util.List;
 
 public class ConnectionHandler implements StompSessionHandler{
     Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
-    private final MessageBuffer messageBuffer;
+    private final MessageManager messageManager;
     private final List<String> topics;
 
-    public ConnectionHandler(MessageBuffer messageBuffer, List<String> topics){
-        this.messageBuffer = messageBuffer;
+    public ConnectionHandler(MessageManager messageManager, List<String> topics){
+        this.messageManager = messageManager;
         this.topics = new LinkedList<>(topics);
     }
 
@@ -61,9 +62,9 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        String msg = payload.toString();
-        logger.info("Got message: {}", msg);
-        messageBuffer.addMessage(new Message(msg));
+        Message msg;
+        // TODO: convert payload to message
+//        messageManager.addMessage(msg);
     }
 }
 

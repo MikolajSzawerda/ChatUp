@@ -4,9 +4,12 @@ import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.component.MessageFactor;
+import com.chatup.chatup_client.manager.MessageManager;
+import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.manager.MessageBuffer;
 import com.chatup.chatup_client.web.ConnectionHandler;
+import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -30,12 +33,15 @@ public class ChatViewController implements Initializable {
     Logger logger = LoggerFactory.getLogger(ChatViewController.class);
     private final String URL = "ws://localhost:8080/chat";
     private final LinkedList<String> topics = new LinkedList<>(){{
-        add("/topic/channel/all");
-        add("/app/hello");
+        add("/topic/channel/1");
     }};
     private final SocketClient socketClient;
 
-    private final MessageBuffer messageBuffer;
+    private final RestClient restClient;
+
+    private Channel currentChannel = new Channel(1L, "Test", false, false);
+
+    private final MessageManager messageManager;
 
     private static ChatViewController INSTANCE;
     @FXML
@@ -49,28 +55,39 @@ public class ChatViewController implements Initializable {
     @FXML
     public ListView<String> direct;
 
-
-    public ChatViewController() {
+    ListChangeListener<Message> listChangeListener = new ListChangeListener<Message>() {
+        @Override
+        public void onChanged(Change c) {
+            messages.scrollTo(messages.getItems().size()-1);
+        }
+    };
+    public ChatViewController(String token) {
+        System.out.println("Creating chat view controller");
         INSTANCE = this;
-        this.messageBuffer = new MessageBuffer();
-        this.socketClient = new SocketClient(URL, new ConnectionHandler(this.messageBuffer, topics));
+        this.messageManager = new MessageManager();
+        this.socketClient = new SocketClient(URL, new ConnectionHandler(this.messageManager, topics));
+        this.restClient = new RestClient(token);
     }
 
-    public ChatViewController getInstance() {
+    public static ChatViewController getInstance() {
         return INSTANCE;
     }
 
     @FXML
     public void onSendMessage(){
         logger.info("Text: {}", message.getText());
-/*
-        handle of message send on current channel should be handled here
-
         if(!message.getText().equals("")){
-            socketClient.sendMessage("/app/channel/all", message.getText());
+            socketClient.sendMessage("/channel/"+currentChannel.channelID(), message.getText());
             message.clear();
         }
-*/
+    }
+
+    public void changeChannel(Channel channel){
+        messageManager.getMessageBuffer(currentChannel).getMessages().removeListener(listChangeListener);
+        currentChannel = channel;
+        messages.setItems(messageManager.getMessageBuffer(currentChannel).getMessages());
+        messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
+        restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
     }
 
     @FXML
@@ -146,13 +163,9 @@ public class ChatViewController implements Initializable {
                 }
             }
         });
-        messages.setItems(messageBuffer.getMessages());
-        messageBuffer.getMessages().addListener(new ListChangeListener<Message>() {
-            @Override
-            public void onChanged(Change<? extends Message> c) {
-                messages.scrollTo(messages.getItems().size()-1);
-            }
-        });
+        messages.setItems(messageManager.getMessageBuffer(currentChannel).getMessages());
+        messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
+//        restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
 
         ObservableList<String> channelList = FXCollections.observableArrayList();
         channelList.add("Kanał pierwszy");
