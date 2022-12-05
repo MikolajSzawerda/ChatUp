@@ -1,7 +1,5 @@
 package com.chatup.chatup_client.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.Instant;
 
 public class Message {

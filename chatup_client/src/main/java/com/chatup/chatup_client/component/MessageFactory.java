@@ -13,7 +13,7 @@ public class MessageFactory {
         GridPane message  = new GridPane();
         Text authorText = new Text(author);
         Text message_content = new Text(text);
-        String initials = new String();
+        StringBuilder initials = new StringBuilder();
 
         authorText.setFont(Font.font("Calibri", FontWeight.EXTRA_BOLD, 15));
         message_content.setFont(Font.font(12));
@@ -22,10 +22,10 @@ public class MessageFactory {
 
         String[] parts = author.split(" ");
         for (String part:parts){
-            initials += part.charAt(0);
+            initials.append(part.charAt(0));
         }
         Insets padding = new Insets(0, 30, 0, 0);
-        StackPane avatar = AvatarFactory.createAvatar(initials, 25.0, padding);
+        StackPane avatar = AvatarFactory.createAvatar(initials.toString(), 25.0, padding);
         message.add(avatar, 0, 0, 1, 3);
         message.add(authorText, 1, 0, 1, 1);
         message.add(message_content, 1, 2, 1, 2);

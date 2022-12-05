@@ -6,7 +6,7 @@ import com.chatup.chatup_client.model.Message;
 import java.util.HashMap;
 
 public class MessageManager {
-    HashMap<Long, MessageBuffer> buffers = new HashMap<>();
+    private final HashMap<Long, MessageBuffer> buffers = new HashMap<>();
     public MessageBuffer getMessageBuffer(Channel channel) {
         if(buffers.containsKey(channel.channelID())) {
             return buffers.get(channel.channelID());

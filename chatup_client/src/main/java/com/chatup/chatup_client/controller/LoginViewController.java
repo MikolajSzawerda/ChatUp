@@ -19,7 +19,6 @@ import java.util.ResourceBundle;
 
 
 public class LoginViewController implements Initializable {
-    private static LoginViewController INSTANCE;
     @FXML
     public Text invalidCredentialsText;
     @FXML
@@ -32,12 +31,7 @@ public class LoginViewController implements Initializable {
     private final AuthClient authClient;
 
     public LoginViewController() {
-        INSTANCE = this;
         authClient = new AuthClient();
-    }
-
-    public LoginViewController getInstance() {
-        return INSTANCE;
     }
 
     @FXML
@@ -62,7 +56,7 @@ public class LoginViewController implements Initializable {
         Parent root = loader.load();
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Roboto+Slab");
+        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Roboto+Slab");
         stage.setScene(scene);
         stage.show();
 

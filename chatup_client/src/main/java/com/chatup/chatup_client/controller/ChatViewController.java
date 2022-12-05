@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 
 
 public class ChatViewController implements Initializable {
-    Logger logger = LoggerFactory.getLogger(ChatViewController.class);
+    final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
     private final String URL = "ws://localhost:8080/chat";
     private final LinkedList<String> topics = new LinkedList<>(){{
         add("/topic/channel/1");
@@ -43,8 +43,6 @@ public class ChatViewController implements Initializable {
     private Channel currentChannel = new Channel(1L, "Test", false, false);
 
     private final MessageManager messageManager;
-
-    private static ChatViewController INSTANCE;
     @FXML
     public ListView<Message> messages;
     @FXML
@@ -56,14 +54,13 @@ public class ChatViewController implements Initializable {
     @FXML
     public ListView<String> direct;
 
-    ListChangeListener<Message> listChangeListener = new ListChangeListener<Message>() {
+    final ListChangeListener<Message> listChangeListener = new ListChangeListener<>() {
         @Override
         public void onChanged(Change c) {
-            messages.scrollTo(messages.getItems().size()-1);
+            messages.scrollTo(messages.getItems().size() - 1);
         }
     };
     public ChatViewController(String token) {
-        INSTANCE = this;
         this.messageManager = new MessageManager();
         this.socketClient = new SocketClient(
             URL,
@@ -71,10 +68,6 @@ public class ChatViewController implements Initializable {
             new ConnectionHandler(this.messageManager, topics)
         );
         this.restClient = new RestClient(token);
-    }
-
-    public static ChatViewController getInstance() {
-        return INSTANCE;
     }
 
     @FXML
@@ -104,7 +97,7 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
-        messages.setCellFactory(param -> new ListCell<Message>() {
+        messages.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Message item, boolean empty) {
                 super.updateItem(item, empty);
@@ -125,7 +118,7 @@ public class ChatViewController implements Initializable {
             }
         });
 
-        channels.setCellFactory(param -> new ListCell<String>() {
+        channels.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -135,10 +128,9 @@ public class ChatViewController implements Initializable {
                     setGraphic(null);
                 } else if (item != null) {
                     Node channelIcon;
-                    if(item.equals("Kanał drugi")) {
+                    if (item.equals("Kanał drugi")) {
                         channelIcon = ChannelIconFactory.createChannelIcon(true, 12);
-                    }
-                    else{
+                    } else {
                         channelIcon = ChannelIconFactory.createChannelIcon(false, 12);
                     }
 
@@ -150,7 +142,7 @@ public class ChatViewController implements Initializable {
             }
         });
 
-        direct.setCellFactory(param -> new ListCell<String>() {
+        direct.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -188,9 +180,7 @@ public class ChatViewController implements Initializable {
 
         try{
             socketClient.connect();
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

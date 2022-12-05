@@ -2,9 +2,6 @@ package com.chatup.chatup_client.web;
 
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.manager.MessageBuffer;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -17,10 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ConnectionHandler implements StompSessionHandler{
-    Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
+    final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
     private final MessageManager messageManager;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final List<String> topics;
 
     public ConnectionHandler(MessageManager messageManager, List<String> topics){

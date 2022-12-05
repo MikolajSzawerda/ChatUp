@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class RestClient {
     private final WebClient webClient;
     private final String baseUrl = "http://localhost:8080";
-    private String token;
+    private final String token;
     public RestClient(String token) {
         this.webClient = WebClient.create(baseUrl);
         this.token = token;
