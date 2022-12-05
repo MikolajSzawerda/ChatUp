@@ -7,6 +7,25 @@ public class Message {
     private String content;
     private Long authorID;
     private String authorUsername;
+
+    public String getAuthorFirstName() {
+        return authorFirstName;
+    }
+
+    public void setAuthorFirstName(String authorFirstName) {
+        this.authorFirstName = authorFirstName;
+    }
+
+    public String getAuthorLastName() {
+        return authorLastName;
+    }
+
+    public void setAuthorLastName(String authorLastName) {
+        this.authorLastName = authorLastName;
+    }
+
+    private String authorFirstName;
+    private String authorLastName;
     private Long channelID;
     private Instant timeCreated;
     private Boolean isDeleted;

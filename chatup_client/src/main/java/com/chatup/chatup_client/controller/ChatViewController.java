@@ -111,7 +111,7 @@ public class ChatViewController implements Initializable {
                     setPrefWidth(param.getWidth() - 100);
 
                     setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    GridPane message = MessageFactory.createMessage(item.getContent(), item.getAuthorUsername(), param.getWidth());
+                    GridPane message = MessageFactory.createMessage(item.getContent(), item.getAuthorFirstName() + " " + item.getAuthorLastName(), param.getWidth());
 
                     setGraphic(message);
                 }
@@ -164,6 +164,7 @@ public class ChatViewController implements Initializable {
         messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
         restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
 
+
         ObservableList<String> channelList = FXCollections.observableArrayList();
         channelList.add("Kanał pierwszy");
         channelList.add("Kanał drugi");
@@ -174,9 +175,6 @@ public class ChatViewController implements Initializable {
         directMessages.add("Jan Kowalczewski");
         directMessages.add("Mikołaj Szawerda");
         direct.setItems(directMessages);
-
-
-
 
         try{
             socketClient.connect();
