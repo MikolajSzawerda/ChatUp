@@ -3,7 +3,7 @@ package com.chatup.chatup_client.controller;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
-import com.chatup.chatup_client.component.MessageFactor;
+import com.chatup.chatup_client.component.MessageFactory;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 
 public class ChatViewController implements Initializable {
@@ -62,7 +63,6 @@ public class ChatViewController implements Initializable {
         }
     };
     public ChatViewController(String token) {
-        System.out.println("Creating chat view controller");
         INSTANCE = this;
         this.messageManager = new MessageManager();
         this.socketClient = new SocketClient(
@@ -99,6 +99,7 @@ public class ChatViewController implements Initializable {
         if(e.getCode() == KeyCode.ENTER){
             onSendMessage();
         }
+
     }
 
     @Override
@@ -117,7 +118,7 @@ public class ChatViewController implements Initializable {
                     setPrefWidth(param.getWidth() - 100);
 
                     setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    GridPane message = MessageFactor.createMessage(item.toString(), "Kajetan Rożej", param.getWidth());
+                    GridPane message = MessageFactory.createMessage(item.getContent(), item.getAuthorUsername(), param.getWidth());
 
                     setGraphic(message);
                 }
@@ -169,7 +170,7 @@ public class ChatViewController implements Initializable {
         });
         messages.setItems(messageManager.getMessageBuffer(currentChannel).getMessages());
         messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
-//        restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
+        restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
 
         ObservableList<String> channelList = FXCollections.observableArrayList();
         channelList.add("Kanał pierwszy");
@@ -185,12 +186,12 @@ public class ChatViewController implements Initializable {
 
 
 
-//        try{
-//            socketClient.connect();
-//        } catch (ExecutionException e) {
-//            throw new RuntimeException(e);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
+        try{
+            socketClient.connect();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

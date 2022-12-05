@@ -8,7 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class MessageFactor {
+public class MessageFactory {
     public static GridPane createMessage(String text, String author, Double width){
         GridPane message  = new GridPane();
         Text authorText = new Text(author);

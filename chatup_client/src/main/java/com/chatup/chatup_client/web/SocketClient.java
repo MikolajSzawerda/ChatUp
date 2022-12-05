@@ -1,6 +1,8 @@
 package com.chatup.chatup_client.web;
 
 import org.apache.tomcat.websocket.WsWebSocketContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -15,6 +17,7 @@ import javax.websocket.WebSocketContainer;
 import java.util.concurrent.ExecutionException;
 
 public class SocketClient {
+    private final Logger logger = LoggerFactory.getLogger(SocketClient.class);
     private final String URL;
     private final String token;
     private final ConnectionHandler connectionHandler;
@@ -43,6 +46,7 @@ public class SocketClient {
 
     public void sendMessage(String topic, String message){
         if(this.session!=null){
+            logger.info("Sending message {} to {}", message, topic);
             this.session.send(topic, message);
         }
     }

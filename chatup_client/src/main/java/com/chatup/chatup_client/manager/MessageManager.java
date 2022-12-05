@@ -18,12 +18,12 @@ public class MessageManager {
     }
 
     public void addMessage(Message msg) {
-        if(buffers.containsKey(msg.channelID())) {
-            buffers.get(msg.channelID()).addMessage(msg);
+        if(buffers.containsKey(msg.getChannelID())) {
+            buffers.get(msg.getChannelID()).addMessage(msg);
         } else {
             MessageBuffer buffer = new MessageBuffer();
             buffer.addMessage(msg);
-            buffers.put(msg.channelID(), buffer);
+            buffers.put(msg.getChannelID(), buffer);
         }
     }
 }

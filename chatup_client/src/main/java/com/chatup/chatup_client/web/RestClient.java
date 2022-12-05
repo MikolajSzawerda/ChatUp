@@ -26,9 +26,9 @@ public class RestClient {
                 .block();
     }
 
-    public Collection<Message> getFeedFrom(Channel channel, Long messageID, int page) {
+    public Collection<Message> getFeedFrom(Channel channel, Message message, int page) {
         return webClient.get()
-                .uri("/feed/" + channel.channelID() + "?fromMessageID=" + messageID + "&page=" + page)
+                .uri("/feed/" + channel.channelID() + "?fromMessageID=" + message.getMessageID() + "&page=" + page)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToFlux(Message.class)
@@ -36,9 +36,9 @@ public class RestClient {
                 .block();
     }
 
-    public Collection<Message> getFeedFrom(Channel channel, Long messageID) {
+    public Collection<Message> getFeedFrom(Channel channel, Message message) {
         return webClient.get()
-                .uri("/feed/" + channel.channelID() + "?fromMessageID=" + messageID)
+                .uri("/feed/" + channel.channelID() + "?fromMessageID=" + message.getMessageID())
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToFlux(Message.class)

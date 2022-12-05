@@ -25,7 +25,7 @@ public class MessageBuffer {
 
     public void addMessage(Message msg){
         for(Message m : messages) {
-            if(Objects.equals(m.messageID(), msg.messageID())) {
+            if(Objects.equals(m.getMessageID(), msg.getMessageID())) {
                 return;
             }
         }
@@ -33,7 +33,7 @@ public class MessageBuffer {
             @Override
             public void run() {
                 messages.add(msg);
-                messages.sort(Comparator.comparing(Message::timeCreated));
+                messages.sort(Comparator.comparing(Message::getTimeCreated));
             }
         });
     }
