@@ -29,7 +29,6 @@ public class ConnectionHandler implements StompSessionHandler{
     }
 
     public void addSubscription(String topic){
-        topics.add(topic);
         if(this.session != null){
             this.session.subscribe(topic, this);
             logger.info("Connected to {}", topic);
@@ -51,7 +50,7 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
+        logger.error("Exception occurred", exception);
     }
 
     @Override
