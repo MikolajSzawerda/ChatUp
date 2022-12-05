@@ -1,7 +1,6 @@
-package com.chatup.chatup_client.controller;
+package com.chatup.chatup_client.component.skin;
 
 import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.geometry.Insets;
@@ -52,8 +51,11 @@ public class MyButtonSkin extends ButtonSkin {
 
         };
         control.setBackground(new Background(new BackgroundFill(new Color(0, 0 ,0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
-        control.setOnAction(e->animation.play());
-    };
+        control.setOnAction(e->{
+            animation.play();
+            // here change of chat
+        });
+    }
 
 }
 

@@ -1,7 +1,7 @@
 package com.chatup.chatup_client.web;
 
+import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.model.MessageBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -14,17 +14,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ConnectionHandler implements StompSessionHandler{
-    Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
-    private final MessageBuffer messageBuffer;
+    final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
+    private final MessageManager messageManager;
     private final List<String> topics;
 
-    public ConnectionHandler(MessageBuffer messageBuffer, List<String> topics){
-        this.messageBuffer = messageBuffer;
+    public ConnectionHandler(MessageManager messageManager, List<String> topics){
+        this.messageManager = messageManager;
         this.topics = new LinkedList<>(topics);
     }
 
     public void addSubscription(String topic){
-        topics.add(topic);
         if(this.session != null){
             this.session.subscribe(topic, this);
             logger.info("Connected to {}", topic);
@@ -46,7 +45,7 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-
+        logger.error("Exception occurred", exception);
     }
 
     @Override
@@ -56,14 +55,15 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return String.class;
+        return Message.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        String msg = payload.toString();
-        logger.info("Got message: {}", msg);
-        messageBuffer.addMessage(new Message(msg));
+        logger.info("Received message");
+        synchronized (this) {
+            messageManager.addMessage((Message) payload);
+        }
     }
 }
 

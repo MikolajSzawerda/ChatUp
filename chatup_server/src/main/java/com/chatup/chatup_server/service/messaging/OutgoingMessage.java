@@ -9,6 +9,8 @@ public record OutgoingMessage(
         String content,
         Long authorID,
         String authorUsername,
+        String authorFirstName,
+        String authorLastName,
         Long channelID,
         Instant timeCreated,
         Boolean isDeleted
@@ -19,6 +21,8 @@ public record OutgoingMessage(
                 message.getContent(),
                 message.getAuthor().getId(),
                 message.getAuthor().getUsername(),
+                message.getAuthor().getFirstName(),
+                message.getAuthor().getLastName(),
                 message.getChannelID(),
                 message.getTimeCreated(),
                 message.getDeleted());
