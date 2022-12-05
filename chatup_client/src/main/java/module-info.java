@@ -15,6 +15,9 @@ module com.chatup.chatup_client {
     requires reactor.core;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.module.paramnames;
+    requires com.fasterxml.jackson.datatype.jdk8;
+    requires com.fasterxml.jackson.datatype.jsr310;
     opens com.chatup.chatup_client to javafx.fxml;
     exports com.chatup.chatup_client;
     exports com.chatup.chatup_client.controller;

@@ -61,24 +61,15 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return String.class;
+        return Message.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        if(payload == null){
-            return;
+        logger.info("Received message");
+        synchronized (this) {
+            messageManager.addMessage((Message) payload);
         }
-        String msgStr = payload.toString();
-        logger.info("Received message: {}", msgStr);
-        Message msg;
-        try {
-            msg = objectMapper.readValue(msgStr, Message.class);
-        } catch (JsonProcessingException e) {
-            logger.error("Error parsing message: {}", msgStr);
-            return;
-        }
-        messageManager.addMessage(msg);
     }
 }
 
