@@ -1,6 +1,7 @@
 package com.chatup.chatup_client.web;
 
 import com.chatup.chatup_client.model.Channel;
+import com.chatup.chatup_client.model.MeObject;
 import com.chatup.chatup_client.model.Message;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -43,6 +44,15 @@ public class RestClient {
                 .retrieve()
                 .bodyToFlux(Message.class)
                 .collect(Collectors.toList())
+                .block();
+    }
+
+    public MeObject getMe() {
+        return webClient.get()
+                .uri("/me")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToMono(MeObject.class)
                 .block();
     }
 }
