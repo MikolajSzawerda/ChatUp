@@ -6,8 +6,8 @@ import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.component.MessageFactory;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
-import com.chatup.chatup_client.model.MeObject;
 import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.ConnectionHandler;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
@@ -103,11 +103,11 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
-        //MeObject me = restClient.getMe();
-
-        userNameSurname.setText("Magda Wiśniewska");
+        UserInfo currentUser = restClient.getCurrentUser();
+        logger.info("Logged in user: {}", currentUser.toString());
+        userNameSurname.setText(currentUser.toString());
         Insets padding = new Insets(0, 0, 0, 0);
-        userAvatar.getChildren().addAll(AvatarFactory.createAvatar("Magda Wiśniewska", 25.0, padding));
+        userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
 
         messages.setCellFactory(param -> new ListCell<>() {
             @Override
