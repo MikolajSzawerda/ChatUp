@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -26,7 +27,7 @@ public class LoginViewController implements Initializable {
     @FXML
     public TextField usernameField;
     @FXML
-    public TextField passwordField;
+    public PasswordField passwordField;
 
     private final AuthClient authClient;
 
