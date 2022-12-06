@@ -1,7 +1,9 @@
 package com.chatup.chatup_server.api;
 
+import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.domain.JwtRequest;
 import com.chatup.chatup_server.domain.JwtResponse;
+import com.chatup.chatup_server.domain.UserInfo;
 import com.chatup.chatup_server.service.AppUserService;
 import com.chatup.chatup_server.service.AuthService;
 import org.slf4j.Logger;
@@ -12,16 +14,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 
 @RestController
-public class AuthController {
-    Logger logger = LoggerFactory.getLogger(AuthController.class);
+public class UserEndpoint {
+    Logger logger = LoggerFactory.getLogger(UserEndpoint.class);
 
     private final AuthService authService;
     private final AppUserService appUserService;
 
     @Autowired
-    public AuthController(
+    public UserEndpoint(
             AuthService authService,
             AppUserService appUserService
     ) {
@@ -42,5 +46,12 @@ public class AuthController {
         String token = authService.generateTokenForUser(userDetails);
 
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @GetMapping("/me")
+    public UserInfo getCurrentUserInfo(Principal user) {
+        AppUser appUser = appUserService.loadUserByUsername(user.getName());
+
+        return UserInfo.from(appUser);
     }
 }
