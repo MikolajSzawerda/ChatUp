@@ -9,3 +9,10 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: chat
+  app:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    command: java -jar build/libs/chatup_server-0.0.1-SNAPSHOT.jar
