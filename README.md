@@ -22,9 +22,8 @@ Aplikacja udostępniająca wewnętrzny komunikator dla organizacji.
 - W folderze chatup_server wykonać polecenie `docker compose build`
 - Następnie `docker compose up` w celu uruchomienia serwera
 
-#### chatup_client 
-- Do zbudowania klienta lokalnie niezbędny jest [gradle](https://gradle.org/install/)
-- W folderze chatup_client wykonać polecenie `gradle build`
+#### chatup_client
+- W folderze chatup_client wykonać polecenie `./gradlew build`, aby zbudować klienta lokalnie
 - Klienta można uruchomić za pomocą `java -jar build/libs/chatup_client-1.0-SNAPSHOT.jar`
 
 ## Polecenie
