@@ -7,6 +7,7 @@ import com.chatup.chatup_client.component.MessageFactory;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.ConnectionHandler;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
@@ -22,6 +23,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +52,10 @@ public class ChatViewController implements Initializable {
     @FXML
     public TextField message;
     public ListView<String> channels;
+    @FXML
+    public Text userNameSurname;
+    @FXML
+    public StackPane userAvatar;
 
     @FXML
     public ListView<String> direct;
@@ -97,6 +103,12 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
+        UserInfo currentUser = restClient.getCurrentUser();
+        logger.info("Logged in user: {}", currentUser.toString());
+        userNameSurname.setText(currentUser.toString());
+        Insets padding = new Insets(0, 0, 0, 0);
+        userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
+
         messages.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Message item, boolean empty) {
@@ -152,7 +164,7 @@ public class ChatViewController implements Initializable {
                 } else if (item != null) {
 
                     Insets padding = new Insets(0, 5, 0, 0);
-                    StackPane avatar = AvatarFactory.createAvatar("DK", 18.0, padding);
+                    StackPane avatar = AvatarFactory.createAvatar(item, 18.0, padding);
                     Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
 
                     setGraphic(directMessageButton);

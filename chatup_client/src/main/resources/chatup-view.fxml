@@ -9,115 +9,66 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!--suppress XmlHighlighting -->
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false"
-            prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <opaqueInsets>
-        <Insets/>
+        <Insets />
     </opaqueInsets>
     <cursor>
-        <Cursor fx:constant="DEFAULT"/>
+        <Cursor fx:constant="DEFAULT" />
     </cursor>
-    <SplitPane dividerPositions="0.10776942355889724" orientation="VERTICAL" prefHeight="800.0" prefWidth="1280.0"
-               stylesheets="@test.css" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
-               AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
-        <AnchorPane focusTraversable="true"
-                    style="-fx-background-color: #645a5a; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;"
-                    SplitPane.resizableWithParent="false">
-            <Text fill="#e8e7e3" layoutX="179.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Sloneczna Company"
-                  wrappingWidth="322.7294921875" AnchorPane.leftAnchor="179.0">
+    <SplitPane dividerPositions="0.10776942355889724" orientation="VERTICAL" prefHeight="800.0" prefWidth="1280.0" stylesheets="@test.css" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+        <AnchorPane focusTraversable="true" style="-fx-background-color: #645a5a; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" SplitPane.resizableWithParent="false">
+            <Text fill="#e8e7e3" layoutX="179.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Sloneczna Company" wrappingWidth="322.7294921875" AnchorPane.leftAnchor="179.0">
                 <font>
-                    <Font size="30.0"/>
+                    <Font size="30.0" />
                 </font>
             </Text>
-            <TextField layoutX="650.0" layoutY="24.0" prefHeight="38.0" prefWidth="177.0"
-                       promptText="Search ..."
-                       style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;"
-                       AnchorPane.leftAnchor="650.0" AnchorPane.rightAnchor="455.0"/>
-            <ImageView fitHeight="72.0" fitWidth="123.0" layoutX="51.0" layoutY="9.0" pickOnBounds="true"
-                       preserveRatio="true" smooth="false" AnchorPane.topAnchor="9.0">
-                <Image url="@pngwing.com.png"/>
+            <TextField layoutX="606.0" layoutY="23.0" prefHeight="38.0" prefWidth="177.0" promptText="Search ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.leftAnchor="606.0" AnchorPane.rightAnchor="499.0" />
+            <ImageView fitHeight="72.0" fitWidth="123.0" layoutX="51.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.topAnchor="9.0">
+                <Image url="@pngwing.com.png" />
             </ImageView>
-            <Circle fill="#fed542" layoutX="1035.0" layoutY="47.0" radius="25.0" stroke="BLACK"
-                    strokeType="INSIDE" AnchorPane.rightAnchor="222.0"/>
-            <Text layoutX="1072.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Kajetan Rożej"
-                  wrappingWidth="156.7294921875" AnchorPane.rightAnchor="53.0">
+            <Text fx:id="userNameSurname" fill="#e8e7e3" layoutX="990.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="username" wrappingWidth="271.7294921875" AnchorPane.rightAnchor="20.2705078125">
                 <font>
-                    <Font size="22.0"/>
+                    <Font size="22.0" />
                 </font>
             </Text>
-            <Text layoutX="1020.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  style="-fx-font-family: &quot;Roboto Slab&quot;;" text="KR" wrappingWidth="29.7294921875"
-                  AnchorPane.rightAnchor="232.0">
-                <font>
-                    <Font size="20.0"/>
-                </font>
-            </Text>
+         <StackPane fx:id="userAvatar" layoutX="905.0" layoutY="10.0" prefHeight="63.0" prefWidth="72.0" AnchorPane.rightAnchor="305.0" />
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
             <children>
-                <SplitPane dividerPositions="0.1786833855799373" layoutX="8.0" prefHeight="712.0" prefWidth="1278.0"
-                           style="-fx-border-width: 0;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0"
-                           AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+                <SplitPane dividerPositions="0.1786833855799373" layoutX="8.0" prefHeight="712.0" prefWidth="1278.0" style="-fx-border-width: 0;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
                     <items>
-                        <AnchorPane maxWidth="228.0" minHeight="0.0" minWidth="150.0" prefHeight="648.0"
-                                    prefWidth="228.0" style="-fx-background-color: #7896cf;">
+                        <AnchorPane maxWidth="228.0" minHeight="0.0" minWidth="150.0" prefHeight="648.0" prefWidth="228.0" style="-fx-background-color: #7896cf;">
                             <children>
-                                <SplitPane dividerPositions="0.46935933147632314" layoutX="34.0" layoutY="96.0"
-                                           orientation="VERTICAL" prefHeight="718.0" prefWidth="228.0"
-                                           style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);"
-                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <SplitPane dividerPositions="0.46935933147632314" layoutX="34.0" layoutY="96.0" orientation="VERTICAL" prefHeight="718.0" prefWidth="228.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <items>
-                                        <AnchorPane prefHeight="352.0" prefWidth="228.0"
-                                                    style="-fx-background-color: #7896cf;">
+                                        <AnchorPane prefHeight="352.0" prefWidth="228.0" style="-fx-background-color: #7896cf;">
                                             <children>
-                                                <Text layoutX="6.0" layoutY="31.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0"
-                                                      style="-fx-font-family: &quot;Roboto Slab&quot;;"
-                                                      text="Channels:" wrappingWidth="107.7294921875"
-                                                      AnchorPane.leftAnchor="6.0">
+                                                <Text layoutX="6.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Channels:" wrappingWidth="107.7294921875" AnchorPane.leftAnchor="6.0">
                                                     <font>
-                                                        <Font size="18.0"/>
+                                                        <Font size="18.0" />
                                                     </font>
                                                 </Text>
-                                                <ListView fx:id="channels" layoutX="6.0" layoutY="46.0"
-                                                          prefHeight="200.0" prefWidth="200.0"
-                                                          style="-fx-background-color: #7896cf;"
-                                                          styleClass="channels-list" AnchorPane.bottomAnchor="6.0"
-                                                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                          AnchorPane.topAnchor="40.0"/>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0"
-                                                           layoutX="2.0" layoutY="-1.0" stroke="BLACK"
-                                                           strokeType="INSIDE" strokeWidth="0.0"
-                                                           style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);"
-                                                           width="225.0"/>
+                                                <ListView fx:id="channels" layoutX="6.0" layoutY="46.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7896cf;" styleClass="channels-list" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0" layoutX="2.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);" width="225.0" />
                                             </children>
                                         </AnchorPane>
                                         <AnchorPane style="-fx-background-color: #7896cf;">
                                             <children>
-                                                <Text layoutX="14.0" layoutY="21.0" strokeType="OUTSIDE"
-                                                      strokeWidth="0.0"
-                                                      style="-fx-font-family: &quot;Roboto Slab&quot;;"
-                                                      text="Direct Messages:" wrappingWidth="176.7294921875"
-                                                      AnchorPane.leftAnchor="6.0">
+                                                <Text layoutX="14.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Direct Messages:" wrappingWidth="176.7294921875" AnchorPane.leftAnchor="6.0">
                                                     <font>
-                                                        <Font size="18.0"/>
+                                                        <Font size="18.0" />
                                                     </font>
                                                 </Text>
-                                                <ListView fx:id="direct" layoutX="8.0" layoutY="29.0"
-                                                          styleClass="dm-list" AnchorPane.bottomAnchor="6.0"
-                                                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                          AnchorPane.topAnchor="29.0"/>
+                                                <ListView fx:id="direct" layoutX="8.0" layoutY="29.0" styleClass="dm-list" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" />
                                             </children>
                                         </AnchorPane>
                                     </items>
@@ -126,32 +77,15 @@
                         </AnchorPane>
                         <AnchorPane>
                             <children>
-                                <TextField fx:id="message" layoutX="12.0" layoutY="294.0"
-                                           onKeyPressed="#setOnKeyPressed" prefHeight="38.0" prefWidth="956.0"
-                                           promptText="Write something here..."
-                                           style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-color: #6aba9c; -fx-border-radius: 10; -fx-background-radius: 10;"
-                                           AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="12.0"
-                                           AnchorPane.rightAnchor="80.0"/>
-                                <ListView fx:id="messages" layoutY="-1.0" styleClass="message-list"
-                                          AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="3.0"
-                                          AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="10.0"/>
-                                <Button fx:id="sendButton" layoutX="989.0" layoutY="661.0" mnemonicParsing="false"
-                                        onAction="#onSendMessage" style="-fx-background-color: #F4F4F4;"
-                                        textFill="WHITE" AnchorPane.bottomAnchor="14.0"
-                                        AnchorPane.rightAnchor="14.0">
+                                <TextField fx:id="message" layoutX="12.0" layoutY="294.0" onKeyPressed="#setOnKeyPressed" prefHeight="38.0" prefWidth="956.0" promptText="Write something here..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-color: #6aba9c; -fx-border-radius: 10; -fx-background-radius: 10;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="80.0" />
+                                <ListView fx:id="messages" layoutY="1.0" prefHeight="652.0" prefWidth="1052.0" styleClass="message-list" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0" />
+                                <Button fx:id="sendButton" layoutX="989.0" layoutY="661.0" mnemonicParsing="false" onAction="#onSendMessage" style="-fx-background-color: #F4F4F4;" textFill="WHITE" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
                                     <graphic>
-                                        <FontIcon iconColor="#6aba9c" iconLiteral="fa-send" iconSize="35" text=""/>
+                                        <FontIcon iconColor="#6aba9c" iconLiteral="fa-send" iconSize="35" text="" />
                                     </graphic>
                                 </Button>
-                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0" layoutX="1.0"
-                                           layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0"
-                                           style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);"
-                                           width="1056.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="-1.0"
-                                           AnchorPane.topAnchor="-1.0"/>
-                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="716.0" layoutX="1.0"
-                                           layoutY="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0"
-                                           style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);"
-                                           width="4.0" AnchorPane.leftAnchor="-5.0"/>
+                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0" layoutX="1.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);" width="1056.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0" />
+                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="716.0" layoutX="1.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" width="4.0" AnchorPane.leftAnchor="-5.0" />
                             </children>
                         </AnchorPane>
                     </items>

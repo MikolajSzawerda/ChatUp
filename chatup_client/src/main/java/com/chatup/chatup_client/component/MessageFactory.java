@@ -13,19 +13,15 @@ public class MessageFactory {
         GridPane message  = new GridPane();
         Text authorText = new Text(author);
         Text message_content = new Text(text);
-        StringBuilder initials = new StringBuilder();
 
         authorText.setFont(Font.font("Calibri", FontWeight.EXTRA_BOLD, 15));
         message_content.setFont(Font.font(12));
         message_content.setWrappingWidth(width - 120); //to change in future
         message_content.setTextOrigin(VPos.TOP);
 
-        String[] parts = author.split(" ");
-        for (String part:parts){
-            initials.append(part.charAt(0));
-        }
+
         Insets padding = new Insets(0, 30, 0, 0);
-        StackPane avatar = AvatarFactory.createAvatar(initials.toString(), 25.0, padding);
+        StackPane avatar = AvatarFactory.createAvatar(author, 25.0, padding);
         message.add(avatar, 0, 0, 1, 3);
         message.add(authorText, 1, 0, 1, 1);
         message.add(message_content, 1, 2, 1, 2);

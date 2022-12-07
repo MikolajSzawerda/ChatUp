@@ -1,31 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" style="-fx-background-color: #7896cf;" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.LoginViewController">
-   <TextField fx:id="usernameField" layoutX="198.0" layoutY="216.0"/>
-   <TextField fx:id="passwordField" layoutX="198.0" layoutY="278.0"/>
-   <Text layoutX="198.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0"
-         style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Username:"/>
-   <Text layoutX="198.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0"
-         style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Password:"/>
-   <Button fx:id="loginButton" layoutX="257.0" layoutY="338.0" mnemonicParsing="false" onAction="#onLoginButtonClicked"
-           text="Login"/>
-   <Text layoutX="107.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0"
-         style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Sloneczna Company" wrappingWidth="409.8779296875">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #7896cf;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.LoginViewController">
+   <TextField fx:id="usernameField" layoutX="198.0" layoutY="216.0" />
+   <Text layoutX="198.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Username:" />
+   <Text layoutX="198.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Password:" />
+   <Button fx:id="loginButton" layoutX="257.0" layoutY="338.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" text="Login" />
+   <Text layoutX="107.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Sloneczna Company" wrappingWidth="409.8779296875">
       <font>
-         <Font size="36.0"/>
+         <Font size="36.0" />
       </font>
    </Text>
-   <Pane prefHeight="44.0" prefWidth="600.0" style="-fx-background-color: #645a5a;" AnchorPane.topAnchor="0.0"/>
-   <Text fx:id="invalidCredentialsText" fill="#ff0404" layoutX="168.0" layoutY="166.0" strokeType="OUTSIDE"
-         strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" textAlignment="CENTER"
-         wrappingWidth="231.0"/>
+   <Pane prefHeight="44.0" prefWidth="600.0" style="-fx-background-color: #645a5a;" AnchorPane.topAnchor="0.0" />
+   <Text fx:id="invalidCredentialsText" fill="#ff0404" layoutX="168.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" textAlignment="CENTER" wrappingWidth="231.0" />
+   <PasswordField fx:id="passwordField" layoutX="198.0" layoutY="279.0" />
 </AnchorPane>
