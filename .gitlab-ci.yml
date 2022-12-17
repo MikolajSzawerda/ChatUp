@@ -3,6 +3,11 @@ image: gradle:alpine
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
+stages:
+  - build
+  - test
+  - integration_test
+
 build_server:
   stage: build
   tags: [unittest]
@@ -34,7 +39,32 @@ test_server:
   - export GRADLE_USER_HOME
   script:
     - cd "$CI_PROJECT_DIR/chatup_server" 
-    - gradle check
+    - gradle check --info
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull-push
+    paths:
+      - chatup_server/build
+      - chatup_server/.gradle
+  artifacts:
+    when: always
+    paths:
+      - chatup_server/build/test-results/test/**/TEST-*xml
+    reports:
+      junit: chatup_server/build/test-results/test/**/TEST-*.xml
+
+integration_test_server:
+#  variables:
+#    TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
+  stage: integration_test
+  tags: [unittest]
+  before_script:
+    - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
+    - export GRADLE_USER_HOME
+    - ls /var/run | grep docker
+  script:
+    - cd "$CI_PROJECT_DIR/chatup_server"
+    - gradle integrationTest --info
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
@@ -44,9 +74,9 @@ test_server:
   artifacts:
     when: always
     paths:
-      - chatup_server/build/test-results/test/TEST-com.chatup.chatup_server.ChatupServerApplicationTests.xml
+      - chatup_server/build/test-results/integrationTest/**/TEST-*.xml
     reports:
-      junit: chatup_server/build/test-results/test/TEST-com.chatup.chatup_server.ChatupServerApplicationTests.xml
+      junit: chatup_server/build/test-results/integrationTest/**/TEST-*.xml
 
 build_client:
   stage: build
@@ -72,10 +102,16 @@ test_client:
   - export GRADLE_USER_HOME
   script:
     - cd "$CI_PROJECT_DIR/chatup_client" 
-    - gradle check
+    - gradle check --info
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
       - chatup_client/build
       - chatup_client/.gradle
+  artifacts:
+    when: always
+    paths:
+      - chatup_client/build/test-results/test/**/TEST-*.xml
+    reports:
+      junit: chatup_client/build/test-results/test/**/TEST-*.xml
