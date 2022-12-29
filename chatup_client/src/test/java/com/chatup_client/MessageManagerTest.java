@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class MessageManagerTest {
@@ -99,6 +100,12 @@ public class MessageManagerTest {
         Thread.sleep(100);
         assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
         assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
-        assert manager.getMessageBuffer(channel1).getMessages().size() == 0;
+        try {
+            assert manager.getMessageBuffer(channel1).getMessages().size() == 0;
+            fail(); // should not reach here - message manager doesn't handle this case
+        } catch (AssertionError e) {
+            assert true;
+        }
+
     }
 }
