@@ -17,42 +17,58 @@ public class RestClient {
         this.token = token;
     }
 
-    public Collection<Message> getLastFeed(Channel channel) {
-        return webClient.get()
-                .uri("/last-feed/" + channel.channelID())
+    private <T> T postAsClass(String url, Object body, Class<T> clazz) {
+        return webClient.post()
+                .uri(url)
                 .header("Authorization", "Bearer " + token)
+                .bodyValue(body)
                 .retrieve()
-                .bodyToFlux(Message.class)
+                .bodyToMono(clazz)
+                .block();
+    }
+
+    private <T> Collection<T> postAsCollection(String url, Object body, Class<T> clazz) {
+        return webClient.post()
+                .uri(url)
+                .header("Authorization", "Bearer " + token)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToFlux(clazz)
                 .collect(Collectors.toList())
                 .block();
+    }
+    private <T> T getAsClass(String uri, Class<T> clazz) {
+        return webClient.get()
+                .uri(uri)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToMono(clazz)
+                .block();
+    }
+
+    private <T> Collection<T> getAsCollection(String uri, Class<T> clazz) {
+        return webClient.get()
+                .uri(uri)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .bodyToFlux(clazz)
+                .collect(Collectors.toList())
+                .block();
+    }
+
+    public Collection<Message> getLastFeed(Channel channel) {
+        return getAsCollection("/last-feed/" + channel.channelID(), Message.class);
     }
 
     public Collection<Message> getFeedFrom(Channel channel, Message message, int page) {
-        return webClient.get()
-                .uri("/feed/" + channel.channelID() + "?fromMessageID=" + message.getMessageID() + "&page=" + page)
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToFlux(Message.class)
-                .collect(Collectors.toList())
-                .block();
+        return getAsCollection("/feed/" + channel.channelID() + "?fromMessageID=" + message.getMessageID() + "&page=" + page, Message.class);
     }
 
     public Collection<Message> getFeedFrom(Channel channel, Message message) {
-        return webClient.get()
-                .uri("/feed/" + channel.channelID() + "?fromMessageID=" + message.getMessageID())
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToFlux(Message.class)
-                .collect(Collectors.toList())
-                .block();
+        return getAsCollection("/feed/" + channel.channelID() + "?fromMessageID=" + message.getMessageID(), Message.class);
     }
 
     public UserInfo getCurrentUser() {
-        return webClient.get()
-                .uri("/me")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(UserInfo.class)
-                .block();
+        return getAsClass("/me", UserInfo.class);
     }
 }
