@@ -32,4 +32,11 @@ public class MessageBuffer {
         });
     }
 
+    // only for very special cases - do not use normally
+    public void removeMessage(Message msg) {
+        Platform.runLater(() -> {
+            messages.remove(msg);
+        });
+    }
+
 }

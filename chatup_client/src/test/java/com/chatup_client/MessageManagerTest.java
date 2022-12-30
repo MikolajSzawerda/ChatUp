@@ -98,14 +98,8 @@ public class MessageManagerTest {
         assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
         manager.addMessage(msg2);
         Thread.sleep(100);
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
-        assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
-        try {
-            assert manager.getMessageBuffer(channel1).getMessages().size() == 0;
-            fail(); // should not reach here - message manager doesn't handle this case
-        } catch (AssertionError e) {
-            assert true;
-        }
+        assert manager.getMessageBuffer(channel0).getMessages().size() == 0;
+        assert manager.getMessageBuffer(channel1).getMessages().size() == 0;
 
     }
 }
