@@ -11,7 +11,7 @@ import java.time.Instant;
 @Table(
         name = "Messages"
 )
-//@Indexed
+@Indexed
 public class Message{
     @Id
     @SequenceGenerator(
@@ -26,7 +26,7 @@ public class Message{
     @Column(name = "message_id")
     private Long ID;
     @Column(length = 5000)
-//    @FullTextField
+    @FullTextField
     private String content;
     @Column(name="time_created")
     private Instant timeCreated;
