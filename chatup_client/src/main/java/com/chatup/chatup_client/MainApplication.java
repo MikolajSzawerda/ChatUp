@@ -1,15 +1,35 @@
 package com.chatup.chatup_client;
 
 import javafx.application.Application;
+import javafx.application.HostServices;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class MainApplication extends Application {
+    ConfigurableApplicationContext context;
+
+    @Override
+    public void init() {
+        ApplicationContextInitializer<GenericApplicationContext> initializer = ac -> {
+            ac.registerBean(Application.class, () -> MainApplication.this);
+            ac.registerBean(Parameters.class, this::getParameters);
+            ac.registerBean(HostServices.class, this::getHostServices);
+        };
+        context = new SpringApplicationBuilder().sources(ClientSpringApplication.class)
+                .initializers(initializer)
+                .run(getParameters().getRaw().toArray(new String[0]));
+    }
     @Override
     public void start(Stage stage) throws IOException {
         Parent root  = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/login-view.fxml")));
@@ -20,7 +40,9 @@ public class MainApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch();
+    @Override
+    public void stop(){
+        context.close();
+        Platform.exit();
     }
 }

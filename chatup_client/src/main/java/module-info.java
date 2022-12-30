@@ -18,7 +18,8 @@ module com.chatup.chatup_client {
     requires com.fasterxml.jackson.module.paramnames;
     requires com.fasterxml.jackson.datatype.jdk8;
     requires com.fasterxml.jackson.datatype.jsr310;
-    opens com.chatup.chatup_client to javafx.fxml;
+    requires spring.context;
+    opens com.chatup.chatup_client to javafx.fxml, spring.core;
     exports com.chatup.chatup_client;
     exports com.chatup.chatup_client.controller;
     exports com.chatup.chatup_client.model;
