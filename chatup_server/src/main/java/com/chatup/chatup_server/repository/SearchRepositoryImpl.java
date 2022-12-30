@@ -3,8 +3,6 @@ package com.chatup.chatup_server.repository;
 import com.chatup.chatup_server.domain.Message;
 import com.chatup.chatup_server.repository.SearchRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.hibernate.search.backend.elasticsearch.ElasticsearchExtension;
 import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
@@ -17,14 +15,6 @@ public class SearchRepositoryImpl implements SearchRepository {
 
     public SearchRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-    }
-
-    @Override
-    public Long getHitCount(String word) {
-        SearchSession session = Search.session(entityManager);
-        SearchResult<Message> results = session.search(Message.class)
-                .where(f->f.match().field("content").matching(word)).fetch(20);
-        return results.total().hitCount();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.chatup.chatup_server.api;
 
-import com.chatup.chatup_server.domain.Message;
 import com.chatup.chatup_server.service.messaging.MessageService;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 import org.springframework.web.bind.annotation.*;

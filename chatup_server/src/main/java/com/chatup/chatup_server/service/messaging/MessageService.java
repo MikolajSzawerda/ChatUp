@@ -7,12 +7,9 @@ import com.chatup.chatup_server.repository.MessageRepository;
 import com.chatup.chatup_server.service.AuthService;
 import com.chatup.chatup_server.service.JwtTokenService;
 import com.chatup.chatup_server.service.utils.InstantService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -48,10 +45,6 @@ public class MessageService {
 
     public Page<Message> getFeedFrom(Long channelID, Long messageID, int page){
         return messageRepository.getFeedFrom(channelID, messageID, PageRequest.of(page, PAGESIZE));
-    }
-
-    public Long getWordCount(String word){
-        return messageRepository.getHitCount(word);
     }
 
     public List<Message> searchByContent(String content, int page){
