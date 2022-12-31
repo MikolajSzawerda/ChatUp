@@ -84,7 +84,6 @@ build_client:
   before_script:
   - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
   - export GRADLE_USER_HOME
-  - apk add libx11
   script: 
     - cd "$CI_PROJECT_DIR/chatup_client"
     - gradle --build-cache assemble
@@ -102,6 +101,8 @@ test_client:
   - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
   - export GRADLE_USER_HOME
   - apk add libx11
+  - apk add mesa-gl
+  - ls /usr/lib/
   script:
     - cd "$CI_PROJECT_DIR/chatup_client" 
     - gradle check --info
