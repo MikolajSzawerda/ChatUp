@@ -14,7 +14,7 @@ integration_test_server:
   #   - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
   #   - find . -type f | grep "test-compose.yml"
   script:
-    - ls /etc/gitlab-runner/
+    - ls /etc/
     - ls ~/.gitlab-runner/
     # - echo "BUILDING"
     # - find . -type f | grep "test-compose.yml"
