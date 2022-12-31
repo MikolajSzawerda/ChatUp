@@ -7,6 +7,9 @@ import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
+
 import static org.junit.jupiter.api.Assertions.fail;
 
 
@@ -16,23 +19,33 @@ public class MessageManagerTest {
 
     @BeforeAll
     static void setupJavaFX() {
-        Platform.startup(() -> {});
+//        Platform.startup(() -> {});
     }
 
     @BeforeEach
     void setupManager() {
-        manager = new MessageManager();
+        manager = new MessageManager(true);
     }
 
+    Message createMessage(Long messageID, Long channelID, String content) {
+        Message msg = new Message();
+        msg.setMessageID(messageID);
+        msg.setChannelID(channelID);
+        msg.setContent("Test message " + content + " (ID: " + messageID + ")");
+        msg.setAuthorID(1L);
+        msg.setAuthorUsername("TestUser");
+        msg.setAuthorFirstName("Test");
+        msg.setAuthorLastName("User");
+        msg.setTimeCreated(Instant.now());
+        msg.setIsDeleted(false);
+        return msg;
+    }
     @Test
     void standardOneMessage() throws InterruptedException {
-        Message msg = new Message();
-        msg.setMessageID(0L);
-        msg.setChannelID(0L);
+        Message msg = createMessage(0L, 0L, "standardOneMessage");
         Channel channel0 = new Channel(0L, "0", false, false);
         Channel otherChannel = new Channel(1L, "1", false, false);
         manager.addMessage(msg);
-        Thread.sleep(100);
         assert manager.getMessageBuffer(otherChannel) != null;
         assert manager.getMessageBuffer(otherChannel).getMessages().size() == 0;
         assert manager.getMessageBuffer(channel0) != null;
@@ -42,19 +55,13 @@ public class MessageManagerTest {
 
     @Test
     void duplicateOneMessage() throws InterruptedException {
-        Message msg = new Message();
-        msg.setMessageID(0L);
-        msg.setChannelID(0L);
-        Message msg2 = new Message();
-        msg2.setMessageID(0L);
-        msg2.setMessageID(1L);
+        Message msg = createMessage(0L, 0L, "duplicateOneMessage");
+        Message msg2 = new Message(msg);
         Channel channel0 = new Channel(0L, "0", false, false);
         manager.addMessage(msg);
-        Thread.sleep(100);
         assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
         assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
         manager.addMessage(msg2);
-        Thread.sleep(100);
         assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
         assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
         assert !manager.getMessageBuffer(channel0).getMessages().contains(msg2);
@@ -63,19 +70,13 @@ public class MessageManagerTest {
     @Test
     void sameChannelDiffId() throws InterruptedException {
         // Normal case
-        Message msg = new Message();
-        msg.setMessageID(0L);
-        msg.setChannelID(0L);
-        Message msg2 = new Message();
-        msg2.setMessageID(1L);
-        msg2.setChannelID(0L);
+        Message msg = createMessage(0L, 0L, "sameChannelDiffId");
+        Message msg2 = createMessage(1L, 0L, "sameChannelDiffId");
         Channel channel0 = new Channel(0L, "0", false, false);
         manager.addMessage(msg);
-        Thread.sleep(100);
         assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
         assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
         manager.addMessage(msg2);
-        Thread.sleep(100);
         assert manager.getMessageBuffer(channel0).getMessages().size() == 2;
         assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
         assert manager.getMessageBuffer(channel0).getMessages().contains(msg2);
@@ -84,22 +85,19 @@ public class MessageManagerTest {
     @Test
     void diffChannelSameId() throws InterruptedException {
         // Abnormal case - a fake message comes in
-        Message msg = new Message();
-        msg.setMessageID(0L);
-        msg.setChannelID(0L);
-        Message msg2 = new Message(); // the fake message
-        msg2.setMessageID(0L);
-        msg2.setChannelID(1L);
+        Message msg = createMessage(0L, 0L, "diffChannelSameId");
+        Message msg2 = createMessage(0L, 1L, "diffChannelSameId"); // the fake message
         Channel channel0 = new Channel(0L, "0", false, false);
         Channel channel1 = new Channel(1L, "1", false, false);
         manager.addMessage(msg);
-        Thread.sleep(100);
         assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
         assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
+        assert !msg.getDuplicateFlag();
         manager.addMessage(msg2);
-        Thread.sleep(100);
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 0;
-        assert manager.getMessageBuffer(channel1).getMessages().size() == 0;
+        assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
+        assert manager.getMessageBuffer(channel1).getMessages().size() == 1;
+        assert msg.getDuplicateFlag();
+        assert msg2.getDuplicateFlag();
 
     }
 }

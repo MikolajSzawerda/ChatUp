@@ -67,7 +67,7 @@ public class ChatViewController implements Initializable {
         }
     };
     public ChatViewController(String token) {
-        this.messageManager = new MessageManager();
+        this.messageManager = new MessageManager(false);
         this.socketClient = new SocketClient(
             URL,
             token,

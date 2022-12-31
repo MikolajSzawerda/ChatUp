@@ -11,11 +11,17 @@ import java.util.HashMap;
 public class MessageManager {
     private final Logger logger = LoggerFactory.getLogger(MessageManager.class);
     private final HashMap<Long, MessageBuffer> buffers = new HashMap<>();
+    private final boolean testMode;
+
+    public MessageManager(boolean testMode) {
+        this.testMode = testMode;
+    }
+
     public MessageBuffer getMessageBuffer(Channel channel) {
         if(buffers.containsKey(channel.channelID())) {
             return buffers.get(channel.channelID());
         } else {
-            MessageBuffer buffer = new MessageBuffer();
+            MessageBuffer buffer = new MessageBuffer(testMode);
             buffers.put(channel.channelID(), buffer);
             return buffer;
         }
@@ -25,9 +31,13 @@ public class MessageManager {
         if(buffers.containsKey(msg.getChannelID())) {
             buffers.get(msg.getChannelID()).addMessage(msg);
         } else {
-            MessageBuffer buffer = new MessageBuffer();
+            MessageBuffer buffer = new MessageBuffer(testMode);
             buffer.addMessage(msg);
             buffers.put(msg.getChannelID(), buffer);
+        }
+        if(testMode) {
+            checkForDuplicates(msg);
+            return;
         }
         Platform.runLater(() -> {
             checkForDuplicates(msg);
@@ -39,21 +49,10 @@ public class MessageManager {
             for(Message msg : buffer.getMessages()) {
                 if(msg.getMessageID().equals(originalMessage.getMessageID()) && !msg.equals(originalMessage)) {
                     logger.warn("Duplicate message found: " + msg + " and " + originalMessage);
-                    buffer.removeMessage(msg);
-                    // TODO: remove constructing channel once channel manager is working
-                    MessageBuffer orgBuffer = getMessageBuffer(new Channel(originalMessage.getChannelID(), "", false, false));
-                    // not very efficient waiting but it will be rarely used
-                    while(!orgBuffer.getMessages().contains(originalMessage)) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    orgBuffer.removeMessage(originalMessage);
-                    logger.info("Duplicate message removed");
+                    msg.setDuplicateFlag(true);
+                    originalMessage.setDuplicateFlag(true);
                 }
                 }
-            }
+        }
         }
     }
