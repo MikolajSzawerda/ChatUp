@@ -6,7 +6,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 public class MessageBuffer {
     private final boolean testMode;

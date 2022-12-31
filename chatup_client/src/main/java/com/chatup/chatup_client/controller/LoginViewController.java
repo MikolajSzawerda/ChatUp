@@ -1,25 +1,28 @@
 package com.chatup.chatup_client.controller;
 
+import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.web.AuthClient;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
+@Component
 public class LoginViewController implements Initializable {
+    private final Logger logger = LoggerFactory.getLogger(LoginViewController.class);
+    private final MainApplication application;
     @FXML
     public Text invalidCredentialsText;
     @FXML
@@ -31,8 +34,12 @@ public class LoginViewController implements Initializable {
 
     private final AuthClient authClient;
 
-    public LoginViewController() {
-        authClient = new AuthClient();
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    public LoginViewController(AuthClient authClient, Application application) { // Application bean is added manually, so IDE may show an error here
+        this.authClient = authClient;
+        this.application = (MainApplication) application;
+        logger.info("LoginViewController created");
     }
 
     @FXML
@@ -40,10 +47,10 @@ public class LoginViewController implements Initializable {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
-        String token = authClient.authenticate(username, password);
+        boolean success = authClient.authenticate(username, password);
 
-        if(token != null) {
-            switchToChatView(e, token);
+        if(success) {
+            application.switchToChatView(e);
             return;
         }
 
@@ -51,20 +58,10 @@ public class LoginViewController implements Initializable {
         usernameField.clear();
         passwordField.clear();
     }
-    void switchToChatView(ActionEvent e, String token) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatup-view.fxml"));
-        loader.setController(new ChatViewController(token));
-        Parent root = loader.load();
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Roboto+Slab");
-        stage.setScene(scene);
-        stage.show();
-
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
     }
+
 }

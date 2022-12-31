@@ -3,24 +3,15 @@ package com.chatup_client;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
-import javafx.application.Platform;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 
 public class MessageManagerTest {
 
     private MessageManager manager;
-
-    @BeforeAll
-    static void setupJavaFX() {
-//        Platform.startup(() -> {});
-    }
 
     @BeforeEach
     void setupManager() {
@@ -41,7 +32,7 @@ public class MessageManagerTest {
         return msg;
     }
     @Test
-    void standardOneMessage() throws InterruptedException {
+    void standardOneMessage(){
         Message msg = createMessage(0L, 0L, "standardOneMessage");
         Channel channel0 = new Channel(0L, "0", false, false);
         Channel otherChannel = new Channel(1L, "1", false, false);
@@ -54,7 +45,7 @@ public class MessageManagerTest {
     }
 
     @Test
-    void duplicateOneMessage() throws InterruptedException {
+    void duplicateOneMessage() {
         Message msg = createMessage(0L, 0L, "duplicateOneMessage");
         Message msg2 = new Message(msg);
         Channel channel0 = new Channel(0L, "0", false, false);
@@ -68,7 +59,7 @@ public class MessageManagerTest {
     }
 
     @Test
-    void sameChannelDiffId() throws InterruptedException {
+    void sameChannelDiffId() {
         // Normal case
         Message msg = createMessage(0L, 0L, "sameChannelDiffId");
         Message msg2 = createMessage(1L, 0L, "sameChannelDiffId");
@@ -83,7 +74,7 @@ public class MessageManagerTest {
     }
 
     @Test
-    void diffChannelSameId() throws InterruptedException {
+    void diffChannelSameId(){
         // Abnormal case - a fake message comes in
         Message msg = createMessage(0L, 0L, "diffChannelSameId");
         Message msg2 = createMessage(0L, 1L, "diffChannelSameId"); // the fake message

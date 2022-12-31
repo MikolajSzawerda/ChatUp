@@ -24,6 +24,7 @@ public class Message {
         this.channelID = other.getChannelID();
         this.timeCreated = other.getTimeCreated();
         this.isDeleted = other.getIsDeleted();
+        this.duplicateFlag = other.getDuplicateFlag();
     }
 
     public Message() {}

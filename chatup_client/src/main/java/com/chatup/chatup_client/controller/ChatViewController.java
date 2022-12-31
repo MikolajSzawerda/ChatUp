@@ -1,5 +1,6 @@
 package com.chatup.chatup_client.controller;
 
+import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
@@ -8,9 +9,9 @@ import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
-import com.chatup.chatup_client.web.ConnectionHandler;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -26,27 +27,27 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-
+@Component
 public class ChatViewController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
-    private final String URL = "ws://localhost:8080/chat";
-    private final LinkedList<String> topics = new LinkedList<>(){{
-        add("/topic/channel/1");
-    }};
+    private final MainApplication application;
     private final SocketClient socketClient;
-
     private final RestClient restClient;
-
-    private Channel currentChannel = new Channel(1L, "Test", false, false);
-
     private final MessageManager messageManager;
     @FXML
     public ListView<Message> messages;
+    final ListChangeListener<Message> listChangeListener = new ListChangeListener<>() {
+        @Override
+        public void onChanged(Change c) {
+            messages.scrollTo(messages.getItems().size() - 1);
+        }
+    };
     @FXML
     public Button sendButton;
     @FXML
@@ -56,24 +57,18 @@ public class ChatViewController implements Initializable {
     public Text userNameSurname;
     @FXML
     public StackPane userAvatar;
-
     @FXML
     public ListView<String> direct;
+    private Channel currentChannel = new Channel(1L, "Test", false, false);
 
-    final ListChangeListener<Message> listChangeListener = new ListChangeListener<>() {
-        @Override
-        public void onChanged(Change c) {
-            messages.scrollTo(messages.getItems().size() - 1);
-        }
-    };
-    public ChatViewController(String token) {
-        this.messageManager = new MessageManager(false);
-        this.socketClient = new SocketClient(
-            URL,
-            token,
-            new ConnectionHandler(this.messageManager, topics)
-        );
-        this.restClient = new RestClient(token);
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    public ChatViewController(MessageManager messageManager, SocketClient socketClient, RestClient restClient, Application application) {
+        this.messageManager = messageManager;
+        this.socketClient = socketClient;
+        this.restClient = restClient;
+        this.application = (MainApplication) application;
+        logger.info("ChatViewController created");
     }
 
     @FXML
