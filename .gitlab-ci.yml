@@ -5,55 +5,52 @@ variables:
 
 stages:
   - build
-  - test
+  # - test
   - integration_test
 
 build_server:
   stage: build
   tags: [unittest]
   before_script:
-  - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
-  - export GRADLE_USER_HOME
+  - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
   script: 
     - cd "$CI_PROJECT_DIR/chatup_server"
-    - gradle --build-cache assemble
+    - ./gradlew --build-cache assemble
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
       - chatup_server/build
       - chatup_server/.gradle
-  after_script:
-    - tree $CI_PROJECT_DIR
 
-test_server:
-  services:
-  - postgres
-  variables:
-    POSTGRES_DB: chat
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: password
-    POSTGRES_HOST_AUTH_METHOD: trust
-  stage: test
-  tags: [unittest]
-  before_script:
-  - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
-  - export GRADLE_USER_HOME
-  script:
-    - cd "$CI_PROJECT_DIR/chatup_server" 
-    - gradle check --info
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull-push
-    paths:
-      - chatup_server/build
-      - chatup_server/.gradle
-  artifacts:
-    when: always
-    paths:
-      - chatup_server/build/test-results/test/**/TEST-*xml
-    reports:
-      junit: chatup_server/build/test-results/test/**/TEST-*.xml
+# test_server:
+#   services:
+#   - postgres
+#   variables:
+#     POSTGRES_DB: chat
+#     POSTGRES_USER: postgres
+#     POSTGRES_PASSWORD: password
+#     POSTGRES_HOST_AUTH_METHOD: trust
+#   stage: test
+#   tags: [unittest]
+#   before_script:
+#   - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
+#   - export GRADLE_USER_HOME
+#   script:
+#     - cd "$CI_PROJECT_DIR/chatup_server" 
+#     - gradle check --info
+#   cache:
+#     key: "$CI_COMMIT_REF_NAME"
+#     policy: pull-push
+#     paths:
+#       - chatup_server/build
+#       - chatup_server/.gradle
+#   artifacts:
+#     when: always
+#     paths:
+#       - chatup_server/build/test-results/test/**/TEST-*xml
+#     reports:
+#       junit: chatup_server/build/test-results/test/**/TEST-*.xml
 
 integration_test_server:
 #  variables:
@@ -61,13 +58,11 @@ integration_test_server:
   stage: integration_test
   tags: [unittest]
   before_script:
-    - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
-    - export GRADLE_USER_HOME
+    - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - ls /var/run | grep docker
-    - tree $CI_PROJECT_DIR
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
-    - gradle integrationTest --info
+    - ./gradlew integrationTest --info
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
@@ -81,40 +76,40 @@ integration_test_server:
     reports:
       junit: chatup_server/build/test-results/integrationTest/**/TEST-*.xml
 
-build_client:
-  stage: build
-  tags: [unittest]
-  before_script:
-  - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
-  - export GRADLE_USER_HOME
-  script: 
-    - cd "$CI_PROJECT_DIR/chatup_client"
-    - gradle --build-cache assemble
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - chatup_client/build
-      - chatup_client/.gradle
+# build_client:
+#   stage: build
+#   tags: [unittest]
+#   before_script:
+#   - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
+#   - export GRADLE_USER_HOME
+#   script: 
+#     - cd "$CI_PROJECT_DIR/chatup_client"
+#     - gradle --build-cache assemble
+#   cache:
+#     key: "$CI_COMMIT_REF_NAME"
+#     policy: push
+#     paths:
+#       - chatup_client/build
+#       - chatup_client/.gradle
 
-test_client:
-  stage: test
-  tags: [unittest]
-  before_script:
-  - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
-  - export GRADLE_USER_HOME
-  script:
-    - cd "$CI_PROJECT_DIR/chatup_client" 
-    - gradle check --info
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - chatup_client/build
-      - chatup_client/.gradle
-  artifacts:
-    when: always
-    paths:
-      - chatup_client/build/test-results/test/**/TEST-*.xml
-    reports:
-      junit: chatup_client/build/test-results/test/**/TEST-*.xml
+# test_client:
+#   stage: test
+#   tags: [unittest]
+#   before_script:
+#   - GRADLE_USER_HOME="$(pwd)/chatup_client/.gradle"
+#   - export GRADLE_USER_HOME
+#   script:
+#     - cd "$CI_PROJECT_DIR/chatup_client" 
+#     - gradle check --info
+#   cache:
+#     key: "$CI_COMMIT_REF_NAME"
+#     policy: pull
+#     paths:
+#       - chatup_client/build
+#       - chatup_client/.gradle
+#   artifacts:
+#     when: always
+#     paths:
+#       - chatup_client/build/test-results/test/**/TEST-*.xml
+#     reports:
+#       junit: chatup_client/build/test-results/test/**/TEST-*.xml
