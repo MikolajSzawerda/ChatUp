@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 public class MessageService {
@@ -44,5 +45,9 @@ public class MessageService {
 
     public Page<Message> getFeedFrom(Long channelID, Long messageID, int page){
         return messageRepository.getFeedFrom(channelID, messageID, PageRequest.of(page, PAGESIZE));
+    }
+
+    public List<Message> searchByContent(String content, int page){
+        return messageRepository.fuzzySearchByContent(content, PageRequest.of(page, PAGESIZE));
     }
 }

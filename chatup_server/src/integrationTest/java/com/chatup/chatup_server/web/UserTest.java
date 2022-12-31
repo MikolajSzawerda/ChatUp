@@ -76,9 +76,4 @@ public class UserTest  extends BaseInitializedDbTest {
         return restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(createAuthHeaders(token)), UserInfo.class);
     }
 
-    private String createUserToken(String username){
-        AppUser appUser = appUserRepository.findAppUserByUsername(username);
-        return jwtTokenService.generateToken(appUser);
-    }
-
 }

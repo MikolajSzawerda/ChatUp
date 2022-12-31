@@ -3,12 +3,15 @@ package com.chatup.chatup_server.domain;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import java.time.Instant;
 @Entity
 @Table(
         name = "Messages"
 )
+@Indexed
 public class Message{
     @Id
     @SequenceGenerator(
@@ -23,6 +26,7 @@ public class Message{
     @Column(name = "message_id")
     private Long ID;
     @Column(length = 5000)
+    @FullTextField
     private String content;
     @Column(name="time_created")
     private Instant timeCreated;
