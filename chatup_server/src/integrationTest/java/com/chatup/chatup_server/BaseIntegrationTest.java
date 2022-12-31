@@ -36,7 +36,7 @@ public abstract class BaseIntegrationTest {
     public static final DockerComposeContainer environment;
 
     static{
-        environment = new DockerComposeContainer(new File("src/integrationTest/resources/docker-compose.yml"))
+        environment = new DockerComposeContainer(new File("./src/integrationTest/resources/docker-compose.yml"))
                 .withExposedService("postgres", 5432)
                 .withExposedService("elasticsearch", 9200)
                 .waitingFor("elasticsearch", Wait.forListeningPort())
