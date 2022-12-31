@@ -9,21 +9,23 @@ stages:
 integration_test_server:
   stage: integration_test
   tags: [unittest]
-  before_script:
-    - find . -name "*.toml" -exec cat {} +
-    - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
-    - find . -type f | grep "test-compose.yml"
+  # before_script:
+  #   - find . -name "*.toml" -exec cat {} +
+  #   - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
+  #   - find . -type f | grep "test-compose.yml"
   script:
-    - echo "BUILDING"
-    - find . -type f | grep "test-compose.yml"
-    - cd "$CI_PROJECT_DIR/chatup_server"
-    - echo $pwd
-    - gradle --build-cache assemble
-    - find . -type f | grep "test-compose.yml"
-    - gradle integrationTest --info
-  artifacts:
-    when: always
-    paths:
-      - chatup_server/build/test-results/integrationTest/**/TEST-*.xml
-    reports:
-      junit: chatup_server/build/test-results/integrationTest/**/TEST-*.xml
+    - ls /etc/gitlab-runner/
+    - ls ~/.gitlab-runner/
+    # - echo "BUILDING"
+    # - find . -type f | grep "test-compose.yml"
+    # - cd "$CI_PROJECT_DIR/chatup_server"
+    # - echo $pwd
+    # - gradle --build-cache assemble
+    # - find . -type f | grep "test-compose.yml"
+    # - gradle integrationTest --info
+  # artifacts:
+  #   when: always
+  #   paths:
+  #     - chatup_server/build/test-results/integrationTest/**/TEST-*.xml
+  #   reports:
+  #     junit: chatup_server/build/test-results/integrationTest/**/TEST-*.xml
