@@ -23,6 +23,8 @@ build_server:
     paths:
       - chatup_server/build
       - chatup_server/.gradle
+  after_script:
+    - tree $CI_PROJECT_DIR
 
 test_server:
   services:
