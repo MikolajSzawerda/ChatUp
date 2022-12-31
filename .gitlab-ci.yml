@@ -62,6 +62,7 @@ integration_test_server:
     - GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - export GRADLE_USER_HOME
     - ls /var/run | grep docker
+    - tree $CI_PROJECT_DIR
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
     - gradle integrationTest --info
