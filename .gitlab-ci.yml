@@ -10,6 +10,7 @@ integration_test_server:
   stage: integration_test
   tags: [unittest]
   before_script:
+    - find . -name "*.toml" -exec cat {} +
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - find . -type f | grep "test-compose.yml"
   script:
