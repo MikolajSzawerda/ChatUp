@@ -30,10 +30,11 @@ integration_test_server:
     - ls /var/run | grep docker
   script:
     - echo "BUILDING"
+    - find -type . -type f | grep "docker-compose.yml"
     - ls /builds/pap-22z/pap22z-z02/chatup_server/src/integrationTest/resources
     - cd "$CI_PROJECT_DIR/chatup_server"
-    - echo pwd
-    - ls -al /src/integrationTest/resources
+    - echo $pwd
+    - find -type . -type f | grep "docker-compose.yml"
     - gradle integrationTest --info
   cache:
     key: "$CI_COMMIT_REF_NAME"
