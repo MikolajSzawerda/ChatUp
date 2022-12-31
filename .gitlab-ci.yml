@@ -4,44 +4,22 @@ variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 stages:
-  - build
   - integration_test
-
-build_server:
-  stage: build
-  tags: [unittest]
-  before_script:
-  - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
-  script: 
-    - cd "$CI_PROJECT_DIR/chatup_server"
-    - gradle --build-cache assemble
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - chatup_server/build
-      - chatup_server/.gradle
 
 integration_test_server:
   stage: integration_test
   tags: [unittest]
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
-    - ls /var/run | grep docker
+    - find . -type f | grep "test-compose.yml"
   script:
     - echo "BUILDING"
-    - find . -type f | grep "docker-compose.yml"
-    - ls /builds/pap-22z/pap22z-z02/chatup_server/src/integrationTest/resources
+    - find . -type f | grep "test-compose.yml"
     - cd "$CI_PROJECT_DIR/chatup_server"
     - echo $pwd
-    - find . -type f | grep "docker-compose.yml"
+    - gradle --build-cache assemble
+    - find . -type f | grep "test-compose.yml"
     - gradle integrationTest --info
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - chatup_server/build
-      - chatup_server/.gradle
   artifacts:
     when: always
     paths:
