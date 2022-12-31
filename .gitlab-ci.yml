@@ -56,7 +56,7 @@ integration_test_server:
 #  variables:
 #    TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
   stage: integration_test
-  tags: [integrationtest]
+  tags: [unittest]
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - ls /var/run | grep docker
