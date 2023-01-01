@@ -1,5 +1,6 @@
 package com.chatup.chatup_client.web;
 
+import com.chatup.chatup_client.config.AppConfig;
 import com.chatup.chatup_client.model.IncomingMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -19,18 +21,22 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import javax.websocket.WebSocketContainer;
 import java.util.concurrent.ExecutionException;
 
+@Component
 public class SocketClient {
     private final Logger logger = LoggerFactory.getLogger(SocketClient.class);
     private final String URL;
-    private final String token;
     private final ConnectionHandler connectionHandler;
+    private final AppConfig appConfig;
+    private final AuthClient authClient;
     private StompSession session;
     private final WebSocketStompClient webSocketStompClient;
 
-    public SocketClient(String url, String token, ConnectionHandler connectionHandler) {
-        this.URL = url;
-        this.token = token;
+    public SocketClient(AppConfig appConfig, AuthClient authClient, ConnectionHandler connectionHandler) {
+        this.authClient = authClient;
+        this.appConfig = appConfig;
         this.connectionHandler = connectionHandler;
+        this.URL = appConfig.getWebSocketURL();
+        logger.info("SocketClient created");
 
         WebSocketContainer webSocketContainer = new WsWebSocketContainer();
         WebSocketClient webSocketClient = new StandardWebSocketClient(webSocketContainer);
@@ -47,7 +53,7 @@ public class SocketClient {
     public void connect() throws ExecutionException, InterruptedException {
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
         StompHeaders stompHeaders = new StompHeaders();
-        headers.add("Authorization", "Bearer " + this.token);
+        headers.add("Authorization", "Bearer " + authClient.getToken());
         webSocketStompClient.connect(this.URL, headers, stompHeaders, this.connectionHandler).get();
         this.session = connectionHandler.getSession();
     }

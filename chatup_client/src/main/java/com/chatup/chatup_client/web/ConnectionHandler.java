@@ -4,23 +4,31 @@ import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
+@Component
 public class ConnectionHandler implements StompSessionHandler{
     final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
     private final MessageManager messageManager;
-    private final List<String> topics;
 
-    public ConnectionHandler(MessageManager messageManager, List<String> topics){
+    // TODO: remove once channel manager is working
+    private final List<String> topics = new LinkedList<>(){{
+        add("/topic/channel/1");
+    }};
+
+    @Autowired
+    public ConnectionHandler(MessageManager messageManager) {
         this.messageManager = messageManager;
-        this.topics = new LinkedList<>(topics);
+        logger.info("ConnectionHandler created");
     }
 
     public void addSubscription(String topic){

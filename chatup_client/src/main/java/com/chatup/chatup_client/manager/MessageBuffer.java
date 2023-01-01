@@ -6,9 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 public class MessageBuffer {
+    private final boolean testMode;
 
     public ObservableList<Message> getMessages() {
         return messages;
@@ -16,15 +16,21 @@ public class MessageBuffer {
 
     private final ObservableList<Message> messages;
 
-    public MessageBuffer() {
+    public MessageBuffer(boolean testMode) {
+        this.testMode = testMode;
         this.messages = FXCollections.observableArrayList();
     }
 
     public void addMessage(Message msg){
         for(Message m : messages) {
-            if(Objects.equals(m.getMessageID(), msg.getMessageID())) {
+            if(m.equals(msg)) { // same message sent twice
                 return;
             }
+        }
+        if(testMode) {
+            messages.add(msg);
+            messages.sort(Comparator.comparing(Message::getTimeCreated));
+            return;
         }
         Platform.runLater(() -> {
             messages.add(msg);

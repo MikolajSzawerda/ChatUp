@@ -1,21 +1,35 @@
 package com.chatup.chatup_client.web;
 
+import com.chatup.chatup_client.config.AppConfig;
 import com.chatup.chatup_client.model.TokenRequest;
 import com.chatup.chatup_client.model.TokenResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
-
+@Component
 public class AuthClient {
-    private final String baseUrl = "http://localhost:8080";
+    private final Logger logger = LoggerFactory.getLogger(AuthClient.class);
+    private final AppConfig appConfig;
     private final WebClient webClient;
 
-    public AuthClient() {
-        this.webClient = WebClient.create(baseUrl);
+    public String getToken() {
+        return token;
     }
-    public String authenticate(String username, String password) {
-        String token = null;
+
+    private String token;
+
+    @Autowired
+    public AuthClient(AppConfig appConfig) {
+        this.appConfig = appConfig;
+        this.webClient = WebClient.create(appConfig.getRestURL());
+        logger.info("AuthClient created");
+    }
+    public boolean authenticate(String username, String password) {
         try {
             TokenResponse tokenResponse = webClient.post()
                 .uri("/auth")
@@ -28,9 +42,8 @@ public class AuthClient {
                 token = tokenResponse.getToken();
 
         } catch(WebClientResponseException e) {
-            return null;
+            return false;
         }
-
-        return token;
+        return true;
     }
 }
