@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
-import java.io.File;
+import java.io.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -34,9 +34,43 @@ public abstract class BaseIntegrationTest {
     protected int PORT;
 
     public static final DockerComposeContainer environment;
+    private static final String TEST_COMPOSE = "version: '3.8'\n" +
+            "\n" +
+            "services:\n" +
+            "  postgres:\n" +
+            "    image: postgres\n" +
+            "    ports:\n" +
+            "      - \"5432:5432\"\n" +
+            "    environment:\n" +
+            "      POSTGRES_USER: postgres\n" +
+            "      POSTGRES_PASSWORD: password\n" +
+            "      POSTGRES_DB: chat\n" +
+            "  elasticsearch:\n" +
+            "    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3\n" +
+            "    environment:\n" +
+            "      - xpack.security.enabled=false\n" +
+            "      - discovery.type=single-node\n" +
+            "      - \"ES_JAVA_OPTS=-Xms1g -Xmx1g\"\n" +
+            "      - cluster.routing.allocation.disk.threshold_enabled=true\n" +
+            "      - cluster.routing.allocation.disk.watermark.flood_stage=200mb\n" +
+            "      - cluster.routing.allocation.disk.watermark.low=500mb\n" +
+            "      - cluster.routing.allocation.disk.watermark.high=300mb\n" +
+            "      - bootstrap.memory_lock=true\n" +
+            "    ports:\n" +
+            "      - \"9200:9200\"\n" +
+            "    ulimits:\n" +
+            "      memlock:\n" +
+            "        soft: -1\n" +
+            "        hard: -1\n";
 
     static{
-        environment = new DockerComposeContainer(new File("src/integrationTest/resources/test-compose.yml"))
+        File compose = new File("test-compose.yml");
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(compose))){
+            bufferedWriter.write(TEST_COMPOSE);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        environment = new DockerComposeContainer(compose)
                 .withExposedService("postgres", 5432)
                 .withExposedService("elasticsearch", 9200)
                 .waitingFor("elasticsearch", Wait.forListeningPort())
@@ -55,6 +89,7 @@ public abstract class BaseIntegrationTest {
             set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         }};
     }
+
 
 
 }
