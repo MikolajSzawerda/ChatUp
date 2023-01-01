@@ -1,13 +1,6 @@
 image: gradle:alpine
 
-services:
-  - name: docker:dind
-    command: ["--tls=false"]
-
 variables:
-  DOCKER_HOST: "tcp://docker:2375"
-  DOCKER_TLS_CERTDIR: ""
-  DOCKER_DRIVER: overlay2
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 stages:
