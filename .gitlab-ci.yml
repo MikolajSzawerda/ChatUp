@@ -24,6 +24,8 @@ integration_test_server:
     - apk update
     - apk add --update docker
     - apk add --update docker-compose
+    - rc-update add docker boot
+    - service docker start
     - docker info
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
