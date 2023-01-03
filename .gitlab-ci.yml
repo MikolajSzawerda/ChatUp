@@ -21,6 +21,8 @@ integration_test_server:
     TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
+    - apk update
+    - apk add --update docker
     - apk add --update docker-compose
     - docker info
   script:
