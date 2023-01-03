@@ -22,6 +22,7 @@ integration_test_server:
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk add --update docker-compose
+    - iptables -A INPUT -i docker0 -j ACCEPT
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
     - gradle --build-cache assemble
