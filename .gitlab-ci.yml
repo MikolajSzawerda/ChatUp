@@ -1,4 +1,4 @@
-image: docker/compose:debian-1.29.2
+image: gradle:alpine
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -11,12 +11,11 @@ integration_test_server:
   tags: [unittest]
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
-    - apt update
-    - apt install openjdk-17-jdk
+    - curl -L https://github.com/docker/compose/releases/download/v2.0.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
-    - ./gradlew --build-cache assemble
-    - ./gradlew integrationTest --info
+    - gradle --build-cache assemble
+    - gradle integrationTest --info
   artifacts:
     when: always
     paths:
