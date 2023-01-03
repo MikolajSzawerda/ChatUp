@@ -2,6 +2,8 @@ package com.chatup.chatup_server;
 
 import com.chatup.chatup_server.client.ClientConfig;
 import com.chatup.chatup_server.client.SocketClientFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.io.*;
@@ -34,6 +37,8 @@ public abstract class BaseIntegrationTest {
     protected int PORT;
 
     public static final DockerComposeContainer environment;
+    private static final Logger elasticLogger = LoggerFactory.getLogger("Elastic logger");
+    private static final Logger posgresLogger = LoggerFactory.getLogger("Postgresql logger");
     private static final String TEST_COMPOSE = "version: '3.8'\n" +
             "\n" +
             "services:\n" +
@@ -71,10 +76,12 @@ public abstract class BaseIntegrationTest {
             throw new RuntimeException(e);
         }
         environment = new DockerComposeContainer(compose)
-                .withExposedService("postgres", 5432)
-                .withExposedService("elasticsearch", 9200)
-                .waitingFor("elasticsearch", Wait.forListeningPort())
-                .waitingFor("postgres", Wait.forListeningPort());
+                .withExposedService("postgres", 5432, Wait.forListeningPort())
+                .withExposedService("elasticsearch", 9200, Wait.forListeningPort())
+                .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
+                .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
+                .withLocalCompose(true)
+                .withOptions("--compatibility");
         environment.start();
     }
 
