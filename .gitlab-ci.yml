@@ -1,15 +1,5 @@
 image: gradle:alpine
 
-services:
-  - name: docker:dind
-    command: ["--tls=false"]
-
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  DOCKER_HOST: "tcp://docker:2375"
-  DOCKER_TLS_CERTDIR: ""
-  DOCKER_DRIVER: overlay2
-
 stages:
   - integration_test
 
@@ -18,8 +8,8 @@ integration_test_server:
   stage: integration_test
   tags: [unittest]
   variables:
-    TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
-    # TESTCONTAINERS_RYUK_DISABLED: "true"
+    # TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
+    TESTCONTAINERS_RYUK_DISABLED: "true"
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk update
