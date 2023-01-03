@@ -1,4 +1,4 @@
-image: amidos/dcind:latest
+image: gradle:alpine
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -13,8 +13,8 @@ integration_test_server:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
-    - ./gradlew --build-cache assemble
-    - ./gradlew integrationTest --info
+    - gradle --build-cache assemble
+    - gradle integrationTest --info
   artifacts:
     when: always
     paths:
