@@ -87,7 +87,8 @@ public abstract class BaseIntegrationTest {
                 .withLocalCompose(true)
                 .withOptions("--compatibility");
         environment.start();
-        environment.getServicePort("elasticsearch", 9200);
+        elasticLogger.info("Port: "+environment.getServicePort("elasticsearch", 9200));
+        elasticLogger.info("Host: "+environment.getServiceHost("elasticsearch", 9200));
     }
 
     protected <T> void timedAssertEquals(T expected, Supplier<T> actual) {
