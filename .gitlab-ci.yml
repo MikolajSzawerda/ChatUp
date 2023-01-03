@@ -1,21 +1,31 @@
-image: gradle:alpine
+# image: gradle:alpine
+
+services:
+  - name: docker:dind
+    command: ["--tls=false"]
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_DRIVER: overlay2
 
 stages:
   - integration_test
 
 integration_test_server:
+  image: gradle:5.0
   stage: integration_test
   tags: [unittest]
+  variables:
+    TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk add --update docker-compose
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
-    - gradle --build-cache assemble
-    - gradle integrationTest --info
+    - ./gradlew --build-cache assemble
+    - ./gradlew integrationTest --info
   artifacts:
     when: always
     paths:
