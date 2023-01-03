@@ -11,7 +11,7 @@ integration_test_server:
   tags: [unittest]
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
-    - curl -L https://github.com/docker/compose/releases/download/v2.0.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+    - apk add --update docker-compose
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
     - gradle --build-cache assemble
