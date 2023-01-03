@@ -22,8 +22,7 @@ integration_test_server:
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk update
-    - apk add --update docker
-    - apk add --update docker-compose
+    - apk add --update docker docker-compose openrc
     - rc-update add docker boot
     - service docker start
     - docker info
