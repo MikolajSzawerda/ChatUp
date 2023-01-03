@@ -19,6 +19,7 @@ integration_test_server:
   tags: [unittest]
   variables:
     TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
+    TESTCONTAINERS_RYUK_DISABLED: "true"
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk update
