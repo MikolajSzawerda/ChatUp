@@ -1,4 +1,4 @@
-image: amidos/dcind:1
+image: amidos/dcind:latest
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
