@@ -1,4 +1,4 @@
-# image: gradle:alpine
+image: gradle:alpine
 
 services:
   - name: docker:dind
@@ -14,7 +14,7 @@ stages:
   - integration_test
 
 integration_test_server:
-  image: gradle:alpine
+  # image: gradle:alpine
   stage: integration_test
   tags: [unittest]
   variables:
@@ -22,6 +22,7 @@ integration_test_server:
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk add --update docker-compose
+    - sudo service docker restart
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
     - ./gradlew --build-cache assemble
