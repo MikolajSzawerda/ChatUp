@@ -17,16 +17,15 @@ integration_test_server:
   # image: gradle:alpine
   stage: integration_test
   tags: [unittest]
-  variables:
-    TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
+  # variables:
+  #   TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
   before_script:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk add --update docker-compose
-    - service docker restart
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
-    - ./gradlew --build-cache assemble
-    - ./gradlew integrationTest --info
+    - gradle --build-cache assemble
+    - gradle integrationTest --info
   artifacts:
     when: always
     paths:
