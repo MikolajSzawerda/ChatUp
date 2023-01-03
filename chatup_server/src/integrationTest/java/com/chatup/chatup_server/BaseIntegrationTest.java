@@ -77,12 +77,17 @@ public abstract class BaseIntegrationTest {
         }
         environment = new DockerComposeContainer(compose)
                 .withExposedService("postgres", 5432, Wait.forListeningPort())
-                .withExposedService("elasticsearch", 9200, Wait.forListeningPort())
+                .withExposedService("elasticsearch", 9200,
+                        Wait
+                                .forHttp("/_cluster/health")
+                                .forStatusCode(200)
+                )
                 .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
                 .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
                 .withLocalCompose(true)
                 .withOptions("--compatibility");
         environment.start();
+        environment.getServicePort("elasticsearch", 9200);
     }
 
     protected <T> void timedAssertEquals(T expected, Supplier<T> actual) {
