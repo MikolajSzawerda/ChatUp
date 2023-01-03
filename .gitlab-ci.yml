@@ -6,7 +6,7 @@ services:
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  DOCKER_HOST: "tcp://docker:2375"
+  # DOCKER_HOST: "tcp://docker:2375"
   DOCKER_TLS_CERTDIR: ""
   DOCKER_DRIVER: overlay2
 
@@ -23,7 +23,7 @@ integration_test_server:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk update
     - apk add --update docker docker-compose openrc iptables ip6tables
-    - iptables -A INPUT -i docker0 -j ACCEPT
+    # - iptables -A INPUT -i docker0 -j ACCEPT
     # - rc-update add docker boot
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
