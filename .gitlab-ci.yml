@@ -23,7 +23,8 @@ integration_test_server:
     - export GRADLE_USER_HOME="$(pwd)/chatup_server/.gradle"
     - apk update
     - apk add --update docker docker-compose openrc iptables ip6tables
-    - rc-update add docker boot
+    - iptables -A INPUT -i docker0 -j ACCEPT
+    # - rc-update add docker boot
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
     - gradle --build-cache assemble
