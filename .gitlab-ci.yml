@@ -7,6 +7,8 @@ stages:
   - integration_test
 
 integration_test_server:
+  variables:
+   TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
   stage: integration_test
   tags: [unittest]
   before_script:
