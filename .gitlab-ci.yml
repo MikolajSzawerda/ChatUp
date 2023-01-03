@@ -24,7 +24,6 @@ integration_test_server:
     - apk update
     - apk add --update docker docker-compose openrc
     - rc-update add docker boot
-    - docker info
   script:
     - cd "$CI_PROJECT_DIR/chatup_server"
     - gradle --build-cache assemble
