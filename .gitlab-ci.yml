@@ -1,8 +1,5 @@
 image: gradle:alpine
 
-variables: 
-  DOCKER_HOST: tcp://docker:2375/
-
 stages:
   - integration_test
 
