@@ -77,18 +77,15 @@ public abstract class BaseIntegrationTest {
         }
         environment = new DockerComposeContainer(compose)
                 .withExposedService("postgres", 5432, Wait.forListeningPort())
-                .withExposedService("elasticsearch", 9200,
-                        Wait
-                                .forHttp("/_cluster/health")
-                                .forStatusCode(200)
-                )
+                .withExposedService("elasticsearch", 9200, Wait.forListeningPort())
                 .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
                 .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
                 .withLocalCompose(true)
                 .withOptions("--compatibility");
         environment.start();
-        elasticLogger.info("Port: "+environment.getServicePort("elasticsearch", 9200));
-        elasticLogger.info("Host: "+environment.getServiceHost("elasticsearch", 9200));
+        Integer port = environment.getServicePort("elasticsearch", 9200);
+        String host = environment.getServiceHost("elasticsearch", 9200);
+        System.getProperties().setProperty("hibernate.search.backend.hosts", host+":"+port);
     }
 
     protected <T> void timedAssertEquals(T expected, Supplier<T> actual) {
