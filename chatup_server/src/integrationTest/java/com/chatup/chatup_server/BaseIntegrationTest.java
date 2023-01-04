@@ -11,8 +11,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
 import java.io.*;
 import java.time.Duration;
@@ -45,15 +47,17 @@ public abstract class BaseIntegrationTest {
     static{
         environment = new DockerComposeContainer(new File("src/integrationTest/resources/compose-test.yml"))
                 .withExposedService("postgres", 5432, Wait.forListeningPort())
-                .withExposedService("elasticsearch", 9200, Wait.forHttp("/_cluster/health").forStatusCode(200).withStartupTimeout(Duration.of(10, ChronoUnit.MINUTES)))
+                .withExposedService("elasticsearch", 9200, Wait.forHttp("/_cluster/health").forStatusCode(200).withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)))
                 .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
                 .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
-                .withStartupTimeout(Duration.of(10, ChronoUnit.MINUTES))
+                .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES))
                 .withLocalCompose(true)
                 .withOptions("--compatibility");
         environment.start();
         Integer port = environment.getServicePort("elasticsearch", 9200);
         String host = environment.getServiceHost("elasticsearch", 9200);
+        environment.getContainerByServiceName("elasticsearch").get();
+
         String httpAddress = host+":"+port;
         logger.info("Address: {}", httpAddress);
         System.getProperties().setProperty("hibernate.search.backend.hosts", httpAddress);
