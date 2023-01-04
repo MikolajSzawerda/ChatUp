@@ -30,6 +30,7 @@ services:
     build: .
     depends_on:
       - db
+      - elasticsearch
     ports:
       - "8080:8080"
     command: java -jar build/libs/chatup_server-0.0.1-SNAPSHOT.jar

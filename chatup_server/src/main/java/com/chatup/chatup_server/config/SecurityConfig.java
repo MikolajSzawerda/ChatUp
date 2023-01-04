@@ -1,7 +1,6 @@
 package com.chatup.chatup_server.config;
 
 import com.chatup.chatup_server.service.AppUserService;
-import com.chatup.chatup_server.service.JwtAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,17 +20,13 @@ public class SecurityConfig {
     private final AppUserService appUserService;
     private final JwtRequestFilter jwtRequestFilter;
 
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     @Autowired
     public SecurityConfig(
             AppUserService appUserService,
-            JwtRequestFilter jwtRequestFilter,
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint
+            JwtRequestFilter jwtRequestFilter
     ) {
         this.appUserService = appUserService;
         this.jwtRequestFilter = jwtRequestFilter;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
     @Bean
@@ -61,9 +56,6 @@ public class SecurityConfig {
                 .permitAll()
                 .anyRequest()
                 .authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
