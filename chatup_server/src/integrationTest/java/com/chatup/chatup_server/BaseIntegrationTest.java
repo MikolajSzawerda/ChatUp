@@ -39,45 +39,11 @@ public abstract class BaseIntegrationTest {
     public static final DockerComposeContainer environment;
     private static final Logger elasticLogger = LoggerFactory.getLogger("Elastic logger");
     private static final Logger posgresLogger = LoggerFactory.getLogger("Postgresql logger");
-    private static final String TEST_COMPOSE = "version: '3.8'\n" +
-            "\n" +
-            "services:\n" +
-            "  postgres:\n" +
-            "    image: postgres\n" +
-            "    ports:\n" +
-            "      - \"5432:5432\"\n" +
-            "    environment:\n" +
-            "      POSTGRES_USER: postgres\n" +
-            "      POSTGRES_PASSWORD: password\n" +
-            "      POSTGRES_DB: chat\n" +
-            "  elasticsearch:\n" +
-            "    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3\n" +
-            "    environment:\n" +
-            "      - xpack.security.enabled=false\n" +
-            "      - discovery.type=single-node\n" +
-            "      - \"ES_JAVA_OPTS=-Xms1g -Xmx1g\"\n" +
-            "      - cluster.routing.allocation.disk.threshold_enabled=true\n" +
-            "      - cluster.routing.allocation.disk.watermark.flood_stage=200mb\n" +
-            "      - cluster.routing.allocation.disk.watermark.low=500mb\n" +
-            "      - cluster.routing.allocation.disk.watermark.high=300mb\n" +
-            "      - bootstrap.memory_lock=true\n" +
-            "    ports:\n" +
-            "      - \"9200:9200\"\n" +
-            "    ulimits:\n" +
-            "      memlock:\n" +
-            "        soft: -1\n" +
-            "        hard: -1\n";
-
+    private static final Logger logger = LoggerFactory.getLogger(BaseIntegrationTest.class);
     static{
-        File compose = new File("test-compose.yml");
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(compose))){
-            bufferedWriter.write(TEST_COMPOSE);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        environment = new DockerComposeContainer(compose)
+        environment = new DockerComposeContainer(new File("src/integrationTest/resources/compose-test.yml"))
                 .withExposedService("postgres", 5432, Wait.forListeningPort())
-                .withExposedService("elasticsearch", 9200, Wait.forListeningPort())
+                .withExposedService("elasticsearch", 9200, Wait.forHttp("/_cluster/health").forStatusCode(200))
                 .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
                 .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
                 .withLocalCompose(true)
@@ -85,7 +51,10 @@ public abstract class BaseIntegrationTest {
         environment.start();
         Integer port = environment.getServicePort("elasticsearch", 9200);
         String host = environment.getServiceHost("elasticsearch", 9200);
-        System.getProperties().setProperty("hibernate.search.backend.hosts", host+":"+port);
+        String httpAddress = host+":"+port;
+        logger.info("Address: {}", httpAddress);
+        System.getProperties().setProperty("hibernate.search.backend.hosts", httpAddress);
+        System.getProperties().setProperty("spring.jpa.properties.hibernate.search.backend.hosts", httpAddress);
     }
 
     protected <T> void timedAssertEquals(T expected, Supplier<T> actual) {
