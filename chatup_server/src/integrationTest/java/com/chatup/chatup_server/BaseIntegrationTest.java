@@ -15,6 +15,8 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -46,6 +48,7 @@ public abstract class BaseIntegrationTest {
                 .withExposedService("elasticsearch", 9200, Wait.forHttp("/_cluster/health").forStatusCode(200))
                 .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
                 .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
+                .withStartupTimeout(Duration.of(10, ChronoUnit.MINUTES))
                 .withLocalCompose(true)
                 .withOptions("--compatibility");
         environment.start();
