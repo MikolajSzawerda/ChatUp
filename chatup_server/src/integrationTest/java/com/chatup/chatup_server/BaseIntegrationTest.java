@@ -45,7 +45,7 @@ public abstract class BaseIntegrationTest {
     static{
         environment = new DockerComposeContainer(new File("src/integrationTest/resources/compose-test.yml"))
                 .withExposedService("postgres", 5432, Wait.forListeningPort())
-                .withExposedService("elasticsearch", 9200, Wait.forHttp("/_cluster/health").forStatusCode(200))
+                .withExposedService("elasticsearch", 9200, Wait.forHttp("/_cluster/health").forStatusCode(200).withStartupTimeout(Duration.of(10, ChronoUnit.MINUTES)))
                 .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
                 .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
                 .withStartupTimeout(Duration.of(10, ChronoUnit.MINUTES))
