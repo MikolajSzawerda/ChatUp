@@ -1,11 +1,8 @@
 package com.chatup.chatup_server.web;
 
 import com.chatup.chatup_server.BaseInitializedDbTest;
-import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.domain.Message;
-import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.repository.MessageRepository;
-import com.chatup.chatup_server.service.JwtTokenService;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FeedTest extends BaseInitializedDbTest {
     private final String LAST_FEED_ENDPOINT = "/last-feed/{channelID}";
     private final String FEED_FROM_ENDPOINT = "/feed/{channelID}";
-    @Autowired
-    private JwtTokenService jwtTokenService;
-    @Autowired
-    private AppUserRepository appUserRepository;
+
 
     @Autowired
     private MessageRepository messageRepository;
@@ -130,10 +124,5 @@ public class FeedTest extends BaseInitializedDbTest {
 
     protected ResponseEntity<OutgoingMessage[]> getFeedRequest(URI uri, String token){
         return restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(createAuthHeaders(token)), OutgoingMessage[].class);
-    }
-
-    private String createUserToken(String username){
-        AppUser appUser = appUserRepository.findAppUserByUsername(username);
-        return jwtTokenService.generateToken(appUser);
     }
 }

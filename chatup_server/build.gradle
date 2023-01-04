@@ -22,22 +22,27 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation "org.hibernate.orm:hibernate-core:6.0.2.Final"
+    implementation "org.hibernate.search:hibernate-search-mapper-orm-orm6:6.1.7.Final"
+    implementation "org.hibernate.search:hibernate-search-backend-elasticsearch:6.1.7.Final"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-    implementation "com.fasterxml.jackson:jackson-bom"
+    implementation 'com.fasterxml.jackson:jackson-bom'
     testImplementation "org.mockito:mockito-core:4.7.0"
-    runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
     testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation "org.testcontainers:testcontainers:1.17.6"
     testImplementation "org.testcontainers:postgresql"
     testImplementation 'org.testcontainers:rabbitmq'
+    testImplementation "org.testcontainers:elasticsearch"
 }
 
 dependencyManagement {
