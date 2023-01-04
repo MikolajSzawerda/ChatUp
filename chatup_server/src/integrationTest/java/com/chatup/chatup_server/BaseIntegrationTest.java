@@ -2,6 +2,8 @@ package com.chatup.chatup_server;
 
 import com.chatup.chatup_server.client.ClientConfig;
 import com.chatup.chatup_server.client.SocketClientFactory;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.*;
 import java.time.Duration;
@@ -26,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @ActiveProfiles("integration")
-//@Testcontainers
+@Testcontainers
 @SpringBootTest(classes = {ClientConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseIntegrationTest {
 
@@ -40,29 +44,56 @@ public abstract class BaseIntegrationTest {
     @Value("${local.server.port}")
     protected int PORT;
 
-    public static final DockerComposeContainer environment;
+//    public static final DockerComposeContainer environment;
+    @ClassRule
+    public static final PostgreSQLContainer postgreContainer;
+    @ClassRule
+    public static final ElasticsearchContainer elasticContainer;
     private static final Logger elasticLogger = LoggerFactory.getLogger("Elastic logger");
     private static final Logger posgresLogger = LoggerFactory.getLogger("Postgresql logger");
     private static final Logger logger = LoggerFactory.getLogger(BaseIntegrationTest.class);
     static{
-        environment = new DockerComposeContainer(new File("src/integrationTest/resources/compose-test.yml"))
-                .withExposedService("postgres", 5432, Wait.forListeningPort())
-                .withExposedService("elasticsearch", 9200, Wait.forHttp("/_cluster/health").forStatusCode(200).withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)))
-                .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
-                .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
-                .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES))
-                .withLocalCompose(true)
-                .withOptions("--compatibility");
-        environment.start();
-        Integer port = environment.getServicePort("elasticsearch", 9200);
-        String host = environment.getServiceHost("elasticsearch", 9200);
-        environment.getContainerByServiceName("elasticsearch").get();
-
-        String httpAddress = host+":"+port;
-        logger.info("Address: {}", httpAddress);
-        System.getProperties().setProperty("hibernate.search.backend.hosts", httpAddress);
-        System.getProperties().setProperty("spring.jpa.properties.hibernate.search.backend.hosts", httpAddress);
+//        environment = new DockerComposeContainer(new File("src/integrationTest/resources/compose-test.yml"))
+//                .withExposedService("postgres", 5432, Wait.forListeningPort())
+//                .withExposedService("elasticsearch", 9200, Wait.forHttp("/_cluster/health").forStatusCode(200).withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)))
+//                .withLogConsumer("elasticsearch", new Slf4jLogConsumer(elasticLogger))
+//                .withLogConsumer("postgres", new Slf4jLogConsumer(posgresLogger))
+//                .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES))
+//                .withLocalCompose(true)
+//                .withOptions("--compatibility");
+//        environment.start();
+//        Integer port = environment.getServicePort("elasticsearch", 9200);
+//        String host = environment.getServiceHost("elasticsearch", 9200);
+//        environment.getContainerByServiceName("elasticsearch").get();
+//
+//        String httpAddress = host+":"+port;
+//        logger.info("Address: {}", httpAddress);
+        postgreContainer = new PostgreSQLContainer("postgres");
+        elasticContainer =  new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:8.5.3")
+                .withEnv("xpack.security.enabled","false")
+                .withEnv("discovery.type","single-node")
+                .withEnv("ES_JAVA_OPTS","-Xms1g -Xmx1g")
+                .withEnv("cluster.routing.allocation.disk.threshold_enabled","true")
+                .withEnv("cluster.routing.allocation.disk.watermark.flood_stage","200mb")
+                .withEnv("cluster.routing.allocation.disk.watermark.low","500mb")
+                .withEnv("cluster.routing.allocation.disk.watermark.high","300mb")
+                .withEnv("bootstrap.memory_lock","true")
+                .withLogConsumer(new Slf4jLogConsumer(elasticLogger))
+                .withExposedPorts(9200)
+                .waitingFor(Wait
+                        .forHttp("/_cluster/health")
+                        .forStatusCode(200)
+                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)));
+        postgreContainer.start();
+        elasticContainer.start();
+        System.getProperties().setProperty("hibernate.search.backend.hosts", elasticContainer.getHttpHostAddress());
+        System.getProperties().setProperty("spring.jpa.properties.hibernate.search.backend.hosts", elasticContainer.getHttpHostAddress());
     }
+//    @AfterAll
+//    static void closeAll(){
+//        postgreContainer.close();
+//        elasticContainer.close();
+//    }
 
     protected <T> void timedAssertEquals(T expected, Supplier<T> actual) {
         await()
