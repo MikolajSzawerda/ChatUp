@@ -11,6 +11,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: true
 app:
   jwt:
     secretKey: cdrNaN7Ksz33GNDuNzWqLP0d

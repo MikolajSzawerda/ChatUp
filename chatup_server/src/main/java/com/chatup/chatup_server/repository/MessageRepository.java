@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long> {
+public interface MessageRepository extends JpaRepository<Message, Long>, SearchRepository {
     @Query(value="select m from Message m where m.channelID=?1 order by m.ID desc")
     Page<Message> getLastFeed(Long channelID, Pageable pageable);
 
