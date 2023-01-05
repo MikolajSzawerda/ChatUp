@@ -17,6 +17,7 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.MountableFile;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -86,6 +87,7 @@ public abstract class BaseIntegrationTest {
         System.getProperties().setProperty("spring.rabbitmq.host", rabbitContainer.getHost());
         System.getProperties().setProperty("spring.rabbitmq.port", String.valueOf(rabbitContainer.getMappedPort(5672)));
         System.getProperties().setProperty("spring.rabbitmq.relay-port", String.valueOf(rabbitContainer.getMappedPort(61613)));
+        System.getProperties().setProperty("spring.rabbitmq.relay-host", rabbitContainer.getHost());
     }
 
     protected <T> void timedAssertEquals(T expected, Supplier<T> actual) {

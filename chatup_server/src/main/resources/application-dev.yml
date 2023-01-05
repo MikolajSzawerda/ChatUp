@@ -20,6 +20,7 @@ spring:
       mode: always
   rabbitmq:
     relay-port: 61613
+    relay-host: localhost
 
 
 app:

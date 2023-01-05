@@ -15,6 +15,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Value("${spring.rabbitmq.relay-port}")
     public int relayPort;
+    @Value("${spring.rabbitmq.relay-host}")
+    public String host;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -22,7 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config
                 .setApplicationDestinationPrefixes("/app")
                 .enableStompBrokerRelay("/topic")
-                .setRelayHost("localhost")
+                .setRelayHost(host)
                 .setRelayPort(relayPort)
                 .setClientLogin("guest")
                 .setClientPasscode("guest");
