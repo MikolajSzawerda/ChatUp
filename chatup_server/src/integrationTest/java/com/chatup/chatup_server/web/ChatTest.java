@@ -37,10 +37,10 @@ public class ChatTest extends BaseIntegrationTest {
     private static final String USER_3 = "test.test.3";
     private static final String USER_4 = "test.test.4";
     private static final LinkedList<String> topics = new LinkedList<>() {{
-        add("/topic/channel/" + CHANNEL);
+        add("/topic/channel." + CHANNEL);
     }};
 
-    private static final String BROADCAST_ENDPOINT = "/app/channel/" + CHANNEL;
+    private static final String BROADCAST_ENDPOINT = "/app/channel." + CHANNEL;
 
     @BeforeEach
     void initClient() {
@@ -109,11 +109,11 @@ public class ChatTest extends BaseIntegrationTest {
     @Test
     void shouldReceiveOnlyWhenSubscribed() {
         //Given
-        String newTopic = "/topic/channel/345";
+        String newTopic = "/topic/channel.345";
 
         //When
         client2.subscribe(newTopic);
-        client1.sendMessage("/app/channel/345", "Test");
+        client1.sendMessage("/app/channel.345", "Test");
 
         //Then
         timedAssertEquals(1, client2.getMessages()::size);
