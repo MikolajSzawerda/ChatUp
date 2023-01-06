@@ -20,7 +20,7 @@ import java.net.URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class UserTest  extends BaseInitializedDbTest {
+public class UserTest extends BaseInitializedDbTest {
     private final String AUTHENTICATE_ENDPOINT = "/auth";
     private final String GET_CURRENT_LOGGED_IN_USER_ENDPOINT = "/me";
 
