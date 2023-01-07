@@ -4,6 +4,8 @@ import com.chatup.chatup_client.model.Channel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,7 @@ import java.util.Comparator;
 
 @Component
 public class ChannelManager {
+    private final Logger logger = LoggerFactory.getLogger(ChannelManager.class);
     private boolean testMode;
     public ChannelManager(@Value("false") boolean testMode) {
         this.testMode = testMode;
@@ -38,6 +41,12 @@ public class ChannelManager {
         if(listToAdd.contains(channel)) {
             return;
         }
+        if(testMode) {
+            listToAdd.add(channel);
+            listToAdd.sort(Comparator.comparing(Channel::getName));
+            checkForDuplicates(channel);
+            return;
+        }
         Platform.runLater(() -> {
             listToAdd.add(channel);
             listToAdd.sort(Comparator.comparing(Channel::getName));
@@ -47,6 +56,12 @@ public class ChannelManager {
         });
     }
     public void checkForDuplicates(Channel channel) {
-
+        for(Channel ch : standardChannels) {
+            if(ch.getId().equals(channel.getId()) && ch != channel) {
+                logger.warn("Duplicate channel found: " + ch + " and " + channel);
+                ch.setDuplicateFlag(true);
+                channel.setDuplicateFlag(true);
+            }
+        }
     }
 }

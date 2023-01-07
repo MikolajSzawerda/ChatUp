@@ -49,7 +49,7 @@ public class MessageManager {
     public void checkForDuplicates(Message originalMessage) {
         for(MessageBuffer buffer : buffers.values()) {
             for(Message msg : buffer.getMessages()) {
-                if(msg.getMessageID().equals(originalMessage.getMessageID()) && !msg.equals(originalMessage)) {
+                if(msg.getMessageID().equals(originalMessage.getMessageID()) && msg != originalMessage ) { // comparing using != intentional
                     logger.warn("Duplicate message found: " + msg + " and " + originalMessage);
                     msg.setDuplicateFlag(true);
                     originalMessage.setDuplicateFlag(true);

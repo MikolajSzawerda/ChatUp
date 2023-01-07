@@ -3,6 +3,12 @@ package com.chatup.chatup_client.model;
 public class Channel
 {
     private Long id;
+    private String name;
+    private Boolean isPrivate;
+    private Boolean isDirectMessage;
+
+
+    private Boolean duplicateFlag = false;
 
     public Long getId() {
         return id;
@@ -20,23 +26,39 @@ public class Channel
         this.name = name;
     }
 
-    public boolean getIsPrivate() {
+    public Boolean getIsPrivate() {
         return isPrivate;
     }
 
-    public void setIsPrivate(boolean aPrivate) {
+    public void setIsPrivate(Boolean aPrivate) {
         isPrivate = aPrivate;
     }
 
-    public boolean getIsDirectMessage() {
+    public Boolean getIsDirectMessage() {
         return isDirectMessage;
     }
 
-    public void setIsDirectMessage(boolean directMessage) {
+    public void setIsDirectMessage(Boolean directMessage) {
         isDirectMessage = directMessage;
     }
 
-    private String name;
-    private boolean isPrivate;
-    private boolean isDirectMessage;
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Channel channelObj)) return false;
+        return name.equals(channelObj.getName()) &&
+                id.equals(channelObj.getId()) &&
+                isPrivate.equals(channelObj.getIsPrivate()) &&
+                isDirectMessage.equals(channelObj.getIsDirectMessage());
+    }
+
+    public Boolean getDuplicateFlag() {
+        return duplicateFlag;
+    }
+
+    public void setDuplicateFlag(Boolean duplicateFlag) {
+        this.duplicateFlag = duplicateFlag;
+    }
+
+    public String toString() {
+        return name;
+    }
 }

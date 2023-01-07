@@ -22,11 +22,7 @@ public class MessageBuffer {
     }
 
     public void addMessage(Message msg){
-        for(Message m : messages) {
-            if(m.equals(msg)) { // same message sent twice
-                return;
-            }
-        }
+        if(messages.contains(msg)) return;
         if(testMode) {
             messages.add(msg);
             messages.sort(Comparator.comparing(Message::getTimeCreated));
