@@ -11,6 +11,8 @@ import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -23,13 +25,16 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.util.Duration;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
@@ -57,6 +62,26 @@ public class ChatViewController implements Initializable {
     public Text userNameSurname;
     @FXML
     public StackPane userAvatar;
+
+    @FXML
+    public Button addChannel;
+
+    @FXML
+    public Rectangle backdrop;
+
+    @FXML
+    public Pane dialog;
+
+    @FXML
+    public Button closeButton;
+
+    @FXML
+    public ListView<String> searchUserResults;
+
+    @FXML
+    public TextField searchField;
+
+
     @FXML
     public ListView<String> direct;
     private Channel currentChannel = new Channel(1L, "Test", false, false);
@@ -80,6 +105,34 @@ public class ChatViewController implements Initializable {
         }
     }
 
+    @FXML
+    public void onAddChannel(){
+        backdrop.setVisible(true);
+        dialog.setVisible(true);
+        searchUserResults.setVisible(false);
+        FadeTransition ft = new FadeTransition(Duration.millis(200), dialog);
+        ft.setFromValue(0.0);
+        ft.setToValue(1.0);
+        ft.play();
+    }
+
+    @FXML
+    public void onCloseButton(){
+        FadeTransition ft = new FadeTransition(Duration.millis(200), dialog);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.0);
+        ft.play();
+        dialog.setVisible(false);
+        backdrop.setVisible(false);
+    }
+
+    @FXML
+    public void onSearchUser(){
+        if(searchField.getText().length() == 0) searchUserResults.setVisible(false);
+        else searchUserResults.setVisible(true);
+        // in future ask API about results;
+    }
+
     public void changeChannel(Channel channel){
         messageManager.getMessageBuffer(currentChannel).getMessages().removeListener(listChangeListener);
         currentChannel = channel;
@@ -98,11 +151,14 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
+        dialog.setVisible(false);
+        backdrop.setVisible(false);
         UserInfo currentUser = restClient.getCurrentUser();
         logger.info("Logged in user: {}", currentUser.toString());
         userNameSurname.setText(currentUser.toString());
         Insets padding = new Insets(0, 0, 0, 0);
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
+
 
         messages.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -149,6 +205,25 @@ public class ChatViewController implements Initializable {
             }
         });
 
+        searchUserResults.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else if (item != null) {
+
+                    Insets padding = new Insets(0, 5, 0, 0);
+                    StackPane avatar = AvatarFactory.createAvatar(item, 13.0, padding);
+                    Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
+
+                    setGraphic(directMessageButton);
+
+                }
+            }
+        });
+
         direct.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -182,6 +257,12 @@ public class ChatViewController implements Initializable {
         directMessages.add("Jan Kowalczewski");
         directMessages.add("Mikołaj Szawerda");
         direct.setItems(directMessages);
+
+        ObservableList<String> searchResults = FXCollections.observableArrayList();
+        searchResults.add("Dawid Kaszyński");
+        searchResults.add("Jan Kowalczewski");
+        searchResults.add("Mikołaj Szawerda");
+        searchUserResults.setItems(searchResults);
 
         try{
             socketClient.connect();
