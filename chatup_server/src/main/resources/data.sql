@@ -7219,3 +7219,5 @@ INSERT INTO messages(message_id, content, time_created, author_user_id, channel_
 INSERT INTO messages(message_id, content, time_created, author_user_id, channel_id, is_deleted) VALUES (7119, 'I nurkuje pomiędzy trawami gęstemi,', '2021-07-15, 03:47:46', 12, 15, false);
 ALTER SEQUENCE user_sequence RESTART WITH 100;
 ALTER SEQUENCE message_sequence RESTART WITH 7120;
+INSERT INTO channels(channel_id, name, is_private, is_direct_message) VALUES (1, 'Kanał pierwszy', false, false);
+INSERT INTO channels_users(channel_id, user_id) VALUES (1, 0);
