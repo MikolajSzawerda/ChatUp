@@ -4,12 +4,14 @@ import com.chatup.chatup_client.config.AppConfig;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
+import com.chatup.chatup_client.model.messaging.ChannelCreateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -66,18 +68,25 @@ public class RestClient {
     }
 
     public Collection<Message> getLastFeed(Channel channel) {
-        return getAsCollection("/last-feed/" + channel.channelID(), Message.class);
+        return getAsCollection("/last-feed/" + channel.id(), Message.class);
     }
 
     public Collection<Message> getFeedFrom(Channel channel, Message message, int page) {
-        return getAsCollection("/feed/" + channel.channelID() + "?fromMessageID=" + message.getMessageID() + "&page=" + page, Message.class);
+        return getAsCollection("/feed/" + channel.id() + "?fromMessageID=" + message.getMessageID() + "&page=" + page, Message.class);
     }
 
     public Collection<Message> getFeedFrom(Channel channel, Message message) {
-        return getAsCollection("/feed/" + channel.channelID() + "?fromMessageID=" + message.getMessageID(), Message.class);
+        return getAsCollection("/feed/" + channel.id() + "?fromMessageID=" + message.getMessageID(), Message.class);
     }
 
     public UserInfo getCurrentUser() {
         return getAsClass("/me", UserInfo.class);
     }
+    public Channel createChannel(String name, boolean isPrivate, boolean isDirectMessage, Set<Long> userIDs) {
+        return postAsClass("/channel/create", new ChannelCreateRequest(name, isPrivate, isDirectMessage, userIDs), Channel.class);
+    }
+    public Collection<Channel> listChannels() {
+        return getAsCollection("/channel/list", Channel.class);
+    }
+
 }

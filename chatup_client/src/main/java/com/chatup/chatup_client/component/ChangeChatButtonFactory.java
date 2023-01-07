@@ -1,6 +1,7 @@
 package com.chatup.chatup_client.component;
 
 import com.chatup.chatup_client.component.skin.MyButtonSkin;
+import com.chatup.chatup_client.model.Channel;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -11,8 +12,8 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 
 public class ChangeChatButtonFactory {
-    public static Button createChangeChatButton(Node graphic, String channelName, Double width){
-        Text channelNameText = new Text(channelName);
+    public static Button createChangeChatButton(Node graphic, Channel channel, Double width){
+        Text channelNameText = new Text(channel.name());
         HBox layout = new HBox();
         Button changeChatButton = new Button();
 

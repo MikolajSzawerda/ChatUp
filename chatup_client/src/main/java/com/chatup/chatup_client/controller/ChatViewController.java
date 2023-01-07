@@ -5,6 +5,7 @@ import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.component.MessageFactory;
+import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
@@ -40,6 +41,7 @@ public class ChatViewController implements Initializable {
     private final SocketClient socketClient;
     private final RestClient restClient;
     private final MessageManager messageManager;
+    private final ChannelManager channelManager;
     @FXML
     public ListView<Message> messages;
     final ListChangeListener<Message> listChangeListener = new ListChangeListener<>() {
@@ -52,22 +54,23 @@ public class ChatViewController implements Initializable {
     public Button sendButton;
     @FXML
     public TextField message;
-    public ListView<String> channels;
+    public ListView<Channel> channels;
     @FXML
     public Text userNameSurname;
     @FXML
     public StackPane userAvatar;
     @FXML
-    public ListView<String> direct;
+    public ListView<Channel> direct;
     private Channel currentChannel = new Channel(1L, "Test", false, false);
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public ChatViewController(MessageManager messageManager, SocketClient socketClient, RestClient restClient, Application application) {
+    public ChatViewController(MessageManager messageManager, SocketClient socketClient, RestClient restClient, Application application, ChannelManager channelManager) {
         this.messageManager = messageManager;
         this.socketClient = socketClient;
         this.restClient = restClient;
         this.application = (MainApplication) application;
+        this.channelManager = channelManager;
         logger.info("ChatViewController created");
     }
 
@@ -75,7 +78,7 @@ public class ChatViewController implements Initializable {
     public void onSendMessage(){
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
-            socketClient.sendMessage("/app/channel/"+currentChannel.channelID(), message.getText());
+            socketClient.sendMessage("/app/channel/"+currentChannel.id(), message.getText());
             message.clear();
         }
     }
@@ -96,14 +99,7 @@ public class ChatViewController implements Initializable {
 
     }
 
-    @Override
-    public void initialize(java.net.URL location, ResourceBundle resources) {
-        UserInfo currentUser = restClient.getCurrentUser();
-        logger.info("Logged in user: {}", currentUser.toString());
-        userNameSurname.setText(currentUser.toString());
-        Insets padding = new Insets(0, 0, 0, 0);
-        userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
-
+    private void setCellFactories() {
         messages.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Message item, boolean empty) {
@@ -127,7 +123,7 @@ public class ChatViewController implements Initializable {
 
         channels.setCellFactory(param -> new ListCell<>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(Channel item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if (empty) {
@@ -135,7 +131,7 @@ public class ChatViewController implements Initializable {
                     setGraphic(null);
                 } else if (item != null) {
                     Node channelIcon;
-                    if (item.equals("Kanał drugi")) {
+                    if (item.isPrivate()) {
                         channelIcon = ChannelIconFactory.createChannelIcon(true, 12);
                     } else {
                         channelIcon = ChannelIconFactory.createChannelIcon(false, 12);
@@ -151,7 +147,7 @@ public class ChatViewController implements Initializable {
 
         direct.setCellFactory(param -> new ListCell<>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(Channel item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setText(null);
@@ -159,7 +155,7 @@ public class ChatViewController implements Initializable {
                 } else if (item != null) {
 
                     Insets padding = new Insets(0, 5, 0, 0);
-                    StackPane avatar = AvatarFactory.createAvatar(item, 18.0, padding);
+                    StackPane avatar = AvatarFactory.createAvatar(item.name(), 18.0, padding);
                     Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
 
                     setGraphic(directMessageButton);
@@ -167,21 +163,23 @@ public class ChatViewController implements Initializable {
                 }
             }
         });
+    }
+    @Override
+    public void initialize(java.net.URL location, ResourceBundle resources) {
+        UserInfo currentUser = restClient.getCurrentUser();
+        logger.info("Logged in user: {}", currentUser.toString());
+        userNameSurname.setText(currentUser.toString());
+        Insets padding = new Insets(0, 0, 0, 0);
+        userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
+        setCellFactories();
         messages.setItems(messageManager.getMessageBuffer(currentChannel).getMessages());
         messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
+        channels.setItems(channelManager.getStandardChannels());
+        direct.setItems(channelManager.getDirectMessages());
         restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
+        restClient.listChannels().forEach(channelManager::addChannel);
+        channelManager.addChannel(currentChannel);
 
-
-        ObservableList<String> channelList = FXCollections.observableArrayList();
-        channelList.add("Kanał pierwszy");
-        channelList.add("Kanał drugi");
-        channels.setItems(channelList);
-
-        ObservableList<String> directMessages = FXCollections.observableArrayList();
-        directMessages.add("Dawid Kaszyński");
-        directMessages.add("Jan Kowalczewski");
-        directMessages.add("Mikołaj Szawerda");
-        direct.setItems(directMessages);
 
         try{
             socketClient.connect();

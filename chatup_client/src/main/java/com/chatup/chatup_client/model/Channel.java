@@ -1,9 +1,9 @@
 package com.chatup.chatup_client.model;
 
 public record Channel(
-        Long channelID,
-        String channelName,
+        Long id,
+        String name,
         boolean isPrivate,
-        boolean isDM
+        boolean isDirectMessage
 ) {
 }

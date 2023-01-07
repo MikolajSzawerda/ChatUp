@@ -1,7 +1,7 @@
 package com.chatup.chatup_client.web;
 
 import com.chatup.chatup_client.config.AppConfig;
-import com.chatup.chatup_client.model.IncomingMessage;
+import com.chatup.chatup_client.model.messaging.IncomingMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
