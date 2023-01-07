@@ -13,9 +13,7 @@ import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -145,7 +143,6 @@ public class ChatViewController implements Initializable {
 
                     Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
                     channelButton.getStyleClass().add("my-button");
-
                     setGraphic(channelButton);
                 }
             }
@@ -182,10 +179,9 @@ public class ChatViewController implements Initializable {
         messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
         channels.setItems(channelManager.getStandardChannels());
         direct.setItems(channelManager.getDirectMessages());
+
         restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
         restClient.listChannels().forEach(channelManager::addChannel);
-        channelManager.addChannel(currentChannel);
-
 
         try{
             socketClient.connect();
@@ -193,4 +189,5 @@ public class ChatViewController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
 }
