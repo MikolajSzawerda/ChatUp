@@ -31,7 +31,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Component
@@ -61,7 +63,7 @@ public class ChatViewController implements Initializable {
     public StackPane userAvatar;
     @FXML
     public ListView<Channel> direct;
-    private Channel currentChannel = new Channel(1L, "Test", false, false);
+    private Channel currentChannel = new Channel();
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -72,13 +74,17 @@ public class ChatViewController implements Initializable {
         this.application = (MainApplication) application;
         this.channelManager = channelManager;
         logger.info("ChatViewController created");
+        currentChannel.setId(1L);
+        currentChannel.setName("Test test");
+        currentChannel.setIsDirectMessage(false);
+        currentChannel.setIsPrivate(false);
     }
 
     @FXML
     public void onSendMessage(){
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
-            socketClient.sendMessage("/app/channel/"+currentChannel.id(), message.getText());
+            socketClient.sendMessage("/app/channel/"+currentChannel.getId(), message.getText());
             message.clear();
         }
     }
@@ -131,7 +137,7 @@ public class ChatViewController implements Initializable {
                     setGraphic(null);
                 } else if (item != null) {
                     Node channelIcon;
-                    if (item.isPrivate()) {
+                    if (item.getIsPrivate()) {
                         channelIcon = ChannelIconFactory.createChannelIcon(true, 12);
                     } else {
                         channelIcon = ChannelIconFactory.createChannelIcon(false, 12);
@@ -155,7 +161,7 @@ public class ChatViewController implements Initializable {
                 } else if (item != null) {
 
                     Insets padding = new Insets(0, 5, 0, 0);
-                    StackPane avatar = AvatarFactory.createAvatar(item.name(), 18.0, padding);
+                    StackPane avatar = AvatarFactory.createAvatar(item.getName(), 18.0, padding);
                     Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
 
                     setGraphic(directMessageButton);

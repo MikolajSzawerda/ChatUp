@@ -29,7 +29,7 @@ public class ChannelManager {
 
     public void addChannel(Channel channel) {
         ObservableList<Channel> listToAdd;
-        if(channel.isDirectMessage()) {
+        if(channel.getIsDirectMessage()) {
             listToAdd = directMessages;
         }
         else {
@@ -40,7 +40,7 @@ public class ChannelManager {
         }
         Platform.runLater(() -> {
             listToAdd.add(channel);
-            listToAdd.sort(Comparator.comparing(Channel::name));
+            listToAdd.sort(Comparator.comparing(Channel::getName));
         });
         Platform.runLater(() -> {
             checkForDuplicates(channel);

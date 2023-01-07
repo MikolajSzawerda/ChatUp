@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 
 public class ChangeChatButtonFactory {
     public static Button createChangeChatButton(Node graphic, Channel channel, Double width){
-        Text channelNameText = new Text(channel.name());
+        Text channelNameText = new Text(channel.getName());
         HBox layout = new HBox();
         Button changeChatButton = new Button();
 

@@ -68,15 +68,15 @@ public class RestClient {
     }
 
     public Collection<Message> getLastFeed(Channel channel) {
-        return getAsCollection("/last-feed/" + channel.id(), Message.class);
+        return getAsCollection("/last-feed/" + channel.getId(), Message.class);
     }
 
     public Collection<Message> getFeedFrom(Channel channel, Message message, int page) {
-        return getAsCollection("/feed/" + channel.id() + "?fromMessageID=" + message.getMessageID() + "&page=" + page, Message.class);
+        return getAsCollection("/feed/" + channel.getId() + "?fromMessageID=" + message.getMessageID() + "&page=" + page, Message.class);
     }
 
     public Collection<Message> getFeedFrom(Channel channel, Message message) {
-        return getAsCollection("/feed/" + channel.id() + "?fromMessageID=" + message.getMessageID(), Message.class);
+        return getAsCollection("/feed/" + channel.getId() + "?fromMessageID=" + message.getMessageID(), Message.class);
     }
 
     public UserInfo getCurrentUser() {

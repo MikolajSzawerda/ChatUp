@@ -15,9 +15,9 @@ public record ChannelInfo(Long id, String name, Boolean isPrivate, Boolean isDir
             List<AppUser> users = new ArrayList<>(channel.getUsers());
 
             if(users.get(0).getId().equals(currentUserId))
-                channelName = users.get(1).getUsername();
+                channelName = users.get(1).getFirstName() + " " + users.get(1).getLastName();
             else
-                channelName = users.get(0).getUsername();
+                channelName = users.get(0).getFirstName() + " " + users.get(0).getLastName();
         }
 
         return new ChannelInfo(

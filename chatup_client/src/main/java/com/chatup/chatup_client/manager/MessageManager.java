@@ -22,11 +22,11 @@ public class MessageManager {
     }
 
     public MessageBuffer getMessageBuffer(Channel channel) {
-        if(buffers.containsKey(channel.id())) {
-            return buffers.get(channel.id());
+        if(buffers.containsKey(channel.getId())) {
+            return buffers.get(channel.getId());
         } else {
             MessageBuffer buffer = new MessageBuffer(testMode);
-            buffers.put(channel.id(), buffer);
+            buffers.put(channel.getId(), buffer);
             return buffer;
         }
     }
