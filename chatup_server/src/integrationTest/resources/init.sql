@@ -5,7 +5,20 @@ INSERT INTO users (user_id, first_name, last_name, username, password, status, i
                    (4, 'test','test', 'test.test.4', '$2y$10$bswyoyCaXnI0SnSqXmm91u/cXOTfugc5AOMjceG3rgA3LUOS8DS7y', 'n', true); -- p:test
 ALTER SEQUENCE user_sequence RESTART WITH 10;
 
-INSERT INTO messages(message_id, content, time_created, author_user_id, channel_id, is_deleted) values
+INSERT INTO channels (channel_id, name, is_private, is_direct_message) VALUES
+                        (1, 'Test1', false, false),
+                        (2, 'Test2', false, false),
+                        (3, 'Test3', false, false);
+
+ALTER SEQUENCE channel_sequence RESTART WITH 5;
+
+
+INSERT INTO channels_users(channel_id, user_id) values
+                            (1, 1), (1, 2), (1, 3), (1, 4),
+                            (2, 1), (2, 2), (2, 3), (2, 4),
+                            (3, 1), (3, 2), (3, 3), (3, 4);
+
+INSERT INTO messages(message_id, content, time_created, author_user_id, channel_channel_id, is_deleted) values
                     (1, 'test test', '2005-04-02 21:37:0-00', 1, 1, false),
                     (2, 'test test', '2005-04-02 21:37:1-00', 2, 1, false),
                     (3, 'test test', '2005-04-02 21:37:2-00', 2, 1, false),

@@ -1,5 +1,6 @@
 package com.chatup.chatup_server.api;
 
+import com.chatup.chatup_server.domain.Channel;
 import com.chatup.chatup_server.domain.Message;
 import com.chatup.chatup_server.service.messaging.IncomingMessage;
 import com.chatup.chatup_server.service.messaging.MessageService;
