@@ -18,7 +18,7 @@ INSERT INTO channels_users(channel_id, user_id) values
                             (2, 1), (2, 2), (2, 3), (2, 4),
                             (3, 1), (3, 2), (3, 3), (3, 4);
 
-INSERT INTO messages(message_id, content, time_created, author_user_id, channel_channel_id, is_deleted) values
+INSERT INTO messages(message_id, content, time_created, author_user_id, channel_id, is_deleted) values
                     (1, 'test test', '2005-04-02 21:37:0-00', 1, 1, false),
                     (2, 'test test', '2005-04-02 21:37:1-00', 2, 1, false),
                     (3, 'test test', '2005-04-02 21:37:2-00', 2, 1, false),

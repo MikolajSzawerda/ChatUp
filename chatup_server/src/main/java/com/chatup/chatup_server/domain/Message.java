@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import java.time.Instant;
 @Entity
@@ -32,7 +33,9 @@ public class Message{
     private Instant timeCreated;
     @OneToOne
     private AppUser author;
-    @OneToOne
+    @ManyToOne
+    @IndexedEmbedded
+    @JoinColumn(name="channel_id", nullable=false)
     private Channel channel;
     @ColumnDefault(value = "false")
     @Column(name="is_deleted")

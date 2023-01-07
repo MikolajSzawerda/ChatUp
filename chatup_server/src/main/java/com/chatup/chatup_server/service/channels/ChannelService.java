@@ -50,7 +50,7 @@ public class ChannelService {
 
         return channelRepository.save(
                 new Channel(channelRequest.name(), channelRequest.is_private(),
-                            channelRequest.is_direct_message(), channelUsers)
+                            channelRequest.is_direct_message(), channelUsers, Collections.emptyList())
         );
     }
 

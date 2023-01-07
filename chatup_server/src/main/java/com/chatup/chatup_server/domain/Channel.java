@@ -2,8 +2,8 @@ package com.chatup.chatup_server.domain;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +24,7 @@ public class Channel {
             generator = "channel_sequence"
     )
     @Column(name = "channel_id")
+    @GenericField(name="channelId")
     private Long id;
 
     @Column
@@ -48,21 +49,34 @@ public class Channel {
     )
     private Set<AppUser> users;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "channel")
+    private List<Message> messages;
+
     public Channel() {}
 
-    public Channel(Long id, String name, Boolean isPrivate, Boolean isDirectMessage, Set<AppUser> users) {
+    public Channel(Long id, String name, Boolean isPrivate, Boolean isDirectMessage, Set<AppUser> users, List<Message> messages) {
         this.id = id;
         this.name = name;
         this.isPrivate = isPrivate;
         this.isDirectMessage = isDirectMessage;
         this.users = users;
+        this.messages = messages;
     }
 
-    public Channel(String name, Boolean isPrivate, Boolean isDirectMessage, Set<AppUser> users) {
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public Channel(String name, Boolean isPrivate, Boolean isDirectMessage, Set<AppUser> users, List<Message> messages) {
         this.name = name;
         this.isPrivate = isPrivate;
         this.isDirectMessage = isDirectMessage;
         this.users = users;
+        this.messages = messages;
     }
 
     public Long getId() { return id; }
