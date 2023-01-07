@@ -5,6 +5,7 @@ import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.component.MessageFactory;
+import com.chatup.chatup_client.component.skin.MyButtonSkin;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
@@ -29,6 +30,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import com.sandec.mdfx.MarkdownView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,16 +72,26 @@ public class ChatViewController implements Initializable {
     public Rectangle backdrop;
 
     @FXML
-    public Pane dialog;
+    public Button closeChannelCreateButton;
 
     @FXML
-    public Button closeButton;
+    public Button createChannelButton;
+
 
     @FXML
     public ListView<String> searchUserResults;
 
     @FXML
     public TextField searchField;
+
+    @FXML
+    public Pane addDMDialog;
+
+    @FXML
+    public Pane addChannelDialog;
+
+    @FXML
+    public Button addDM;
 
 
     @FXML
@@ -106,11 +118,22 @@ public class ChatViewController implements Initializable {
     }
 
     @FXML
+    public void onAddDM(){
+        backdrop.setVisible(true);
+        addDMDialog.setVisible(true);
+        //searchUserResults.setVisible(false);
+        FadeTransition ft = new FadeTransition(Duration.millis(200), addDMDialog);
+        ft.setFromValue(0.0);
+        ft.setToValue(1.0);
+        ft.play();
+    }
+
+    @FXML
     public void onAddChannel(){
         backdrop.setVisible(true);
-        dialog.setVisible(true);
+        addChannelDialog.setVisible(true);
         searchUserResults.setVisible(false);
-        FadeTransition ft = new FadeTransition(Duration.millis(200), dialog);
+        FadeTransition ft = new FadeTransition(Duration.millis(200), addChannelDialog);
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
         ft.play();
@@ -118,11 +141,11 @@ public class ChatViewController implements Initializable {
 
     @FXML
     public void onCloseButton(){
-        FadeTransition ft = new FadeTransition(Duration.millis(200), dialog);
+        FadeTransition ft = new FadeTransition(Duration.millis(200), addChannelDialog);
         ft.setFromValue(1.0);
         ft.setToValue(0.0);
         ft.play();
-        dialog.setVisible(false);
+        addChannelDialog.setVisible(false);
         backdrop.setVisible(false);
     }
 
@@ -151,7 +174,9 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
-        dialog.setVisible(false);
+        //closeChannelCreateButton.setSkin(new MyButtonSkin(closeChannelCreateButton));
+        addChannelDialog.setVisible(false);
+        addDMDialog.setVisible(false);
         backdrop.setVisible(false);
         UserInfo currentUser = restClient.getCurrentUser();
         logger.info("Logged in user: {}", currentUser.toString());

@@ -34,8 +34,8 @@
                <FontIcon iconColor="#6aba9c" iconLiteral="fa-send" iconSize="35" text="" />
             </graphic>
          </Button>
-         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0" layoutX="1.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);" width="1056.0" AnchorPane.rightAnchor="0.0" />
-         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="716.0" layoutX="1.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" width="4.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="1052.0" />
+         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0" layoutX="1.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);" width="1056.0" AnchorPane.leftAnchor="-4.0" AnchorPane.rightAnchor="0.0" />
+         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="716.0" layoutX="1.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" width="4.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="1052.0" AnchorPane.topAnchor="3.0" />
       </children>
    </AnchorPane>
    <AnchorPane layoutY="81.0" maxWidth="228.0" minHeight="0.0" minWidth="150.0" prefHeight="566.0" prefWidth="228.0" style="-fx-background-color: #7896cf;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="81.0">
@@ -49,7 +49,7 @@
                   </font>
                </Text>
                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0" layoutX="2.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);" width="225.0" AnchorPane.topAnchor="-4.0" />
-               <Button fx:id="addChannel" layoutX="172.0" layoutY="20.0" mnemonicParsing="false" onAction="#onAddChannel" style="-fx-background-color: #7896cf;" textFill="#6aba9c">
+               <Button fx:id="addChannel" layoutX="172.0" layoutY="18.0" mnemonicParsing="false" onAction="#onAddChannel" style="-fx-background-color: #7896cf;" textFill="#6aba9c">
                   <graphic>
                      <FontIcon iconColor="#6aba9c" iconLiteral="fa-plus" iconSize="30" stroke="BLACK" text="" />
                   </graphic>
@@ -64,7 +64,11 @@
                   </font>
                </Text>
                <ListView fx:id="direct" layoutX="8.0" layoutY="29.0" styleClass="dm-list" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" />
-               <FontIcon iconColor="#6aba9c" iconLiteral="fa-plus" iconSize="30" layoutX="183.0" layoutY="26.0" stroke="BLACK" text="" />
+               <Button fx:id="addDM" layoutX="172.0" layoutY="-6.0" mnemonicParsing="false" onAction="#onAddDM" style="-fx-background-color: #7896cf;" textFill="#6aba9c">
+                  <graphic>
+                     <FontIcon iconColor="#6aba9c" iconLiteral="fa-plus" iconSize="30" stroke="BLACK" text="" />
+                  </graphic>
+               </Button>
             </children>
          </AnchorPane>
       </children>
@@ -76,7 +80,7 @@
                <Font size="30.0" />
             </font>
          </Text>
-         <TextField layoutX="564.0" layoutY="22.0" prefHeight="38.0" prefWidth="361.0" promptText="Search ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="564.0" AnchorPane.rightAnchor="355.0" />
+         <TextField layoutX="517.0" layoutY="21.0" prefHeight="38.0" prefWidth="362.0" promptText="Search ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="517.0" AnchorPane.rightAnchor="401.0" />
          <ImageView fitHeight="72.0" fitWidth="123.0" layoutX="51.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="51.0" AnchorPane.rightAnchor="1157.0" AnchorPane.topAnchor="9.0">
             <image>
                <Image url="@pngwing.com.png" />
@@ -90,16 +94,25 @@
          <StackPane fx:id="userAvatar" layoutX="905.0" layoutY="10.0" prefHeight="63.0" prefWidth="72.0" AnchorPane.rightAnchor="305.0" />
       </children>
    </AnchorPane>
-   <Rectangle fx:id="backdrop" arcHeight="5.0" arcWidth="5.0" height="809.0" layoutX="-10.0" layoutY="-4.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-opacity: 50%;" visible="false" width="1301.0" AnchorPane.bottomAnchor="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-   <Pane fx:id="dialog" layoutX="385.0" layoutY="132.0" prefHeight="537.0" prefWidth="548.0" style="-fx-background-color: #7896cf; -fx-background-radius: 30px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);;" visible="false">
+   <Rectangle fx:id="backdrop" arcHeight="5.0" arcWidth="5.0" height="1080.0" layoutX="-10.0" layoutY="-4.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-opacity: 50%;" visible="false" width="1900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   <Pane fx:id="addChannelDialog" layoutX="385.0" layoutY="132.0" prefHeight="537.0" prefWidth="548.0" style="-fx-background-color: #7896cf; -fx-background-radius: 30px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);;">
       <children>
          <ListView layoutX="81.0" layoutY="154.0" prefHeight="303.0" prefWidth="394.0" style="-fx-background-color: #7896cf;" />
-         <Button fx:id="closeButton" layoutX="84.0" layoutY="481.0" mnemonicParsing="false" onAction="#onCloseButton" text="Create" />
-         <Button fx:id="closeButton1" layoutX="436.0" layoutY="481.0" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-border-radius: 20px;" text="Close" />
          <TextField layoutX="40.0" layoutY="27.0" prefHeight="38.0" prefWidth="323.0" promptText="Channel name ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" />
          <TextField fx:id="searchField" layoutX="24.0" layoutY="91.0" onKeyTyped="#onSearchUser" prefHeight="38.0" prefWidth="505.0" promptText="Search Users ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" />
-         <CheckBox layoutX="417.0" layoutY="37.0" mnemonicParsing="false" text="is private?" />
+         <CheckBox layoutX="417.0" layoutY="37.0" mnemonicParsing="false" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="is private?" />
          <ListView fx:id="searchUserResults" layoutX="37.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="480.0" style="-fx-padding: 0 0 0;" />
+         <Button fx:id="closeChannelCreateButton" layoutX="419.0" layoutY="481.0" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Close" />
+         <Button fx:id="createChannelButton" layoutX="81.0" layoutY="481.0" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Create" />
+      </children>
+   </Pane>
+   <Pane fx:id="addDMDialog" layoutX="395.0" layoutY="142.0" prefHeight="354.0" prefWidth="548.0" style="-fx-background-color: #7896cf; -fx-background-radius: 30px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);;" visible="false">
+      <children>
+         <ListView layoutX="81.0" layoutY="154.0" prefHeight="120.0" prefWidth="394.0" style="-fx-background-color: #7896cf;" />
+         <Button fx:id="closeButton1" layoutX="81.0" layoutY="311.0" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Create" />
+         <Button fx:id="closeButton11" layoutX="409.0" layoutY="311.0" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Close" />
+         <TextField fx:id="searchField1" layoutX="22.0" layoutY="31.0" onKeyTyped="#onSearchUser" prefHeight="38.0" prefWidth="505.0" promptText="Search Users ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" />
+         <ListView fx:id="searchUserResults1" layoutX="35.0" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="480.0" style="-fx-padding: 0 0 0;" />
       </children>
    </Pane>
 </AnchorPane>

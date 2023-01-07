@@ -67,4 +67,9 @@ public class MainApplication extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-view.fxml"));
         loadView(e, loader);
     }
+
+    public void switchToDashboardView(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard-view.fxml"));
+        loadView(e, loader);
+    }
 }

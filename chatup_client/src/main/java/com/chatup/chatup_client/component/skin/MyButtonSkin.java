@@ -53,7 +53,6 @@ public class MyButtonSkin extends ButtonSkin {
         control.setBackground(new Background(new BackgroundFill(new Color(0, 0 ,0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
         control.setOnAction(e->{
             animation.play();
-            // here change of chat
         });
     }
 
