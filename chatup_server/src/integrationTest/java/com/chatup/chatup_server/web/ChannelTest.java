@@ -64,14 +64,15 @@ public class ChannelTest extends BaseInitializedDbTest {
             }}
         );
 
-        getCreateChannelRequest(createUserToken(USER_1), request);
+        Long id = getCreateChannelRequest(createUserToken(USER_1), request).getBody().id();
 
         ResponseEntity<ChannelInfo[]> response = getListChannelsRequest(createUserToken(USER_2));
         List<ChannelInfo> channelsList = List.of(Objects.requireNonNull(response.getBody()));
 
         assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
-        assertEquals(channelsList.size(), 1);
-        assertEquals(channelsList.get(0).name(), user1.getFirstName() + " " + user1.getLastName());
+        String newName = channelsList.stream().filter(c->c.id().equals(id)).findFirst().get().name();
+        assertEquals(user1.getFirstName() + " " + user1.getLastName(), newName);
+
     }
 
     protected ResponseEntity<ChannelInfo> getCreateChannelRequest(String token, ChannelCreateRequest body){
