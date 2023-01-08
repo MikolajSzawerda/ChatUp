@@ -1,14 +1,8 @@
 package com.chatup.chatup_server.web;
 
 import com.chatup.chatup_server.BaseInitializedDbTest;
-import com.chatup.chatup_server.BaseIntegrationTest;
 import com.chatup.chatup_server.client.SocketClient;
-import com.chatup.chatup_server.domain.AppUser;
-import com.chatup.chatup_server.domain.Channel;
-import com.chatup.chatup_server.repository.ChannelRepository;
 import com.chatup.chatup_server.repository.MessageRepository;
-import com.chatup.chatup_server.service.channels.ChannelCreateRequest;
-import com.chatup.chatup_server.service.channels.ChannelService;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 import com.chatup.chatup_server.service.utils.InstantService;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +14,6 @@ import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

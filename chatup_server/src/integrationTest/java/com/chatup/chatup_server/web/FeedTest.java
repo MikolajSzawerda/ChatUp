@@ -1,7 +1,6 @@
 package com.chatup.chatup_server.web;
 
 import com.chatup.chatup_server.BaseInitializedDbTest;
-import com.chatup.chatup_server.domain.Channel;
 import com.chatup.chatup_server.domain.Message;
 import com.chatup.chatup_server.repository.MessageRepository;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;

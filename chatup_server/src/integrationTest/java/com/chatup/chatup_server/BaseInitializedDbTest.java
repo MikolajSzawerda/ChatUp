@@ -45,13 +45,13 @@ public abstract class BaseInitializedDbTest extends BaseIntegrationTest{
 
     @BeforeEach
     void initElastic(){
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        SearchSession searchSession = Search.session( entityManager );
-        MassIndexer indexer = searchSession.massIndexer( Message.class )
+        MassIndexer indexer = Search.session( entityManagerFactory.createEntityManager() )
+                .massIndexer( Message.class , AppUser.class)
                 .threadsToLoadObjects( 7 );
         try {
             indexer.startAndWait();
         } catch (InterruptedException e) {
+
             throw new RuntimeException(e);
         }
     }
