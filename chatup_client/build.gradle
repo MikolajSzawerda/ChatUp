@@ -12,6 +12,9 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://sandec.jfrog.io/artifactory/repo"
+    }
 }
 
 ext {
@@ -36,6 +39,7 @@ javafx {
 }
 
 dependencies {
+    implementation "com.sandec:mdfx:0.2.8"
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
@@ -44,6 +48,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+
 }
 
 test {

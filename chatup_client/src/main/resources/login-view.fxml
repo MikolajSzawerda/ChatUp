@@ -5,20 +5,22 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #7896cf;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.LoginViewController">
-   <TextField fx:id="usernameField" layoutX="198.0" layoutY="216.0" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#setOnKeyPressed" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #7896cf;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.LoginViewController">
+   <TextField fx:id="usernameField" layoutX="198.0" layoutY="216.0" style="-fx-font-family: -fx-font-family; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.leftAnchor="198.0" AnchorPane.rightAnchor="229.0" AnchorPane.topAnchor="216.0" />
    <Text layoutX="198.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Username:" />
    <Text layoutX="198.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Password:" />
-   <Button fx:id="loginButton" layoutX="257.0" layoutY="338.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" text="Login" />
-   <Text layoutX="107.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Sloneczna Company" wrappingWidth="409.8779296875">
+   <Button fx:id="loginButton" layoutX="239.0" layoutY="336.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" styleClass="customized-button" stylesheets="@test.css" text="Login" AnchorPane.leftAnchor="239.0" AnchorPane.rightAnchor="271.0" AnchorPane.topAnchor="336.0" />
+   <Text layoutX="107.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Sloneczna Company" wrappingWidth="409.8779296875" AnchorPane.leftAnchor="107.0" AnchorPane.rightAnchor="83.1220703125" AnchorPane.topAnchor="91.0">
       <font>
          <Font size="36.0" />
       </font>
    </Text>
-   <Pane prefHeight="44.0" prefWidth="600.0" style="-fx-background-color: #645a5a;" AnchorPane.topAnchor="0.0" />
+   <Pane prefHeight="44.0" prefWidth="600.0" style="-fx-background-color: #645a5a; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 5, 0, 0, 0);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    <Text fx:id="invalidCredentialsText" fill="#ff0404" layoutX="168.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" textAlignment="CENTER" wrappingWidth="231.0" />
-   <PasswordField fx:id="passwordField" layoutX="198.0" layoutY="279.0" />
+   <PasswordField fx:id="passwordField" layoutX="198.0" layoutY="279.0" style="-fx-font-family: -fx-font-family; -fx-background-color: #e8e7e3; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #6aba9c;" AnchorPane.leftAnchor="198.0" AnchorPane.rightAnchor="229.0" AnchorPane.topAnchor="279.0" />
+   <Rectangle fx:id="backdrop" arcHeight="5.0" arcWidth="5.0" height="411.0" layoutY="-5.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-opacity: 50%;" visible="false" width="600.0" />
 </AnchorPane>

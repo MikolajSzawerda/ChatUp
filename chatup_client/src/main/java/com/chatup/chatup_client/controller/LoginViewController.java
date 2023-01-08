@@ -1,6 +1,7 @@
 package com.chatup.chatup_client.controller;
 
 import com.chatup.chatup_client.MainApplication;
+import com.chatup.chatup_client.component.skin.MyButtonSkin2;
 import com.chatup.chatup_client.web.AuthClient;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -9,13 +10,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -32,6 +38,9 @@ public class LoginViewController implements Initializable {
     @FXML
     public PasswordField passwordField;
 
+    @FXML
+    public Rectangle backdrop;
+
     private final AuthClient authClient;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -42,25 +51,41 @@ public class LoginViewController implements Initializable {
         logger.info("LoginViewController created");
     }
 
-    @FXML
+
     public void onLoginButtonClicked(ActionEvent e) throws IOException {
+        backdrop.setVisible(true);
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
         boolean success = authClient.authenticate(username, password);
 
         if(success) {
-            application.switchToChatView(e);
+            application.switchToChatView(e, (Stage) loginButton.getScene().getWindow());
             return;
         }
+        else {
+            backdrop.setVisible(false);
+            invalidCredentialsText.setText("Invalid credentials");
+            usernameField.clear();
+            passwordField.clear();
+        }
+    }
 
-        invalidCredentialsText.setText("Invalid credentials");
-        usernameField.clear();
-        passwordField.clear();
+    @FXML
+    public void setOnKeyPressed(KeyEvent e){
+        if(e.getCode() == KeyCode.ENTER){
+            loginButton.fire();
+        }
+
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resources){
+        loginButton.setOnAction(e->{
+            try{onLoginButtonClicked(e);}
+            catch (IOException exception) {throw new UncheckedIOException(exception);}
+        });
+        loginButton.setSkin(new MyButtonSkin2(loginButton));
 
     }
 
