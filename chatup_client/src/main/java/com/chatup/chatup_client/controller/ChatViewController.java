@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class ChatViewController implements Initializable {
     public StackPane userAvatar;
     @FXML
     public ListView<Channel> direct;
-    private Channel currentChannel = new Channel();
+    private Channel currentChannel;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -72,10 +73,6 @@ public class ChatViewController implements Initializable {
         this.application = (MainApplication) application;
         this.channelManager = channelManager;
         logger.info("ChatViewController created");
-        currentChannel.setId(1L);
-        currentChannel.setName("Test test");
-        currentChannel.setIsDirectMessage(false);
-        currentChannel.setIsPrivate(false);
     }
 
     @FXML
@@ -174,15 +171,19 @@ public class ChatViewController implements Initializable {
         userNameSurname.setText(currentUser.toString());
         Insets padding = new Insets(0, 0, 0, 0);
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
+        channels.setItems(channelManager.getStandardChannels());
+        direct.setItems(channelManager.getDirectMessages());
+        Collection<Channel> channels = restClient.listChannels();
+
+        // temporary lines for testing
+        assert channels.size() > 0;
+        channels.forEach((ch) -> {currentChannel = ch;});
+
+        restClient.listChannels().forEach(channelManager::addChannel);
         setCellFactories();
         messages.setItems(messageManager.getMessageBuffer(currentChannel).getMessages());
         messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
-        channels.setItems(channelManager.getStandardChannels());
-        direct.setItems(channelManager.getDirectMessages());
-
         restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
-        restClient.listChannels().forEach(channelManager::addChannel);
-
         try{
             socketClient.connect();
         } catch (ExecutionException | InterruptedException e) {
