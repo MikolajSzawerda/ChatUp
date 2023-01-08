@@ -48,8 +48,7 @@ public abstract class BaseIntegrationTest {
     private static final Logger posgresLogger = LoggerFactory.getLogger("Postgresql logger");
     static{
         postgreContainer = (PostgreSQLContainer) new PostgreSQLContainer("postgres")
-                .withLogConsumer(new Slf4jLogConsumer(posgresLogger))
-                .withReuse(true);
+                .withLogConsumer(new Slf4jLogConsumer(posgresLogger));
         elasticContainer =  new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:8.5.3")
                 .withEnv("xpack.security.enabled","false")
                 .withEnv("discovery.type","single-node")
@@ -64,8 +63,7 @@ public abstract class BaseIntegrationTest {
                 .waitingFor(Wait
                         .forHttp("/_cluster/health")
                         .forStatusCode(200)
-                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)))
-                .withReuse(true);
+                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)));
         postgreContainer.start();
         elasticContainer.start();
         System.getProperties().setProperty("hibernate.search.backend.hosts", elasticContainer.getHttpHostAddress());
