@@ -2,6 +2,8 @@ package com.chatup.chatup_server.domain;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,6 +21,7 @@ import java.util.Set;
                 @Index(name = "username_index", columnList = "username", unique=true)
         }
 )
+@Indexed
 public class AppUser implements UserDetails {
     @Id
     @SequenceGenerator(
@@ -34,9 +37,11 @@ public class AppUser implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
+    @FullTextField
     private String firstName;
 
     @Column(nullable = false)
+    @FullTextField
     private String lastName;
 
     @Column(nullable = false)

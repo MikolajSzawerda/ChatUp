@@ -1,8 +1,10 @@
 package com.chatup.chatup_server.service.messaging;
 
 import com.chatup.chatup_server.domain.AppUser;
+import com.chatup.chatup_server.domain.Channel;
 import com.chatup.chatup_server.domain.Message;
 import com.chatup.chatup_server.repository.AppUserRepository;
+import com.chatup.chatup_server.repository.ChannelRepository;
 import com.chatup.chatup_server.repository.MessageRepository;
 import com.chatup.chatup_server.service.AuthService;
 import com.chatup.chatup_server.service.JwtTokenService;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MessageService {
@@ -21,22 +24,25 @@ public class MessageService {
     private final AppUserRepository appUserRepository;
     private final JwtTokenService jwtTokenService;
     private final InstantService instantService;
+    private final ChannelRepository channelRepository;
     private final int PAGESIZE;
 
 
     public MessageService(MessageRepository messageRepository, AppUserRepository appUserRepository, AuthService authService, JwtTokenService jwtTokenService, InstantService instantService,
-                          @Value("${app.feed.pageSize}") int pageSize) {
+                          ChannelRepository channelRepository, @Value("${app.feed.pageSize}") int pageSize) {
         this.messageRepository = messageRepository;
         this.appUserRepository = appUserRepository;
         this.jwtTokenService = jwtTokenService;
         this.instantService = instantService;
+        this.channelRepository = channelRepository;
         PAGESIZE = pageSize;
     }
 
     public Message preserve(String content, Principal user, Long channelID){
         String username = jwtTokenService.getUsernameFromToken(user.getName());
         AppUser appUser = appUserRepository.findAppUserByUsername(username);
-        return messageRepository.save(new Message(content, instantService.getNow(), appUser, channelID, false));
+        Channel channel = channelRepository.getReferenceById(channelID);
+        return messageRepository.save(new Message(content, instantService.getNow(), appUser, channel, false));
     }
 
     public Page<Message> getLastFeed(Long channelID){
@@ -47,7 +53,7 @@ public class MessageService {
         return messageRepository.getFeedFrom(channelID, messageID, PageRequest.of(page, PAGESIZE));
     }
 
-    public List<Message> searchByContent(String content, int page){
-        return messageRepository.fuzzySearchByContent(content, PageRequest.of(page, PAGESIZE));
+    public List<Message> searchByContent(String content, Set<Long> channels, int page){
+        return messageRepository.fuzzySearchByContent(content, channels, PageRequest.of(page, PAGESIZE));
     }
 }

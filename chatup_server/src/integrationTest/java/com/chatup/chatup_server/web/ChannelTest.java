@@ -19,11 +19,11 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ChannelTest extends BaseInitializedDbTest {
-    private final String CREATE_CHANNEL_ENDPOINT = "/channel/create";
     private final String LIST_CHANNELS_ENDPOINT = "/channel/list";
 
     @Autowired
@@ -34,22 +34,27 @@ public class ChannelTest extends BaseInitializedDbTest {
     @Test
     public void shouldCreateChannel() {
         AppUser user = appUserRepository.findAppUserByUsername(USER_1);
-
+        Long oldChannelCount = channelRepository.count();
+        String channelName = "xyz";
         ChannelCreateRequest request = new ChannelCreateRequest(
-                "xyz", false, false, new HashSet<>(){{
+                channelName, false, false, new HashSet<>(){{
                     add(user.getId());
             }}
         );
 
         ResponseEntity<ChannelInfo> response = getCreateChannelRequest(createUserToken(USER_1), request);
-        List<Channel> channels = channelRepository.findAll();
+        Channel channel = channelRepository
+                .findAll()
+                .stream()
+                .filter(c->c.getName().equals(channelName))
+                .findFirst().get();
 
         assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
-        assertEquals(channels.size(), 1);
-        assertEquals(channels.get(0).getId(), Objects.requireNonNull(response.getBody()).id());
-        assertEquals(channels.get(0).getName(), "xyz");
-        assertEquals(channels.get(0).getDirectMessage(), false);
-        assertEquals(channels.get(0).getPrivate(), false);
+        assertEquals(oldChannelCount+1, channelRepository.count());
+        assertEquals(channel.getId(), Objects.requireNonNull(response.getBody()).id());
+        assertEquals(channel.getName(), "xyz");
+        assertEquals(channel.getDirectMessage(), false);
+        assertEquals(channel.getPrivate(), false);
     }
 
     @Test
@@ -64,27 +69,17 @@ public class ChannelTest extends BaseInitializedDbTest {
             }}
         );
 
-        getCreateChannelRequest(createUserToken(USER_1), request);
+        Long id = getCreateChannelRequest(createUserToken(USER_1), request).getBody().id();
 
         ResponseEntity<ChannelInfo[]> response = getListChannelsRequest(createUserToken(USER_2));
         List<ChannelInfo> channelsList = List.of(Objects.requireNonNull(response.getBody()));
 
         assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
-        assertEquals(channelsList.size(), 1);
-        assertEquals(channelsList.get(0).name(), USER_1);
+        String newName = channelsList.stream().filter(c->c.id().equals(id)).findFirst().get().name();
+        assertEquals(USER_1, newName);
     }
 
-    protected ResponseEntity<ChannelInfo> getCreateChannelRequest(String token, ChannelCreateRequest body){
-        URI uri = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .port(PORT)
-                .host("localhost")
-                .path(CREATE_CHANNEL_ENDPOINT)
-                .build().toUri();
 
-        HttpEntity<ChannelCreateRequest> httpBody = new HttpEntity<>(body, createAuthHeaders(token));
-        return restTemplate.exchange(uri, HttpMethod.POST, httpBody, ChannelInfo.class);
-    }
 
     protected ResponseEntity<ChannelInfo[]> getListChannelsRequest(String token){
         URI uri = UriComponentsBuilder.newInstance()
