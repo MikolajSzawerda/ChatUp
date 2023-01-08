@@ -22,11 +22,11 @@ public class MessageManager {
     }
 
     public MessageBuffer getMessageBuffer(Channel channel) {
-        if(buffers.containsKey(channel.channelID())) {
-            return buffers.get(channel.channelID());
+        if(buffers.containsKey(channel.getId())) {
+            return buffers.get(channel.getId());
         } else {
             MessageBuffer buffer = new MessageBuffer(testMode);
-            buffers.put(channel.channelID(), buffer);
+            buffers.put(channel.getId(), buffer);
             return buffer;
         }
     }
@@ -49,7 +49,7 @@ public class MessageManager {
     public void checkForDuplicates(Message originalMessage) {
         for(MessageBuffer buffer : buffers.values()) {
             for(Message msg : buffer.getMessages()) {
-                if(msg.getMessageID().equals(originalMessage.getMessageID()) && !msg.equals(originalMessage)) {
+                if(msg.getMessageID().equals(originalMessage.getMessageID()) && msg != originalMessage ) { // comparing using != intentional
                     logger.warn("Duplicate message found: " + msg + " and " + originalMessage);
                     msg.setDuplicateFlag(true);
                     originalMessage.setDuplicateFlag(true);

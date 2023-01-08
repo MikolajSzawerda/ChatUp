@@ -32,4 +32,5 @@ module com.chatup.chatup_client {
     opens com.chatup.chatup_client.config to spring.core;
     exports com.chatup.chatup_client.config;
     exports com.chatup.chatup_client.web;
+    exports com.chatup.chatup_client.model.messaging;
 }

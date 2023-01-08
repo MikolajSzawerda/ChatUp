@@ -105,7 +105,8 @@ public class Message {
         return content;
     }
 
-    public boolean equals(Message other) {
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Message other)) return false;
         return getMessageID().equals(other.getMessageID())
                 && getAuthorID().equals(other.getAuthorID())
                 && getChannelID().equals(other.getChannelID())

@@ -1,5 +1,6 @@
 package com.chatup.chatup_server;
 
+import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.domain.Message;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
@@ -23,7 +24,7 @@ public class ServicesInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         logger.info("Populating elastic search...");
         SearchSession searchSession = Search.session( entityManagerFactory.createEntityManager() );
-        MassIndexer indexer = searchSession.massIndexer( Message.class )
+        MassIndexer indexer = searchSession.massIndexer( Message.class, AppUser.class )
                 .threadsToLoadObjects( 7 );
         try {
             indexer.startAndWait();

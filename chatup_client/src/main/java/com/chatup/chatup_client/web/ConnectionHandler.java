@@ -22,7 +22,7 @@ public class ConnectionHandler implements StompSessionHandler{
 
     // TODO: remove once channel manager is working
     private final List<String> topics = new LinkedList<>(){{
-        add("/topic/channel/1");
+        add("/topic/channel.1");
     }};
 
     @Autowired

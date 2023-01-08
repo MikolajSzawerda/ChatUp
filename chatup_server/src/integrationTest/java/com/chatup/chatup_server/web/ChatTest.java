@@ -1,6 +1,6 @@
 package com.chatup.chatup_server.web;
 
-import com.chatup.chatup_server.BaseIntegrationTest;
+import com.chatup.chatup_server.BaseInitializedDbTest;
 import com.chatup.chatup_server.client.SocketClient;
 import com.chatup.chatup_server.repository.MessageRepository;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @Sql({"file:src/integrationTest/resources/cleanUp.sql", "file:src/integrationTest/resources/init.sql"})
-public class ChatTest extends BaseIntegrationTest {
+public class ChatTest extends BaseInitializedDbTest {
 
     @Autowired
     private SimpUserRegistry simpUserRegistry;
@@ -31,16 +31,12 @@ public class ChatTest extends BaseIntegrationTest {
 
     SocketClient client1;
     SocketClient client2;
-    private static final Long CHANNEL = 123L;
-    private static final String USER_1 = "test.test.1";
-    private static final String USER_2 = "test.test.2";
-    private static final String USER_3 = "test.test.3";
-    private static final String USER_4 = "test.test.4";
+    private static final Long CHANNEL = 3L;
     private static final LinkedList<String> topics = new LinkedList<>() {{
-        add("/topic/channel/" + CHANNEL);
+        add("/topic/channel." + CHANNEL);
     }};
 
-    private static final String BROADCAST_ENDPOINT = "/app/channel/" + CHANNEL;
+    private static final String BROADCAST_ENDPOINT = "/app/channel." + CHANNEL;
 
     @BeforeEach
     void initClient() {
@@ -109,14 +105,18 @@ public class ChatTest extends BaseIntegrationTest {
     @Test
     void shouldReceiveOnlyWhenSubscribed() {
         //Given
-        String newTopic = "/topic/channel/345";
+        Long id  = addNewChannel(createUserToken(USER_2), USER_2);
+        String newTopic = "/topic/channel."+id;
 
         //When
         client2.subscribe(newTopic);
-        client1.sendMessage("/app/channel/345", "Test");
+        client1.sendMessage("/app/channel."+id, "Test");
+
 
         //Then
         timedAssertEquals(1, client2.getMessages()::size);
         timedAssertEquals(0, client1.getMessages()::size);
     }
+
+
 }
