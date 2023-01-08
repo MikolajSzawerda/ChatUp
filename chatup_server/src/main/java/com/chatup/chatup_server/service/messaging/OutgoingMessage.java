@@ -23,7 +23,7 @@ public record OutgoingMessage(
                 message.getAuthor().getUsername(),
                 message.getAuthor().getFirstName(),
                 message.getAuthor().getLastName(),
-                message.getChannelID(),
+                message.getChannel().getId(),
                 message.getTimeCreated(),
                 message.getDeleted());
     }
