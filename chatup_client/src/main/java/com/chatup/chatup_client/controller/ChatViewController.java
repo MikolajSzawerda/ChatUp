@@ -302,8 +302,6 @@ public class ChatViewController implements Initializable {
 
     }
 
-<<<<<<< chatup_client/src/main/java/com/chatup/chatup_client/controller/ChatViewController.java
-
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
@@ -346,7 +344,6 @@ public class ChatViewController implements Initializable {
         });
         closeDMDialogButton.setSkin(new MyButtonSkin2(closeDMDialogButton));
 
-=======
     private void setCellFactories() {
         messages.setCellFactory(param -> new ListCell<>() {
             @Override
