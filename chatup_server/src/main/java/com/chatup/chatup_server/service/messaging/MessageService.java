@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MessageService {
@@ -52,7 +53,7 @@ public class MessageService {
         return messageRepository.getFeedFrom(channelID, messageID, PageRequest.of(page, PAGESIZE));
     }
 
-    public List<Message> searchByContent(String content, int page){
-        return messageRepository.fuzzySearchByContent(content, PageRequest.of(page, PAGESIZE));
+    public List<Message> searchByContent(String content, Set<Long> channels, int page){
+        return messageRepository.fuzzySearchByContent(content, channels, PageRequest.of(page, PAGESIZE));
     }
 }

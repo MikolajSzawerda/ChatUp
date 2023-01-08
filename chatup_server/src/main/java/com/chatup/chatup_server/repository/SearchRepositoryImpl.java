@@ -9,6 +9,7 @@ import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 public class SearchRepositoryImpl implements SearchRepository {
     private final EntityManager entityManager;
@@ -18,10 +19,12 @@ public class SearchRepositoryImpl implements SearchRepository {
     }
 
     @Override
-    public List<Message> fuzzySearchByContent(String phrase, Pageable pageable) {
+    public List<Message> fuzzySearchByContent(String phrase, Set<Long> channels, Pageable pageable) {
         SearchSession session = Search.session(entityManager);
         SearchResult<Message> result = session.search(Message.class)
-                .where(f->f.match().field("content").matching(phrase).fuzzy())
+                .where(f->f.bool()
+                        .must(f.match().field("content").matching(phrase).fuzzy())
+                        .must(f.terms().field("channel.id").matchingAny(channels)))
                 .fetch((int) pageable.getOffset(), pageable.getPageSize());
         return result.hits();
     }

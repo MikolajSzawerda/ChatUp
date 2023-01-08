@@ -21,26 +21,28 @@ public class SearchTest extends BaseInitializedDbTest {
     private final String SEARCH_ENDPOINT = "/search";
 
     @Test
-    void shouldReturnSomething(){
+    void shouldReturnMessagesOnlyForGivenChannel(){
         //Given
         String phrase = "test";
+        long channelId = 1L;
 
         //When
-        var response = getSearchRequest(getURISearchFrom(phrase, 0), createUserToken(USER_1));
+        var response = getSearchRequest(getURISearchFrom(phrase, 0, channelId), createUserToken(USER_1));
 
         //Then
         assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
         List<OutgoingMessage> responseSearch = List.of(Objects.requireNonNull(response.getBody()));
-        assertFalse(responseSearch.isEmpty());
+        assertEquals(0, responseSearch.stream().filter(m -> m.channelID() != channelId).count());
     }
 
-    private URI getURISearchFrom(String phrase, int page){
+    private URI getURISearchFrom(String phrase, int page, Long... channels){
         return UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .port(PORT)
                 .host("localhost")
                 .path(SEARCH_ENDPOINT)
                 .queryParam("page", page)
+                .queryParam("channels", channels)
                 .queryParam("phrase", phrase)
                 .build().toUri();
     }
