@@ -1,8 +1,9 @@
 package com.chatup.chatup_client.web;
 
 import com.chatup.chatup_client.config.AppConfig;
-import com.chatup.chatup_client.model.TokenRequest;
-import com.chatup.chatup_client.model.TokenResponse;
+import com.chatup.chatup_client.model.UserInfo;
+import com.chatup.chatup_client.model.messaging.TokenRequest;
+import com.chatup.chatup_client.model.messaging.TokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -76,7 +76,8 @@ public class ChannelTest extends BaseInitializedDbTest {
 
         assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
         String newName = channelsList.stream().filter(c->c.id().equals(id)).findFirst().get().name();
-        assertEquals(USER_1, newName);
+        assertEquals(user1.getFirstName() + " " + user1.getLastName(), newName);
+
     }
 
 

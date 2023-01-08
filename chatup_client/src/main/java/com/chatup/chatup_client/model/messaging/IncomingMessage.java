@@ -1,4 +1,4 @@
-package com.chatup.chatup_client.model;
+package com.chatup.chatup_client.model.messaging;
 
 public class IncomingMessage {
     public IncomingMessage(String message) {
