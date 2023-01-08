@@ -27,7 +27,6 @@
 
 .my-button{
 	-fx-pref-height: 45;
-
 }
 
 .message-list .list-cell {
@@ -35,3 +34,12 @@
 	-fx-padding: 10;
 }
 
+.customized-button{
+	-fx-background-color:  #6aba9c;
+	-fx-border-color:  #000000;
+	-fx-background-radius: 8;
+	-fx-border-radius: 8;
+	-fx-border-width: 1;
+	-fx-font-family: "Roboto Slab";
+	-fx-padding: 0 0 0 0;
+}

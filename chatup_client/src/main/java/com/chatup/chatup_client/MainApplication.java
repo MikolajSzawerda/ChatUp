@@ -48,28 +48,29 @@ public class MainApplication extends Application {
         Platform.exit();
     }
 
-    public void switchToChatView(ActionEvent e) throws IOException {
+    public void switchToChatView(ActionEvent e, Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatup-view.fxml"));
-        loadView(e, loader);
+        loadView(e, loader, stage);
     }
 
-    private void loadView(ActionEvent e, FXMLLoader loader) throws IOException {
+
+    private void loadView(ActionEvent e, FXMLLoader loader, Stage stage) throws IOException {
         loader.setControllerFactory(context::getBean);
         Parent root = loader.load();
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Roboto+Slab");
         stage.setScene(scene);
         stage.show();
     }
 
-    public void switchToLoginView(ActionEvent e) throws IOException {
+
+    public void switchToLoginView(ActionEvent e, Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-view.fxml"));
-        loadView(e, loader);
+        loadView(e, loader, stage);
     }
 
-    public void switchToDashboardView(ActionEvent e) throws IOException {
+    public void switchToDashboardView(ActionEvent e, Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard-view.fxml"));
-        loadView(e, loader);
+        loadView(e, loader, stage);
     }
 }

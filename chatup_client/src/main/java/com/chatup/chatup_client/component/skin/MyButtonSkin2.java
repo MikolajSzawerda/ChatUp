@@ -1,9 +1,11 @@
 package com.chatup.chatup_client.component.skin;
 
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.skin.ButtonSkin;
@@ -34,25 +36,20 @@ import javafx.util.Duration;
 //}
 
 
-public class MyButtonSkin extends ButtonSkin {
-    public MyButtonSkin(Button control){
+public class MyButtonSkin2 extends ButtonSkin {
+    public MyButtonSkin2(Button control){
         super(control);
+        final FadeTransition fadeIn = new FadeTransition(Duration.millis(150));
+        EventHandler<ActionEvent> current = control.getOnAction();
+        fadeIn.setNode(control);
+        fadeIn.setToValue(0.5);
+        fadeIn.setCycleCount(2);
+        fadeIn.setAutoReverse(true);
+        control.setOnAction(e->fadeIn.play());
+        fadeIn.setOnFinished(e->current.handle(e));
 
-        final Animation animation = new Transition() {
-            {
-                setCycleDuration(Duration.millis(400));
-                setInterpolator(Interpolator.EASE_OUT);
-            }
-            @Override
-            protected void interpolate(double frac) {
-                Color vColor = new Color(0.33, 0.42, 0.86, 1 - frac);
-                control.setBackground(new Background(new BackgroundFill(vColor, CornerRadii.EMPTY, Insets.EMPTY)));
-            }
-
-
+        control.setOpacity(1.0);
         };
-        control.setBackground(new Background(new BackgroundFill(new Color(0, 0 ,0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
-        control.addEventHandler(ActionEvent.ACTION, e->animation.play());
-    }
+
 }
 

@@ -12,9 +12,8 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="800.0" prefWidth="1280.0" stylesheets="@test.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.ChatViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="800.0" prefWidth="1280.0" stylesheets="@test.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.DashboardViewController">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
@@ -34,11 +33,6 @@
                      </font>
                   </Text>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0" layoutX="2.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);" width="225.0" AnchorPane.topAnchor="-4.0" />
-                  <Button fx:id="addChannel" layoutX="172.0" layoutY="18.0" mnemonicParsing="false" onAction="#onAddChannel" style="-fx-background-color: #7896cf;" textFill="#6aba9c">
-                     <graphic>
-                        <FontIcon iconColor="#6aba9c" iconLiteral="fa-plus" iconSize="30" stroke="BLACK" text="" />
-                     </graphic>
-                  </Button>
                </children>
             </AnchorPane>
             <AnchorPane layoutX="-10.0" layoutY="283.0" style="-fx-background-color: #7896cf;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="350.0">
@@ -49,11 +43,6 @@
                      </font>
                   </Text>
                   <ListView fx:id="direct" layoutX="8.0" layoutY="29.0" styleClass="dm-list" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" />
-                  <Button fx:id="addDM" layoutX="172.0" layoutY="-6.0" mnemonicParsing="false" onAction="#onAddDM" style="-fx-background-color: #7896cf;" textFill="#6aba9c">
-                     <graphic>
-                        <FontIcon iconColor="#6aba9c" iconLiteral="fa-plus" iconSize="30" stroke="BLACK" text="" />
-                     </graphic>
-                  </Button>
                </children>
             </AnchorPane>
          </children>
@@ -73,10 +62,10 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <StackPane fx:id="userAvatar" layoutX="293.0" layoutY="110.0" prefHeight="72.0" prefWidth="86.0" AnchorPane.rightAnchor="901.0" />
-      <Text fx:id="userNameSurname" layoutX="434.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="username" wrappingWidth="271.7294921875">
+      <StackPane fx:id="userAvatar" layoutX="281.0" layoutY="101.0" prefHeight="111.0" prefWidth="132.0" AnchorPane.leftAnchor="281.0" AnchorPane.topAnchor="101.0" />
+      <Text fx:id="userNameSurname" layoutX="434.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="username" wrappingWidth="770.7294921875" AnchorPane.leftAnchor="434.0">
          <font>
-            <Font size="28.0" />
+            <Font size="40.0" />
          </font>
       </Text>
       <Text fx:id="userNameSurname1" layoutX="263.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Username:" wrappingWidth="395.7294921875">
@@ -94,6 +83,29 @@
             <Font size="21.0" />
          </font>
       </Text>
-      <Button layoutX="434.0" layoutY="388.0" mnemonicParsing="false" text="Log out" />
+      <Button layoutX="323.0" layoutY="406.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="72.0" styleClass="customized-button" text="Log out" />
+      <Text fx:id="username" layoutX="395.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="username" wrappingWidth="770.7294921875">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Text>
+      <Text fx:id="username1" layoutX="390.0" layoutY="295.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="********" wrappingWidth="87.7294921875">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Text>
+      <Button layoutX="502.0" layoutY="276.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="79.0" styleClass="customized-button" text="Change" />
+      <Text fx:id="username2" layoutX="413.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" wrappingWidth="770.7294921875">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Text>
+      <Button fx:id="generateAPIKey" layoutX="435.0" layoutY="325.0" mnemonicParsing="false" onAction="#onGenerateAPIKey" prefHeight="24.0" prefWidth="96.0" styleClass="customized-button" text="Generate" />
+      <Text fx:id="apiKey" layoutX="413.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="k37jkdyndd0d" visible="false" wrappingWidth="191.7294921875">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="goBack" layoutX="798.0" layoutY="463.0" mnemonicParsing="false" onAction="#onGoBack" prefHeight="24.0" prefWidth="79.0" styleClass="customized-button" text="Go back" />
    </children>
 </AnchorPane>

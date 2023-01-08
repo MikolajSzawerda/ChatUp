@@ -6,18 +6,21 @@ import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.component.MessageFactory;
 import com.chatup.chatup_client.component.skin.MyButtonSkin;
+import com.chatup.chatup_client.component.skin.MyButtonSkin2;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
-import javafx.animation.FadeTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -31,22 +34,29 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import com.sandec.mdfx.MarkdownView;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.util.Duration;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+
 
 @Component
 public class ChatViewController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
     private final MainApplication application;
+
     private final SocketClient socketClient;
     private final RestClient restClient;
     private final MessageManager messageManager;
+
     @FXML
     public ListView<Message> messages;
     final ListChangeListener<Message> listChangeListener = new ListChangeListener<>() {
@@ -66,23 +76,40 @@ public class ChatViewController implements Initializable {
     public StackPane userAvatar;
 
     @FXML
+    public Button goToDashboard;
+
+    @FXML
     public Button addChannel;
 
     @FXML
     public Rectangle backdrop;
 
     @FXML
-    public Button closeChannelCreateButton;
+    public Button closeChannelDialogButton;
 
     @FXML
     public Button createChannelButton;
 
+    @FXML
+    public Button closeDMDialogButton;
+
+    @FXML
+    public Button createDMButton;
 
     @FXML
     public ListView<String> searchUserResults;
 
     @FXML
+    public  ListView<String> usersAddedToChannelList;
+
+    @FXML
+    public ListView<String> searchUserResultsDM;
+
+    @FXML
     public TextField searchField;
+
+    @FXML
+    public TextField searchFieldDM;
 
     @FXML
     public Pane addDMDialog;
@@ -93,6 +120,8 @@ public class ChatViewController implements Initializable {
     @FXML
     public Button addDM;
 
+    @FXML
+    public CheckBox isPrivate;
 
     @FXML
     public ListView<String> direct;
@@ -118,21 +147,95 @@ public class ChatViewController implements Initializable {
     }
 
     @FXML
+    public void checkIsPrivate(){
+        if(isPrivate.isSelected()) {
+            addChannelDialog.setMaxHeight(130);
+
+            Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            KeyValue kv = new KeyValue(addChannelDialog.maxHeightProperty(), 550.0);
+            KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+            timeline.getKeyFrames().add(kf);
+
+            Timeline timelineCreateButton= new Timeline();
+            timelineCreateButton.setCycleCount(1);
+            KeyValue kv1 = new KeyValue(createChannelButton.translateYProperty(), 400.0);
+            KeyFrame kf1 = new KeyFrame(Duration.millis(500), kv1);
+            timelineCreateButton.getKeyFrames().add(kf1);
+
+            Timeline timelineCancelButton = new Timeline();
+            timelineCancelButton.setCycleCount(1);
+            KeyValue kv2 = new KeyValue(closeChannelDialogButton.translateYProperty(), 400.0);
+            KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
+            timelineCancelButton.getKeyFrames().add(kf2);
+
+            timeline.play();
+            timelineCancelButton.play();
+            timelineCreateButton.play();
+
+            timeline.setOnFinished(e-> {
+                searchField.setText("");
+                usersAddedToChannelList.setVisible(false);
+                searchField.setVisible(true);
+            });
+        }
+        else{
+            addChannelDialog.setMaxHeight(550);
+
+            searchField.setText("");
+            searchUserResults.setVisible(false);
+            usersAddedToChannelList.setVisible(false);
+            searchField.setVisible(false);
+
+            Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            KeyValue kv = new KeyValue(addChannelDialog.maxHeightProperty(), 130.0);
+            KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+            timeline.getKeyFrames().add(kf);
+
+            Timeline timelineCreateButton= new Timeline();
+            timelineCreateButton.setCycleCount(1);
+            KeyValue kv1 = new KeyValue(createChannelButton.translateYProperty(), 0.0);
+            KeyFrame kf1 = new KeyFrame(Duration.millis(500), kv1);
+            timelineCreateButton.getKeyFrames().add(kf1);
+
+            Timeline timelineCancelButton = new Timeline();
+            timelineCancelButton.setCycleCount(1);
+            KeyValue kv2 = new KeyValue(closeChannelDialogButton.translateYProperty(), 0.0);
+            KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
+            timelineCancelButton.getKeyFrames().add(kf2);
+
+            timeline.play();
+            timelineCancelButton.play();
+            timelineCreateButton.play();
+
+        }
+    }
+
+    @FXML
+    public void onGoToDashboard(ActionEvent e) throws IOException {
+        application.switchToDashboardView(e, (Stage) goToDashboard.getScene().getWindow());
+    }
+
     public void onAddDM(){
         backdrop.setVisible(true);
         addDMDialog.setVisible(true);
-        //searchUserResults.setVisible(false);
+        searchFieldDM.setText("");
+        searchUserResultsDM.setVisible(false);
         FadeTransition ft = new FadeTransition(Duration.millis(200), addDMDialog);
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
         ft.play();
     }
 
-    @FXML
     public void onAddChannel(){
         backdrop.setVisible(true);
         addChannelDialog.setVisible(true);
+        searchField.setText("");
         searchUserResults.setVisible(false);
+        usersAddedToChannelList.setVisible(false);
+        searchField.setVisible(false);
+
         FadeTransition ft = new FadeTransition(Duration.millis(200), addChannelDialog);
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
@@ -140,7 +243,7 @@ public class ChatViewController implements Initializable {
     }
 
     @FXML
-    public void onCloseButton(){
+    public void onCloseChannelDialogButton(){
         FadeTransition ft = new FadeTransition(Duration.millis(200), addChannelDialog);
         ft.setFromValue(1.0);
         ft.setToValue(0.0);
@@ -150,9 +253,26 @@ public class ChatViewController implements Initializable {
     }
 
     @FXML
+    public void onCloseDMDialogButton(){
+        FadeTransition ft = new FadeTransition(Duration.millis(200), addDMDialog);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.0);
+        ft.play();
+        addDMDialog.setVisible(false);
+        backdrop.setVisible(false);
+    }
+
+    @FXML
     public void onSearchUser(){
         if(searchField.getText().length() == 0) searchUserResults.setVisible(false);
         else searchUserResults.setVisible(true);
+        // in future ask API about results;
+    }
+
+    @FXML
+    public void onSearchUserDM(){
+        if(searchField.getText().length() == 0) searchUserResultsDM.setVisible(false);
+        else searchUserResultsDM.setVisible(true);
         // in future ask API about results;
     }
 
@@ -172,9 +292,13 @@ public class ChatViewController implements Initializable {
 
     }
 
+
+
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
         //closeChannelCreateButton.setSkin(new MyButtonSkin(closeChannelCreateButton));
+        //messages.getStylesheets().add("/com/sandec/mdfx/mdfx-default.css");
+        addChannelDialog.setMaxHeight(130);
         addChannelDialog.setVisible(false);
         addDMDialog.setVisible(false);
         backdrop.setVisible(false);
@@ -184,6 +308,32 @@ public class ChatViewController implements Initializable {
         Insets padding = new Insets(0, 0, 0, 0);
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
 
+        addDM.setOnAction(e->{
+            onAddDM();
+        });
+        addDM.setSkin(new MyButtonSkin2(addDM));
+        addChannel.setOnAction(e->{
+            onAddChannel();
+        });
+        addChannel.setSkin(new MyButtonSkin2(addChannel));
+
+        createChannelButton.setOnAction(e->{
+            //checkIsPrivate();   //TODO - only for test purpose
+        });
+        createChannelButton.setSkin(new MyButtonSkin2(createChannelButton));
+        closeChannelDialogButton.setOnAction(e->{
+            onCloseChannelDialogButton();
+        });
+        closeChannelDialogButton.setSkin(new MyButtonSkin2(closeChannelDialogButton));
+
+        createDMButton.setOnAction(e->{
+            ;
+        });
+        createDMButton.setSkin(new MyButtonSkin2(createDMButton));
+        closeDMDialogButton.setOnAction(e->{
+            onCloseDMDialogButton();
+        });
+        closeDMDialogButton.setSkin(new MyButtonSkin2(closeDMDialogButton));
 
         messages.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -199,9 +349,11 @@ public class ChatViewController implements Initializable {
                     setPrefWidth(param.getWidth() - 100);
 
                     setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    GridPane message = MessageFactory.createMessage(item.getContent(), item.getAuthorFirstName() + " " + item.getAuthorLastName(), param.getWidth());
+                    GridPane message = MessageFactory.createMessage(item.getContent(),
+                            item.getAuthorFirstName() + " " + item.getAuthorLastName(), item.getAuthorUsername(), param.getWidth());
 
                     setGraphic(message);
+
                 }
             }
         });
@@ -224,6 +376,7 @@ public class ChatViewController implements Initializable {
 
                     Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
                     channelButton.getStyleClass().add("my-button");
+
 
                     setGraphic(channelButton);
                 }
