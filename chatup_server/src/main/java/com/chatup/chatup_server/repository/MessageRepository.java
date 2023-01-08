@@ -10,10 +10,10 @@ import org.springframework.data.domain.Page;
 
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long>, SearchRepository {
-    @Query(value="select m from Message m where m.channelID=?1 order by m.ID desc")
+public interface MessageRepository extends JpaRepository<Message, Long>, MessageSearchRepository {
+    @Query(value="select m from Message m where m.channel.id=?1 order by m.ID desc")
     Page<Message> getLastFeed(Long channelID, Pageable pageable);
 
-    @Query(value="select m from Message m where m.channelID=?1 and m.ID < ?2 order by m.ID desc")
+    @Query(value="select m from Message m where m.channel.id=?1 and m.ID < ?2 order by m.ID desc")
     Page<Message> getFeedFrom(Long channelID, Long messageID, Pageable pageable);
 }

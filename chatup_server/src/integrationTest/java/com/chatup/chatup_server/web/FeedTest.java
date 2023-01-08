@@ -61,7 +61,7 @@ public class FeedTest extends BaseInitializedDbTest {
         Long channelID = 1L;
         List<Message> feed = messageRepository
                 .findAll()
-                .stream().filter(m->m.getChannelID().equals(channelID))
+                .stream().filter(m->m.getChannel().getId().equals(channelID))
                 .sorted(Comparator.comparingLong(Message::getID).reversed()).toList();
         Set<Long> feedIds = feed.stream().map(Message::getID).collect(Collectors.toSet());
         URI uri = getURIFeedFrom(channelID, feed.get(0).getID(), 0);
@@ -102,7 +102,7 @@ public class FeedTest extends BaseInitializedDbTest {
         return messageRepository
                 .findAll()
                 .stream()
-                .filter(m->m.getChannelID().equals(channelID))
+                .filter(m->m.getChannel().getId().equals(channelID))
                 .sorted(Comparator.comparingLong(Message::getID).reversed())
                 .limit(PAGE_SIZE)
                 .collect(Collectors.toList());

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import java.time.Instant;
 @Entity
@@ -32,8 +33,10 @@ public class Message{
     private Instant timeCreated;
     @OneToOne
     private AppUser author;
-    @Column(name="channel_id")
-    private Long channelID;
+    @ManyToOne
+    @IndexedEmbedded
+    @JoinColumn(name="channel_id", nullable=false)
+    private Channel channel;
     @ColumnDefault(value = "false")
     @Column(name="is_deleted")
     private Boolean isDeleted;
@@ -41,11 +44,11 @@ public class Message{
     public Message() {
     }
 
-    public Message(String content, Instant timeCreated, AppUser author, Long channelID, Boolean isDeleted) {
+    public Message(String content, Instant timeCreated, AppUser author, Channel channel, Boolean isDeleted) {
         this.content = content;
         this.timeCreated = timeCreated;
         this.author = author;
-        this.channelID = channelID;
+        this.channel = channel;
         this.isDeleted = isDeleted;
     }
 
@@ -81,12 +84,12 @@ public class Message{
         this.author = author;
     }
 
-    public Long getChannelID() {
-        return channelID;
+    public Channel getChannel() {
+        return channel;
     }
 
-    public void setChannelID(Long channelID) {
-        this.channelID = channelID;
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     public Boolean getDeleted() {
