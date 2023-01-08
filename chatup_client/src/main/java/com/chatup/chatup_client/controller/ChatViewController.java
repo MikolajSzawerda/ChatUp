@@ -15,6 +15,7 @@ import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.animation.*;
+import javafx.collections.FXCollections;
 import javafx.application.Application;
 import javafx.collections.ListChangeListener;
 
@@ -350,7 +351,7 @@ public class ChatViewController implements Initializable {
 
         searchUserResults.setCellFactory(param -> new ListCell<>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(Channel    item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setText(null);
