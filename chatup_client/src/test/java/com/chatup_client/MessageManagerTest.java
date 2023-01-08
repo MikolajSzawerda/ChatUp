@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class MessageManagerTest {
 
@@ -45,11 +47,11 @@ public class MessageManagerTest {
         Channel channel0 = createChannel(0L);
         Channel otherChannel = createChannel(1L);
         manager.addMessage(msg);
-        assert manager.getMessageBuffer(otherChannel) != null;
-        assert manager.getMessageBuffer(otherChannel).getMessages().size() == 0;
-        assert manager.getMessageBuffer(channel0) != null;
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
-        assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
+        assertNotEquals(null, manager.getMessageBuffer(otherChannel));
+        assertEquals(0, manager.getMessageBuffer(otherChannel).getMessages().size());
+        assertNotEquals(null, manager.getMessageBuffer(channel0));
+        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
     }
 
     @Test
@@ -58,11 +60,11 @@ public class MessageManagerTest {
         Message msg2 = new Message(msg);
         Channel channel0 = createChannel(0L);
         manager.addMessage(msg);
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
-        assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
+        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
         manager.addMessage(msg2);
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
-        assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
+        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
         for(Message m : manager.getMessageBuffer(channel0).getMessages()) {
             assert m != msg2;
         }
@@ -75,12 +77,12 @@ public class MessageManagerTest {
         Message msg2 = createMessage(1L, 0L, "sameChannelDiffId");
         Channel channel0 = createChannel(0L);
         manager.addMessage(msg);
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
-        assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
+        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
         manager.addMessage(msg2);
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 2;
-        assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
-        assert manager.getMessageBuffer(channel0).getMessages().contains(msg2);
+        assertEquals(2, manager.getMessageBuffer(channel0).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
+        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg2));
     }
 
     @Test
@@ -91,14 +93,13 @@ public class MessageManagerTest {
         Channel channel0 = createChannel(0L);
         Channel channel1 = createChannel(1L);
         manager.addMessage(msg);
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
-        assert manager.getMessageBuffer(channel0).getMessages().contains(msg);
-        assert !msg.getDuplicateFlag();
+        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
+        assertFalse(msg.getDuplicateFlag());
         manager.addMessage(msg2);
-        assert manager.getMessageBuffer(channel0).getMessages().size() == 1;
-        assert manager.getMessageBuffer(channel1).getMessages().size() == 1;
-        assert msg.getDuplicateFlag();
-        assert msg2.getDuplicateFlag();
-
+        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
+        assertEquals(1, manager.getMessageBuffer(channel1).getMessages().size());
+        assertTrue(msg.getDuplicateFlag());
+        assertTrue(msg2.getDuplicateFlag());
     }
 }
