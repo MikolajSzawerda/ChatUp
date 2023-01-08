@@ -71,7 +71,7 @@ public class ChannelTest extends BaseInitializedDbTest {
 
         assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(200));
         assertEquals(channelsList.size(), 1);
-        assertEquals(channelsList.get(0).name(), USER_1);
+        assertEquals(channelsList.get(0).name(), user1.getFirstName() + " " + user1.getLastName());
     }
 
     protected ResponseEntity<ChannelInfo> getCreateChannelRequest(String token, ChannelCreateRequest body){
