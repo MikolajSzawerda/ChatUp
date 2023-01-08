@@ -299,50 +299,7 @@ public class ChatViewController implements Initializable {
         if(e.getCode() == KeyCode.ENTER){
             onSendMessage();
         }
-
     }
-
-
-    @Override
-    public void initialize(java.net.URL location, ResourceBundle resources) {
-        //closeChannelCreateButton.setSkin(new MyButtonSkin(closeChannelCreateButton));
-        //messages.getStylesheets().add("/com/sandec/mdfx/mdfx-default.css");
-        addChannelDialog.setMaxHeight(130);
-        addChannelDialog.setVisible(false);
-        addDMDialog.setVisible(false);
-        backdrop.setVisible(false);
-        UserInfo currentUser = restClient.getCurrentUser();
-        logger.info("Logged in user: {}", currentUser.toString());
-        userNameSurname.setText(currentUser.toString());
-        Insets padding = new Insets(0, 0, 0, 0);
-        userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
-
-        addDM.setOnAction(e->{
-            onAddDM();
-        });
-        addDM.setSkin(new MyButtonSkin2(addDM));
-        addChannel.setOnAction(e->{
-            onAddChannel();
-        });
-        addChannel.setSkin(new MyButtonSkin2(addChannel));
-
-        createChannelButton.setOnAction(e->{
-            //checkIsPrivate();   //TODO - only for test purpose
-        });
-        createChannelButton.setSkin(new MyButtonSkin2(createChannelButton));
-        closeChannelDialogButton.setOnAction(e->{
-            onCloseChannelDialogButton();
-        });
-        closeChannelDialogButton.setSkin(new MyButtonSkin2(closeChannelDialogButton));
-
-        createDMButton.setOnAction(e->{
-            ;
-        });
-        createDMButton.setSkin(new MyButtonSkin2(createDMButton));
-        closeDMDialogButton.setOnAction(e->{
-            onCloseDMDialogButton();
-        });
-        closeDMDialogButton.setSkin(new MyButtonSkin2(closeDMDialogButton));
 
     private void setCellFactories() {
         messages.setCellFactory(param -> new ListCell<>() {
@@ -429,6 +386,9 @@ public class ChatViewController implements Initializable {
             }
         });
     }
+
+
+   
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
         UserInfo currentUser = restClient.getCurrentUser();
@@ -450,22 +410,42 @@ public class ChatViewController implements Initializable {
         messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
         restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
 
-        ObservableList<String> channelList = FXCollections.observableArrayList();
-        channelList.add("Kanał pierwszy");
-        channelList.add("Kanał drugi");
-        channels.setItems(channelList);
-
-        ObservableList<String> directMessages = FXCollections.observableArrayList();
-        directMessages.add("Dawid Kaszyński");
-        directMessages.add("Jan Kowalczewski");
-        directMessages.add("Mikołaj Szawerda");
-        direct.setItems(directMessages);
-
         ObservableList<String> searchResults = FXCollections.observableArrayList();
         searchResults.add("Dawid Kaszyński");
         searchResults.add("Jan Kowalczewski");
         searchResults.add("Mikołaj Szawerda");
         searchUserResults.setItems(searchResults);
+
+                addChannelDialog.setMaxHeight(130);
+        addChannelDialog.setVisible(false);
+        addDMDialog.setVisible(false);
+        backdrop.setVisible(false);
+
+        addDM.setOnAction(e->{
+            onAddDM();
+        });
+        addDM.setSkin(new MyButtonSkin2(addDM));
+        addChannel.setOnAction(e->{
+            onAddChannel();
+        });
+        addChannel.setSkin(new MyButtonSkin2(addChannel));
+
+        createChannelButton.setOnAction(e->{
+        });
+        createChannelButton.setSkin(new MyButtonSkin2(createChannelButton));
+        closeChannelDialogButton.setOnAction(e->{
+            onCloseChannelDialogButton();
+        });
+        closeChannelDialogButton.setSkin(new MyButtonSkin2(closeChannelDialogButton));
+
+        createDMButton.setOnAction(e->{
+            ;
+        });
+        createDMButton.setSkin(new MyButtonSkin2(createDMButton));
+        closeDMDialogButton.setOnAction(e->{
+            onCloseDMDialogButton();
+        });
+        closeDMDialogButton.setSkin(new MyButtonSkin2(closeDMDialogButton));
 
         try{
             socketClient.connect();
