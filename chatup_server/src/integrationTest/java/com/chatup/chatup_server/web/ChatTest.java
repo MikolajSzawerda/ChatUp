@@ -33,10 +33,10 @@ public class ChatTest extends BaseInitializedDbTest {
     SocketClient client2;
     private static final Long CHANNEL = 3L;
     private static final LinkedList<String> topics = new LinkedList<>() {{
-        add("/topic/channel/" + CHANNEL);
+        add("/topic/channel." + CHANNEL);
     }};
 
-    private static final String BROADCAST_ENDPOINT = "/app/channel/" + CHANNEL;
+    private static final String BROADCAST_ENDPOINT = "/app/channel." + CHANNEL;
 
     @BeforeEach
     void initClient() {
@@ -106,11 +106,12 @@ public class ChatTest extends BaseInitializedDbTest {
     void shouldReceiveOnlyWhenSubscribed() {
         //Given
         Long id  = addNewChannel(createUserToken(USER_2), USER_2);
-        String newTopic = "/topic/channel/"+id;
+        String newTopic = "/topic/channel."+id;
 
         //When
         client2.subscribe(newTopic);
-        client1.sendMessage("/app/channel/"+id, "Test");
+        client1.sendMessage("/app/channel."+id, "Test");
+
 
         //Then
         timedAssertEquals(1, client2.getMessages()::size);

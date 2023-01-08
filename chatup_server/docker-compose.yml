@@ -26,6 +26,14 @@ services:
       memlock:
         soft: -1
         hard: -1
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "61613:61613"
+    volumes:
+      - "./rabbit_enabled_plugins:/etc/rabbitmq/enabled_plugins"
   app:
     build: .
     depends_on:

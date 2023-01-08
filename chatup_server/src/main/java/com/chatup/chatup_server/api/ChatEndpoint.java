@@ -22,8 +22,8 @@ public class ChatEndpoint {
         this.messageService = messageService;
     }
 
-    @MessageMapping("/channel/{channelID}")
-    @SendTo("/topic/channel/{channelID}")
+    @MessageMapping("channel.{channelID}")
+    @SendTo("/topic/channel.{channelID}")
     public OutgoingMessage broadcast(@Payload IncomingMessage msg, Principal user, @DestinationVariable Long channelID){
         logger.info("User: {} sent: {}", user.getName(), msg.message());
         Message message = messageService.preserve(msg.message(), user, channelID);
