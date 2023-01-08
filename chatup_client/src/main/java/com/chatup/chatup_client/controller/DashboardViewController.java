@@ -113,64 +113,64 @@ public class DashboardViewController implements Initializable {
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 40.0, padding));
 
 
-        direct.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else if (item != null) {
+        // direct.setCellFactory(param -> new ListCell<>() {
+        //     @Override
+        //     protected void updateItem(String item, boolean empty) {
+        //         super.updateItem(item, empty);
+        //         if (empty) {
+        //             setText(null);
+        //             setGraphic(null);
+        //         } else if (item != null) {
 
-                    Insets padding = new Insets(0, 5, 0, 0);
-                    StackPane avatar = AvatarFactory.createAvatar(item, 18.0, padding);
-                    Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
+        //             Insets padding = new Insets(0, 5, 0, 0);
+        //             StackPane avatar = AvatarFactory.createAvatar(item, 18.0, padding);
+        //             Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
 
-                    setGraphic(directMessageButton);
+        //             setGraphic(directMessageButton);
 
-                }
-            }
-        });
+        //         }
+        //     }
+        // });
 
-        channels.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
+        // channels.setCellFactory(param -> new ListCell<>() {
+        //     @Override
+        //     protected void updateItem(String item, boolean empty) {
+        //         super.updateItem(item, empty);
 
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else if (item != null) {
-                    Node channelIcon;
-                    if (item.equals("Kanał drugi")) {
-                        channelIcon = ChannelIconFactory.createChannelIcon(true, 12);
-                    } else {
-                        channelIcon = ChannelIconFactory.createChannelIcon(false, 12);
-                    }
+        //         if (empty) {
+        //             setText(null);
+        //             setGraphic(null);
+        //         } else if (item != null) {
+        //             Node channelIcon;
+        //             if (item.equals("Kanał drugi")) {
+        //                 channelIcon = ChannelIconFactory.createChannelIcon(true, 12);
+        //             } else {
+        //                 channelIcon = ChannelIconFactory.createChannelIcon(false, 12);
+        //             }
 
-                    Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
-                    channelButton.getStyleClass().add("my-button");
+        //             Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
+        //             channelButton.getStyleClass().add("my-button");
 
-                    final Animation animation = new Transition() {
-                        {
-                            setCycleDuration(Duration.millis(400));
-                            setInterpolator(Interpolator.EASE_OUT);
-                        }
-                        @Override
-                        protected void interpolate(double frac) {
-                            Color vColor = new Color(0.33, 0.42, 0.86, 1 - frac);
-                            channelButton.setBackground(new Background(new BackgroundFill(vColor, CornerRadii.EMPTY, Insets.EMPTY)));
-                        }
+        //             final Animation animation = new Transition() {
+        //                 {
+        //                     setCycleDuration(Duration.millis(400));
+        //                     setInterpolator(Interpolator.EASE_OUT);
+        //                 }
+        //                 @Override
+        //                 protected void interpolate(double frac) {
+        //                     Color vColor = new Color(0.33, 0.42, 0.86, 1 - frac);
+        //                     channelButton.setBackground(new Background(new BackgroundFill(vColor, CornerRadii.EMPTY, Insets.EMPTY)));
+        //                 }
 
-                    };
-                    channelButton.setBackground(new Background(new BackgroundFill(new Color(0, 0 ,0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
-                    animation.setOnFinished(event -> goBack.fire());
-                    channelButton.setOnAction(e -> animation.play());
+        //             };
+        //             channelButton.setBackground(new Background(new BackgroundFill(new Color(0, 0 ,0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
+        //             animation.setOnFinished(event -> goBack.fire());
+        //             channelButton.setOnAction(e -> animation.play());
 
-                    setGraphic(channelButton);
-                }
-            }
-        });
+        //             setGraphic(channelButton);
+        //         }
+        //     }
+        // });
 
         ObservableList<String> channelList = FXCollections.observableArrayList();
         channelList.add("Kanał pierwszy");

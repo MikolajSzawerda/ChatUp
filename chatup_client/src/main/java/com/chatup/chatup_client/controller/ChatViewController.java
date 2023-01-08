@@ -349,24 +349,24 @@ public class ChatViewController implements Initializable {
             }
         });
 
-        searchUserResults.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(Channel    item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else if (item != null) {
+        // searchUserResults.setCellFactory(param -> new ListCell<>() {
+        //     @Override
+        //     protected void updateItem(Channel    item, boolean empty) {
+        //         super.updateItem(item, empty);
+        //         if (empty) {
+        //             setText(null);
+        //             setGraphic(null);
+        //         } else if (item != null) {
 
-                    Insets padding = new Insets(0, 5, 0, 0);
-                    StackPane avatar = AvatarFactory.createAvatar(item, 13.0, padding);
-                    Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
+        //             Insets padding = new Insets(0, 5, 0, 0);
+        //             StackPane avatar = AvatarFactory.createAvatar(item, 13.0, padding);
+        //             Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
 
-                    setGraphic(directMessageButton);
+        //             setGraphic(directMessageButton);
 
-                }
-            }
-        });
+        //         }
+        //     }
+        // });
 
         direct.setCellFactory(param -> new ListCell<>() {
             @Override
