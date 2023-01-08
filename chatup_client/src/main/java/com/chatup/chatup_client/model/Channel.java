@@ -22,6 +22,15 @@ public class Channel
         return name;
     }
 
+    public Channel(Channel other) {
+        this.id = other.getId();
+        this.name = other.getName();
+        this.isPrivate = other.getIsPrivate();
+        this.isDirectMessage = other.getIsDirectMessage();
+        this.duplicateFlag = other.getDuplicateFlag();
+    }
+
+    public Channel() {}
     public void setName(String name) {
         this.name = name;
     }
