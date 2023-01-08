@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Set;
 
 
 @Entity
@@ -49,11 +50,14 @@ public class AppUser implements UserDetails {
     @ColumnDefault(value = "true")
     private Boolean isEnabled;
 
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private Set<Channel> channels;
+
     public AppUser() {}
 
     public AppUser(
             Long id, String firstName, String lastName, String username,
-            String password, String status, Boolean isEnabled
+            String password, String status, Boolean isEnabled, Set<Channel> channels
     ) {
         this.id = id;
         this.firstName = firstName;
@@ -62,15 +66,18 @@ public class AppUser implements UserDetails {
         this.password = password;
         this.status = status;
         this.isEnabled = isEnabled;
+        this.channels = channels;
     }
 
-    public AppUser(String firstName, String lastName, String username, String password, String status, Boolean isEnabled) {
+    public AppUser(String firstName, String lastName, String username, String password,
+                   String status, Boolean isEnabled, Set<Channel> channels) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.status = status;
         this.isEnabled = isEnabled;
+        this.channels = channels;
     }
 
     public Long getId() { return id; }
@@ -94,9 +101,11 @@ public class AppUser implements UserDetails {
     public boolean isEnabled() { return isEnabled; }
     public void setIsEnabled(Boolean enabled) { isEnabled = enabled; }
 
-
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public Set<Channel> getChannels() { return channels; }
+    public void setChannels(Set<Channel> channels) { this.channels = channels; }
 
     @Override
     public boolean isAccountNonExpired() { return true; }
