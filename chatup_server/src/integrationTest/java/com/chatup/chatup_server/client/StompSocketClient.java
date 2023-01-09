@@ -1,5 +1,6 @@
 package com.chatup.chatup_server.client;
 
+import com.chatup.chatup_server.service.channels.ChannelInfo;
 import com.chatup.chatup_server.service.messaging.IncomingMessage;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,6 +71,11 @@ public class StompSocketClient implements SocketClient{
     @Override
     public List<OutgoingMessage> getMessages() {
         return connectionHandler.getMessages();
+    }
+
+    @Override
+    public List<ChannelInfo> getEvents() {
+        return connectionHandler.getChannelCreationEvents();
     }
 
     @Override
