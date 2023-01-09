@@ -20,7 +20,7 @@ public class AppUserSearchRepositoryImpl implements AppUserSearchRepository{
     public List<AppUser> fuzzyUserSearch(String name, Pageable pageable) {
         SearchSession session = Search.session(entityManager);
         SearchResult<AppUser> result = session.search(AppUser.class)
-                .where(f->f.match().field("firstName").matching(name).fuzzy())
+                .where(f->f.match().fields("firstName", "lastName").matching(name).fuzzy())
                 .fetch((int) pageable.getOffset(), pageable.getPageSize());
         return result.hits();
     }
