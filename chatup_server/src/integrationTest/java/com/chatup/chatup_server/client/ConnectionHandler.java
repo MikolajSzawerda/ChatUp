@@ -1,5 +1,6 @@
 package com.chatup.chatup_server.client;
 
+import com.chatup.chatup_server.service.channels.ChannelInfo;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -13,6 +14,12 @@ import java.util.List;
 public class ConnectionHandler implements StompSessionHandler{
     private final List<OutgoingMessage> messageBuffer;
 
+    public List<ChannelInfo> getChannelCreationEvents() {
+        return channelCreationBuffer;
+    }
+
+    private final List<ChannelInfo> channelCreationBuffer;
+
     public List<OutgoingMessage> getMessages() {
         return messageBuffer;
     }
@@ -21,6 +28,7 @@ public class ConnectionHandler implements StompSessionHandler{
 
     public ConnectionHandler(List<String> topics){
         this.messageBuffer = new LinkedList<>();
+        this.channelCreationBuffer = new LinkedList<>();
         this.topics = new LinkedList<>(topics);
     }
 
@@ -59,13 +67,20 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
+        if(headers.get("destination").get(0).contains("create")){
+            return ChannelInfo.class;
+        }
         return OutgoingMessage.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
         synchronized (this){
-            messageBuffer.add((OutgoingMessage)payload);
+            if(headers.get("destination").get(0).contains("create")){
+                channelCreationBuffer.add((ChannelInfo) payload);
+            } else {
+                messageBuffer.add((OutgoingMessage)payload);
+            }
         }
     }
 }
