@@ -1,12 +1,16 @@
 package com.chatup.chatup_server.web;
 
 import com.chatup.chatup_server.BaseInitializedDbTest;
+import com.chatup.chatup_server.client.SocketClient;
 import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.domain.Channel;
 import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.repository.ChannelRepository;
 import com.chatup.chatup_server.service.channels.ChannelCreateRequest;
 import com.chatup.chatup_server.service.channels.ChannelInfo;
+import com.chatup.chatup_server.service.channels.ChannelService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -26,10 +30,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ChannelTest extends BaseInitializedDbTest {
     private final String LIST_CHANNELS_ENDPOINT = "/channel/list";
 
+    SocketClient client1;
+    SocketClient client2;
+    AppUser user1;
+    AppUser user2;
+
+
     @Autowired
     private AppUserRepository appUserRepository;
     @Autowired
     private ChannelRepository channelRepository;
+
+    @BeforeEach
+    void initClient() {
+        user1 = appUserRepository.findAppUserByUsername(USER_1);
+        user2 = appUserRepository.findAppUserByUsername(USER_2);
+        client1 = socketClientFactory.getClient(USER_1, List.of(ChannelService.createBroadcastTopicName(user1)));
+        client2 = socketClientFactory.getClient(USER_2, List.of(ChannelService.createBroadcastTopicName(user2)));
+    }
+
+    @AfterEach
+    void closeConnections() {
+        client1.close();
+        client2.close();
+    }
 
     @Test
     public void shouldCreateChannel() {
@@ -59,8 +83,6 @@ public class ChannelTest extends BaseInitializedDbTest {
 
     @Test
     public void shouldCreateChannelNameForDms() {
-        AppUser user1 = appUserRepository.findAppUserByUsername(USER_1);
-        AppUser user2 = appUserRepository.findAppUserByUsername(USER_2);
 
         ChannelCreateRequest request = new ChannelCreateRequest(
                 null, true, true, new HashSet<>(){{
@@ -80,6 +102,21 @@ public class ChannelTest extends BaseInitializedDbTest {
 
     }
 
+    @Test
+    void shouldBroadcastMessageAboutChannelCreation(){
+        AppUser user1 = appUserRepository.findAppUserByUsername(USER_1);
+        AppUser user2 = appUserRepository.findAppUserByUsername(USER_2);
+        ChannelCreateRequest request = new ChannelCreateRequest(
+                null, true, true, new HashSet<>(){{
+            add(user1.getId());
+            add(user2.getId());
+        }}
+        );
+        getCreateChannelRequest(createUserToken(USER_1), request).getBody().id();
+
+        timedAssertEquals(1, client1.getEvents()::size);
+        timedAssertEquals(1, client2.getEvents()::size);
+    }
 
 
     protected ResponseEntity<ChannelInfo[]> getListChannelsRequest(String token){
