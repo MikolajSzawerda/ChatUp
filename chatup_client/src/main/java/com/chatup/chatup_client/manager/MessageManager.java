@@ -32,13 +32,15 @@ public class MessageManager {
     }
 
     public void addMessage(Message msg) {
+        boolean added = false;
         if(buffers.containsKey(msg.getChannelID())) {
             buffers.get(msg.getChannelID()).addMessage(msg);
         } else {
             MessageBuffer buffer = new MessageBuffer(testMode);
-            buffer.addMessage(msg);
+            added = buffer.addMessage(msg);
             buffers.put(msg.getChannelID(), buffer);
         }
+        if(!added) return;
         if(testMode) {
             checkForDuplicates(msg);
             return;
