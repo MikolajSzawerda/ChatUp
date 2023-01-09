@@ -41,5 +41,13 @@ public class UserInfo {
     public String toString() {
         return String.format("%s %s", firstName, lastName);
     }
+
+    public boolean equals(Object obj) {
+        if(!(obj instanceof UserInfo other)) return false;
+        return  getId() == other.getId()
+                && getUsername().equals(other.getUsername())
+                && getFirstName().equals(other.getFirstName())
+                && getLastName().equals(other.getLastName());
+    }
 }
 

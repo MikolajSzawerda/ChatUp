@@ -79,6 +79,10 @@ public class RestClient {
         return getAsCollection("/feed/" + channel.getId() + "?fromMessageID=" + message.getMessageID(), Message.class);
     }
 
+    public Collection<UserInfo> searchUsers(String searchName){
+        return getAsCollection("/search/users?name=" + searchName, UserInfo.class);
+    }
+
     public UserInfo getCurrentUser() {
         return getAsClass("/me", UserInfo.class);
     }
