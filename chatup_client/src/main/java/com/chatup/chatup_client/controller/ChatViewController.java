@@ -159,7 +159,7 @@ public class ChatViewController implements Initializable {
     public void onSendMessage(){
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
-            socketClient.sendMessage("/app/channel/"+currentChannel.getId(), message.getText());
+            socketClient.sendMessage("/app/channel."+currentChannel.getId(), message.getText());
             message.clear();
         }
     }
