@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -16,14 +17,18 @@ import java.util.Comparator;
 @Component
 public class ChannelManager {
     private final Logger logger = LoggerFactory.getLogger(ChannelManager.class);
-    private final ConnectionHandler connectionHandler;
+    private ConnectionHandler connectionHandler;
     private boolean testMode;
 
     @Autowired
-    public ChannelManager(@Value("false") boolean testMode, ConnectionHandler connectionHandler) {
+    public ChannelManager(@Value("false") boolean testMode) {
         this.testMode = testMode;
+    }
+
+    public void setConnectionHandler(ConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
     }
+
     private ObservableList<Channel> standardChannels = FXCollections.observableArrayList();
 
     public ObservableList<Channel> getStandardChannels() {
