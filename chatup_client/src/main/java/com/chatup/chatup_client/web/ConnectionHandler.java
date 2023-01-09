@@ -1,6 +1,9 @@
 package com.chatup.chatup_client.web;
 
+import com.chatup.chatup_client.controller.ChatViewController;
+import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.manager.MessageManager;
+import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +22,12 @@ import java.util.List;
 public class ConnectionHandler implements StompSessionHandler{
     final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
     private final MessageManager messageManager;
-
-    // TODO: remove once channel manager is working
-    private final List<String> topics = new LinkedList<>(){{
-        add("/topic/channel.1");
-    }};
-
+    private final List<String> topics = new LinkedList<>();
+    public void addChannel(Channel channel) {
+        String topic = "/topic/channel." + channel.getId();
+        topics.add(topic);
+        addSubscription(topic);
+    }
     @Autowired
     public ConnectionHandler(MessageManager messageManager) {
         this.messageManager = messageManager;
@@ -63,6 +66,7 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
+        logger.info("Subscription: " + headers.toString());
         return Message.class;
     }
 
