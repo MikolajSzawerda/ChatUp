@@ -50,7 +50,7 @@
             <Font size="21.0" />
          </font>
       </Text>
-      <Button layoutX="502.0" layoutY="276.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="79.0" styleClass="customized-button" text="Change" />
+      <Button disable="true" layoutX="502.0" layoutY="276.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="79.0" styleClass="customized-button" text="Change" />
       <Text fx:id="username2" layoutX="413.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" wrappingWidth="770.7294921875">
          <font>
             <Font size="21.0" />
@@ -63,7 +63,7 @@
          </font>
       </Text>
       <Button fx:id="goBack" layoutX="798.0" layoutY="463.0" mnemonicParsing="false" onAction="#onGoBack" prefHeight="24.0" prefWidth="79.0" styleClass="customized-button" text="Go back" />
-      <fx:include source="sidebar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0" />
-      <fx:include source="headbar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <fx:include fx:id="sidebar" source="sidebar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0" />
+      <fx:include fx:id="headbar" source="headbar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>

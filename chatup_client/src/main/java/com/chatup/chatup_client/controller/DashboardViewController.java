@@ -4,8 +4,11 @@ import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
+import com.chatup.chatup_client.manager.MessageManager;
+import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
+import com.chatup.chatup_client.web.SocketClient;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -31,12 +34,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 @Component
-public class DashboardViewController implements Initializable {
+public class DashboardViewController extends ViewController {
 
+    @FXML
+    private HeadbarController headbarController;
+
+    @FXML
+    private SidebarController sidebarController;
 
     @FXML
     public Text userNameSurname;
@@ -52,9 +63,6 @@ public class DashboardViewController implements Initializable {
 
     @FXML
     public Text apiKey;
-
-    private final RestClient restClient;
-    private final MainApplication application;
 
     @FXML
     public ListView<String> direct;
@@ -98,11 +106,22 @@ public class DashboardViewController implements Initializable {
         }
     }
 
+    @Override
+    public void changeChannel(Channel channel){
+        try{
+            this.application.switchToChatView(new ActionEvent(), (Stage) username.getScene().getWindow());
+        }
+        catch (IOException e)
+        {
+            throw  new UncheckedIOException(e);
+        }
+
+    }
+
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public DashboardViewController(RestClient restClient, Application application) {
-        this.restClient = restClient;
-        this.application = (MainApplication) application;
+    public DashboardViewController(SocketClient socketClient, RestClient restClient, Application application) {
+        super(socketClient, restClient, application);
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -111,76 +130,19 @@ public class DashboardViewController implements Initializable {
         username.setText(currentUser.getUsername());
         Insets padding = new Insets(0, 0, 0, 0);
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 40.0, padding));
+        headbarController.setHeadController(this);
+        sidebarController.setHeadController(this);
+        Collection<Channel> channels = restClient.listChannels();
 
 
-        // direct.setCellFactory(param -> new ListCell<>() {
-        //     @Override
-        //     protected void updateItem(String item, boolean empty) {
-        //         super.updateItem(item, empty);
-        //         if (empty) {
-        //             setText(null);
-        //             setGraphic(null);
-        //         } else if (item != null) {
+        closeDMDialog();
+        closeChannelDialog();
 
-        //             Insets padding = new Insets(0, 5, 0, 0);
-        //             StackPane avatar = AvatarFactory.createAvatar(item, 18.0, padding);
-        //             Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
-
-        //             setGraphic(directMessageButton);
-
-        //         }
-        //     }
-        // });
-
-        // channels.setCellFactory(param -> new ListCell<>() {
-        //     @Override
-        //     protected void updateItem(String item, boolean empty) {
-        //         super.updateItem(item, empty);
-
-        //         if (empty) {
-        //             setText(null);
-        //             setGraphic(null);
-        //         } else if (item != null) {
-        //             Node channelIcon;
-        //             if (item.equals("Kanał drugi")) {
-        //                 channelIcon = ChannelIconFactory.createChannelIcon(true, 12);
-        //             } else {
-        //                 channelIcon = ChannelIconFactory.createChannelIcon(false, 12);
-        //             }
-
-        //             Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
-        //             channelButton.getStyleClass().add("my-button");
-
-        //             final Animation animation = new Transition() {
-        //                 {
-        //                     setCycleDuration(Duration.millis(400));
-        //                     setInterpolator(Interpolator.EASE_OUT);
-        //                 }
-        //                 @Override
-        //                 protected void interpolate(double frac) {
-        //                     Color vColor = new Color(0.33, 0.42, 0.86, 1 - frac);
-        //                     channelButton.setBackground(new Background(new BackgroundFill(vColor, CornerRadii.EMPTY, Insets.EMPTY)));
-        //                 }
-
-        //             };
-        //             channelButton.setBackground(new Background(new BackgroundFill(new Color(0, 0 ,0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
-        //             animation.setOnFinished(event -> goBack.fire());
-        //             channelButton.setOnAction(e -> animation.play());
-
-        //             setGraphic(channelButton);
-        //         }
-        //     }
-        // });
-
-        ObservableList<String> channelList = FXCollections.observableArrayList();
-        channelList.add("Kanał pierwszy");
-        channelList.add("Kanał drugi");
-        channels.setItems(channelList);
-
-        ObservableList<String> directMessages = FXCollections.observableArrayList();
-        directMessages.add("Dawid Kaszyński");
-        directMessages.add("Jan Kowalczewski");
-        directMessages.add("Mikołaj Szawerda");
-        direct.setItems(directMessages);
+        try{
+            socketClient.connect();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 }

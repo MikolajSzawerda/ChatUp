@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
 public class CreateDMDialogController implements Initializable {
 
     final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
-    private ChatViewController headController;
+    private ViewController headController;
     private final RestClient restClient;
     private final MainApplication application;
     @FXML
@@ -111,7 +111,7 @@ public class CreateDMDialogController implements Initializable {
         ft.play();
     }
 
-    public void setHeadController(ChatViewController headController){
+    public void setHeadController(ViewController headController){
         this.headController=headController;
     }
     @Override

@@ -31,9 +31,9 @@
          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="716.0" layoutX="1.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" width="4.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="1052.0" AnchorPane.topAnchor="3.0" />
       </children>
    </AnchorPane>
-   <fx:include fx:id="sidebar" source="sidebar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0" />
-   <fx:include fx:id="headbar" source="headbar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   <fx:include fx:id="sidebar" source="sidebar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="85.0" />
+   <fx:include fx:id="headbar" source="headbar.fxml" AnchorPane.bottomAnchor="710.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    <Rectangle fx:id="backdrop" arcHeight="5.0" arcWidth="5.0" height="1080.0" layoutX="-10.0" layoutY="-4.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-opacity: 50%;" visible="false" width="1900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-   <fx:include fx:id="createDMDialog" source="createDMdialog.fxml" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="140.0" />
    <fx:include fx:id="createChannelDialog" source="createChannelDialog.fxml" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="140.0" />
+   <fx:include fx:id="createDMDialog" source="createDMdialog.fxml" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="140.0" />
 </AnchorPane>

@@ -4,6 +4,7 @@ import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
+import com.chatup.chatup_client.component.skin.MyButtonSkin;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
 import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.manager.MessageManager;
@@ -21,7 +22,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +44,7 @@ public class SidebarController implements Initializable {
     private final RestClient restClient;
     private final MainApplication application;
 
-    private  ChatViewController headController;
+    private  ViewController headController;
 
     public ListView<Channel> channels;
 
@@ -62,7 +67,7 @@ public class SidebarController implements Initializable {
     }
 
 
-    public void setHeadController(ChatViewController headController){
+    public void setHeadController(ViewController headController){
         this.headController=headController;
     }
     @Override
@@ -89,10 +94,13 @@ public class SidebarController implements Initializable {
 
                     Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
                     channelButton.getStyleClass().add("my-button");
-                    channelButton.addEventHandler(ActionEvent.ACTION, event -> {
-                        headController.changeChannel(item);
-                    });
-
+                    channelButton.setOnAction(event ->
+                            headController.changeChannel(item)
+                    );
+                    channelButton.setSkin(new MyButtonSkin(channelButton));
+                    if(item.equals(headController.getCurrentChannel())){
+                        channelButton.setBackground(new Background(new BackgroundFill(new Color(0.33, 0.42, 0.86, 1), CornerRadii.EMPTY, Insets.EMPTY)));
+                    }
                     setGraphic(channelButton);
                 }
             }
@@ -110,10 +118,14 @@ public class SidebarController implements Initializable {
                     Insets padding = new Insets(0, 5, 0, 0);
                     StackPane avatar = AvatarFactory.createAvatar(item.getName(), 18.0, padding);
                     Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
-                    directMessageButton.addEventHandler(ActionEvent.ACTION, event -> {
-                        headController.changeChannel(item);
-                    });
-
+                    directMessageButton.getStyleClass().add("my-button");
+                    directMessageButton.setOnAction(event ->
+                        headController.changeChannel(item)
+                    );
+                    directMessageButton.setSkin(new MyButtonSkin(directMessageButton));
+                    if(item.equals(headController.getCurrentChannel())){
+                        directMessageButton.setBackground(new Background(new BackgroundFill(new Color(0.33, 0.42, 0.86, 1), CornerRadii.EMPTY, Insets.EMPTY)));
+                    }
                     setGraphic(directMessageButton);
 
                 }
