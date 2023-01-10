@@ -95,7 +95,6 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        logger.info("Received WebSocket");
         loadChannelCreateTopic();
         if(Objects.equals(headers.getDestination(), channelCreateTopic)){
             logger.info("Received channel");

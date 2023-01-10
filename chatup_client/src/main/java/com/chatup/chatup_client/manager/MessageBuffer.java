@@ -29,8 +29,14 @@ public class MessageBuffer {
             return true;
         }
         Platform.runLater(() -> {
-            messages.add(msg);
-            messages.sort(Comparator.comparing(Message::getTimeCreated));
+            synchronized (this) {
+                if(!messages.contains(msg)) {
+                    messages.add(msg);
+                    Platform.runLater(() -> {
+                        messages.sort(Comparator.comparing(Message::getTimeCreated));
+                    });
+                }
+            }
         });
         return true;
     }
