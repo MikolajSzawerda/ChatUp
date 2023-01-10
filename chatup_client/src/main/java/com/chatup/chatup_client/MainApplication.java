@@ -49,7 +49,7 @@ public class MainApplication extends Application {
     }
 
     public void switchToChatView(ActionEvent e, Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatup-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatup-view-new.fxml"));
         loadView(e, loader, stage);
     }
 

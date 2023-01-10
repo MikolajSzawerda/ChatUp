@@ -111,20 +111,18 @@
       <children>
          <ListView fx:id="usersAddedToChannelList" layoutX="81.0" layoutY="154.0" prefHeight="334.0" prefWidth="394.0" style="-fx-background-color: #7896cf;" />
          <TextField layoutX="40.0" layoutY="27.0" prefHeight="38.0" prefWidth="323.0" promptText="Channel name ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" />
-         <TextField fx:id="searchField" layoutX="24.0" layoutY="91.0" onKeyTyped="#onSearchUser" prefHeight="38.0" prefWidth="505.0" promptText="Search Users ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" />
+         <TextField fx:id="searchField" layoutX="24.0" layoutY="91.0" onKeyTyped="#onSearchUserChannel" prefHeight="38.0" prefWidth="505.0" promptText="Search Users ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" />
          <CheckBox fx:id="isPrivate" layoutX="417.0" layoutY="37.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#checkIsPrivate" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="is private?" />
-         <ListView fx:id="searchUserResults" layoutX="37.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="480.0" style="-fx-padding: 0 0 0;" />
+         <ListView fx:id="searchUserResultsView" layoutX="37.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#addUserToChannel" prefHeight="170.0" prefWidth="480.0" style="-fx-padding: 0 0 0;" />
          <Button fx:id="closeChannelDialogButton" layoutX="417.0" layoutY="91.0" mnemonicParsing="false" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Close" />
          <Button fx:id="createChannelButton" layoutX="81.0" layoutY="91.0" mnemonicParsing="false" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Create" />
       </children>
    </Pane>
-   <Pane fx:id="addDMDialog" layoutX="395.0" layoutY="142.0" prefHeight="354.0" prefWidth="548.0" style="-fx-background-color: #7896cf; -fx-background-radius: 30px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);;" visible="false">
+   <Pane fx:id="addDMDialog" layoutX="395.0" layoutY="142.0" prefHeight="310.0" prefWidth="548.0" style="-fx-background-color: #7896cf; -fx-background-radius: 30px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);;" visible="false">
       <children>
-         <ListView layoutX="81.0" layoutY="154.0" prefHeight="120.0" prefWidth="394.0" style="-fx-background-color: #7896cf;" />
-         <Button fx:id="createDMButton" layoutX="81.0" layoutY="311.0" mnemonicParsing="false" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Create" />
-         <Button fx:id="closeDMDialogButton" layoutX="409.0" layoutY="311.0" mnemonicParsing="false" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Close" />
+         <Button fx:id="closeDMDialogButton" layoutX="237.0" layoutY="261.0" mnemonicParsing="false" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Close" />
          <TextField fx:id="searchFieldDM" layoutX="22.0" layoutY="31.0" onKeyTyped="#onSearchUserDM" prefHeight="38.0" prefWidth="505.0" promptText="Search Users ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" />
-         <ListView fx:id="searchUserResultsDM" layoutX="35.0" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="480.0" style="-fx-padding: 0 0 0;" />
+         <ListView fx:id="searchUserResultsDM" layoutX="35.0" layoutY="63.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#createDM" prefHeight="170.0" prefWidth="480.0" style="-fx-padding: 0 0 0;" visible="false" />
       </children>
    </Pane>
 </AnchorPane>

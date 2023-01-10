@@ -3,10 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
@@ -22,46 +18,6 @@
    </cursor>
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="800.0" layoutX="217.0" layoutY="78.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" width="11.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="217.0" AnchorPane.rightAnchor="1052.0" AnchorPane.topAnchor="0.0" />
-      <AnchorPane layoutY="81.0" maxWidth="228.0" minHeight="0.0" minWidth="150.0" prefHeight="566.0" prefWidth="228.0" style="-fx-background-color: #7896cf;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="81.0">
-         <children>
-            <AnchorPane layoutY="-1.0" prefHeight="187.0" prefWidth="228.0" style="-fx-background-color: #7896cf;" AnchorPane.bottomAnchor="380.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
-               <children>
-                  <ListView fx:id="channels" layoutX="6.0" layoutY="56.0" prefHeight="267.0" prefWidth="228.0" style="-fx-background-color: #7896cf;" styleClass="channels-list" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="56.0" />
-                  <Text layoutX="14.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Channels:" wrappingWidth="107.7294921875" AnchorPane.leftAnchor="14.0">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Text>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.0" layoutX="2.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1), 10, 0.5, 0, 0);" width="225.0" AnchorPane.topAnchor="-4.0" />
-               </children>
-            </AnchorPane>
-            <AnchorPane layoutX="-10.0" layoutY="283.0" style="-fx-background-color: #7896cf;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="350.0">
-               <children>
-                  <Text layoutX="14.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Direct Messages:" wrappingWidth="176.7294921875" AnchorPane.leftAnchor="6.0">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Text>
-                  <ListView fx:id="direct" layoutX="8.0" layoutY="29.0" styleClass="dm-list" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" />
-               </children>
-            </AnchorPane>
-         </children>
-      </AnchorPane>
-      <AnchorPane focusTraversable="true" layoutX="10.0" layoutY="10.0" style="-fx-background-color: #645a5a; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <Text fill="#e8e7e3" layoutX="179.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Sloneczna Company" wrappingWidth="322.7294921875" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="179.0" AnchorPane.rightAnchor="778.2705078125">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Text>
-            <TextField layoutX="517.0" layoutY="21.0" prefHeight="38.0" prefWidth="362.0" promptText="Search ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="517.0" AnchorPane.rightAnchor="401.0" />
-            <ImageView fitHeight="72.0" fitWidth="123.0" layoutX="51.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="51.0" AnchorPane.rightAnchor="1157.0" AnchorPane.topAnchor="9.0">
-               <image>
-                  <Image url="@pngwing.com.png" />
-               </image>
-            </ImageView>
-         </children>
-      </AnchorPane>
       <StackPane fx:id="userAvatar" layoutX="281.0" layoutY="101.0" prefHeight="111.0" prefWidth="132.0" AnchorPane.leftAnchor="281.0" AnchorPane.topAnchor="101.0" />
       <Text fx:id="userNameSurname" layoutX="434.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="username" wrappingWidth="770.7294921875" AnchorPane.leftAnchor="434.0">
          <font>
@@ -107,5 +63,7 @@
          </font>
       </Text>
       <Button fx:id="goBack" layoutX="798.0" layoutY="463.0" mnemonicParsing="false" onAction="#onGoBack" prefHeight="24.0" prefWidth="79.0" styleClass="customized-button" text="Go back" />
+      <fx:include source="sidebar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0" />
+      <fx:include source="headbar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>
