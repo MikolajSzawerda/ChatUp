@@ -2,9 +2,9 @@ package com.chatup.chatup_server.service.channels;
 
 import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.domain.Channel;
-import com.chatup.chatup_server.domain.exceptions.InvalidRequestException;
 import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.repository.ChannelRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +24,13 @@ public class ChannelService {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    public Channel createChannel(ChannelCreateRequest channelRequest) throws InvalidRequestException {
+    public Channel createChannel(ChannelCreateRequest channelRequest){
         if (channelRequest.is_direct_message()) {
             if (channelRequest.user_ids().size() != 2)
-                throw new InvalidRequestException("Direct message must contain exactly 2 users.");
+                throw new IllegalArgumentException("Direct message must contain exactly 2 users.");
 
             if (!channelRequest.is_private())
-                throw new InvalidRequestException("Direct message channel must be private.");
+                throw new IllegalArgumentException("Direct message channel must be private.");
         }
 
         List<Long> userIds = new ArrayList<>(channelRequest.user_ids());
@@ -38,7 +38,7 @@ public class ChannelService {
         for (Long userId : userIds) {
             Optional<AppUser> optionalUser = appUserRepository.findById(userId);
             if (optionalUser.isEmpty())
-                throw new InvalidRequestException("Provided invalid userId.");
+                throw new EntityNotFoundException("Invalid userId: "+userId);
 
             channelUsers.add(optionalUser.get());
         }
