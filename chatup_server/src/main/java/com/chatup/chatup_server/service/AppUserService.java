@@ -1,6 +1,7 @@
 package com.chatup.chatup_server.service;
 
 import com.chatup.chatup_server.domain.AppUser;
+import com.chatup.chatup_server.domain.Channel;
 import com.chatup.chatup_server.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -36,5 +38,9 @@ public class AppUserService implements UserDetailsService {
 
     public List<AppUser> fuzzySearchByUsername(String username, int page){
         return appUserRepository.fuzzyUserSearch(username, PageRequest.of(page, PAGESIZE));
+    }
+
+    public Set<Channel> getUserChannelsByUsername(String username){
+        return loadUserByUsername(username).getChannels();
     }
 }
