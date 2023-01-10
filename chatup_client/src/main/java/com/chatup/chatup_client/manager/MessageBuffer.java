@@ -21,18 +21,17 @@ public class MessageBuffer {
         this.messages = FXCollections.observableArrayList();
     }
 
-    public boolean addMessage(Message msg){
-        if(messages.contains(msg)) return false;
+    public void addMessage(Message msg){
+        if(messages.contains(msg)) return;
         if(testMode) {
             messages.add(msg);
             messages.sort(Comparator.comparing(Message::getTimeCreated));
-            return true;
+            return;
         }
         messages.add(msg);
         Platform.runLater(() -> {
             messages.sort(Comparator.comparing(Message::getTimeCreated));
         });
-        return true;
     }
 
 }

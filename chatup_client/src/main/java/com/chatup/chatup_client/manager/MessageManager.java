@@ -32,31 +32,12 @@ public class MessageManager {
     }
 
     public void addMessage(Message msg) {
-        boolean added = false;
         if(buffers.containsKey(msg.getChannelID())) {
-            added = buffers.get(msg.getChannelID()).addMessage(msg);
+            buffers.get(msg.getChannelID()).addMessage(msg);
         } else {
             MessageBuffer buffer = new MessageBuffer(testMode);
-            added = buffer.addMessage(msg);
+            buffer.addMessage(msg);
             buffers.put(msg.getChannelID(), buffer);
         }
-        if(!added) return;
-        if(testMode) {
-            checkForDuplicates(msg);
-            return;
-        }
-        Platform.runLater(() -> checkForDuplicates(msg));
     }
-
-    public void checkForDuplicates(Message originalMessage) {
-        for(MessageBuffer buffer : buffers.values()) {
-            for(Message msg : buffer.getMessages()) {
-                if(msg.getMessageID().equals(originalMessage.getMessageID()) && msg != originalMessage ) { // comparing using != intentional
-                    logger.warn("Duplicate message found: " + msg + " and " + originalMessage);
-                    msg.setDuplicateFlag(true);
-                    originalMessage.setDuplicateFlag(true);
-                }
-                }
-        }
-        }
     }

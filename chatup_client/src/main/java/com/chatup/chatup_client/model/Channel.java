@@ -6,10 +6,6 @@ public class Channel
     private String name;
     private Boolean isPrivate;
     private Boolean isDirectMessage;
-
-
-    private Boolean duplicateFlag = false;
-
     public Long getId() {
         return id;
     }
@@ -27,7 +23,6 @@ public class Channel
         this.name = other.getName();
         this.isPrivate = other.getIsPrivate();
         this.isDirectMessage = other.getIsDirectMessage();
-        this.duplicateFlag = other.getDuplicateFlag();
     }
 
     public Channel() {}
@@ -53,18 +48,7 @@ public class Channel
 
     public boolean equals(Object obj) {
         if(!(obj instanceof Channel channelObj)) return false;
-        return name.equals(channelObj.getName()) &&
-                id.equals(channelObj.getId()) &&
-                isPrivate.equals(channelObj.getIsPrivate()) &&
-                isDirectMessage.equals(channelObj.getIsDirectMessage());
-    }
-
-    public Boolean getDuplicateFlag() {
-        return duplicateFlag;
-    }
-
-    public void setDuplicateFlag(Boolean duplicateFlag) {
-        this.duplicateFlag = duplicateFlag;
+        return id.equals(channelObj.getId());
     }
 
     public String toString() {

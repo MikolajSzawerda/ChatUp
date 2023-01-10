@@ -29,7 +29,7 @@ public class ChannelManager {
         this.connectionHandler = connectionHandler;
     }
 
-    private ObservableList<Channel> standardChannels = FXCollections.observableArrayList();
+    private final ObservableList<Channel> standardChannels = FXCollections.observableArrayList();
 
     public ObservableList<Channel> getStandardChannels() {
         return standardChannels;
@@ -39,7 +39,7 @@ public class ChannelManager {
         return directMessages;
     }
 
-    private ObservableList<Channel> directMessages = FXCollections.observableArrayList();
+    private final ObservableList<Channel> directMessages = FXCollections.observableArrayList();
 
     public void addChannel(Channel channel) {
         ObservableList<Channel> listToAdd;
@@ -49,35 +49,16 @@ public class ChannelManager {
         else {
             listToAdd = standardChannels;
         }
-        if(listToAdd.contains(channel)) {
-            return;
-        }
+        if(listToAdd.contains(channel)) return;
         if(testMode) {
             listToAdd.add(channel);
             listToAdd.sort(Comparator.comparing(Channel::getName));
-            checkForDuplicates(channel);
             return;
         }
         listToAdd.add(channel);
         Platform.runLater(() -> {
             listToAdd.sort(Comparator.comparing(Channel::getName));
         });
-        Platform.runLater(() -> {
-            boolean foundDuplicate =  checkForDuplicates(channel);
-            if(!foundDuplicate) {
-                connectionHandler.addChannel(channel);
-            }
-        });
-    }
-    public boolean checkForDuplicates(Channel channel) {
-        for(Channel ch : standardChannels) {
-            if(ch.getId().equals(channel.getId()) && ch != channel) {
-                logger.warn("Duplicate channel found: " + ch + " and " + channel);
-                ch.setDuplicateFlag(true);
-                channel.setDuplicateFlag(true);
-                return true;
-            }
-        }
-        return false;
+        connectionHandler.addChannel(channel);
     }
 }
