@@ -85,9 +85,14 @@ public class SidebarController implements Initializable {
                     } else {
                         channelIcon = ChannelIconFactory.createChannelIcon(false, 12);
                     }
+                    
 
                     Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
                     channelButton.getStyleClass().add("my-button");
+                    channelButton.addEventHandler(ActionEvent.ACTION, event -> {
+                        changeChannel(item);
+                    });
+
                     setGraphic(channelButton);
                 }
             }
