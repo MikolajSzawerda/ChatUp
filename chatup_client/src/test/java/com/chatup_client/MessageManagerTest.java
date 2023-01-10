@@ -17,7 +17,7 @@ public class MessageManagerTest {
 
     @BeforeEach
     void setupManager() {
-        manager = new MessageManager(true);
+        manager = new MessageManager(true, null);
     }
 
     Message createMessage(Long messageID, Long channelID, String content) {
@@ -47,11 +47,11 @@ public class MessageManagerTest {
         Channel channel0 = createChannel(0L);
         Channel otherChannel = createChannel(1L);
         manager.addMessage(msg);
-        assertNotEquals(null, manager.getMessageBuffer(otherChannel));
-        assertEquals(0, manager.getMessageBuffer(otherChannel).getMessages().size());
-        assertNotEquals(null, manager.getMessageBuffer(channel0));
-        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
-        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
+        assertNotEquals(null, manager.getMessageBuffer(otherChannel.getId()));
+        assertEquals(0, manager.getMessageBuffer(otherChannel.getId()).getMessages().size());
+        assertNotEquals(null, manager.getMessageBuffer(channel0.getId()));
+        assertEquals(1, manager.getMessageBuffer(channel0.getId()).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0.getId()).getMessages().contains(msg));
     }
 
     @Test
@@ -60,12 +60,12 @@ public class MessageManagerTest {
         Message msg2 = new Message(msg);
         Channel channel0 = createChannel(0L);
         manager.addMessage(msg);
-        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
-        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
+        assertEquals(1, manager.getMessageBuffer(channel0.getId()).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0.getId()).getMessages().contains(msg));
         manager.addMessage(msg2);
-        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
-        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
-        for(Message m : manager.getMessageBuffer(channel0).getMessages()) {
+        assertEquals(1, manager.getMessageBuffer(channel0.getId()).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0.getId()).getMessages().contains(msg));
+        for(Message m : manager.getMessageBuffer(channel0.getId()).getMessages()) {
             assert m != msg2;
         }
     }
@@ -77,11 +77,11 @@ public class MessageManagerTest {
         Message msg2 = createMessage(1L, 0L, "sameChannelDiffId");
         Channel channel0 = createChannel(0L);
         manager.addMessage(msg);
-        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
-        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
+        assertEquals(1, manager.getMessageBuffer(channel0.getId()).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0.getId()).getMessages().contains(msg));
         manager.addMessage(msg2);
-        assertEquals(2, manager.getMessageBuffer(channel0).getMessages().size());
-        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
-        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg2));
+        assertEquals(2, manager.getMessageBuffer(channel0.getId()).getMessages().size());
+        assertTrue(manager.getMessageBuffer(channel0.getId()).getMessages().contains(msg));
+        assertTrue(manager.getMessageBuffer(channel0.getId()).getMessages().contains(msg2));
     }
 }
