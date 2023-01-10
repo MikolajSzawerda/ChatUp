@@ -31,14 +31,8 @@ public class StompSocketClient implements SocketClient{
     private final ConnectionHandler connectionHandler;
     private StompSession session;
     private final String URL;
-    private final ObjectMapper objectMapper;
 
     public StompSocketClient(String url, ConnectionHandler connectionHandler) {
-        this.objectMapper = JsonMapper.builder()
-                .addModule(new ParameterNamesModule())
-                .addModule(new Jdk8Module())
-                .addModule(new JavaTimeModule())
-                .build();
         this.URL = url;
         WebSocketContainer webSocketContainer = new WsWebSocketContainer();
         WebSocketClient webSocketClient = new StandardWebSocketClient(webSocketContainer);
@@ -62,9 +56,9 @@ public class StompSocketClient implements SocketClient{
     }
 
     @Override
-    public void sendMessage(String topic, String msg) {
+    public void sendMessage(String exchange, String msg) {
         if(this.session!=null){
-            this.session.send(topic, new IncomingMessage(msg));
+            this.session.send(exchange, new IncomingMessage(msg));
         }
     }
 
@@ -83,10 +77,5 @@ public class StompSocketClient implements SocketClient{
         if(this.session!=null){
             this.session.disconnect();
         }
-    }
-
-    @Override
-    public void subscribe(String topic){
-//        connectionHandler.addSubscription(topic);
     }
 }

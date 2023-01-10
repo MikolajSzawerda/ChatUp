@@ -8,6 +8,7 @@ import com.chatup.chatup_server.repository.ChannelRepository;
 import com.chatup.chatup_server.service.JwtTokenService;
 import com.chatup.chatup_server.service.channels.ChannelCreateRequest;
 import com.chatup.chatup_server.service.channels.ChannelInfo;
+import com.chatup.chatup_server.service.messaging.BrokerService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
@@ -50,7 +51,7 @@ public abstract class BaseInitializedDbTest extends BaseIntegrationTest{
     @Autowired
     private ChannelRepository channelRepository;
     @Autowired
-    private AmqpAdmin amqpAdmin;
+    private BrokerService brokerService;
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
@@ -68,29 +69,13 @@ public abstract class BaseInitializedDbTest extends BaseIntegrationTest{
 
             throw new RuntimeException(e);
         }
-        channelRepository
+        List<Channel> channels = channelRepository
                 .findAll().stream()
                 .map(Channel::getId)
-                .map(Object::toString)
-                .map(this::createExchange)
-                .forEach(amqpAdmin::declareExchange);
-        List<AppUser> appUserList = appUserRepository
-                .findAll()
-                .stream()
-                .map(AppUser::getId)
-                .map(id->entityManager.find(AppUser.class, id))
-                .toList();
-        for(var user:appUserList){
-            Hibernate.initialize(user.getChannels());
-            Exchange exchange = createExchange(user.getUsername());
-            amqpAdmin.declareExchange(exchange);
-            for(var channel: user.getChannels()){
-                Binding binding = BindingBuilder
-                        .bind(exchange)
-                        .to(new FanoutExchange(channel.getId().toString()));
-                amqpAdmin.declareBinding(binding);
-            }
-        }
+                .map(id->entityManager.find(Channel.class, id))
+                .collect(Collectors.toList());
+        channels.forEach(c->Hibernate.initialize(c.getUsers()));
+        brokerService.addChannels(channels);
     }
 
 
