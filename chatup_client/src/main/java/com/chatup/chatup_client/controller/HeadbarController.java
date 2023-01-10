@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.result.view.View;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -27,7 +28,7 @@ public class HeadbarController implements Initializable {
 
     final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
 
-    private ChatViewController headController;
+    private ViewController headController;
     private final RestClient restClient;
     private final MainApplication application;
 
@@ -53,7 +54,7 @@ public class HeadbarController implements Initializable {
         application.switchToDashboardView(e, (Stage) goToDashboard.getScene().getWindow());
     }
 
-    public void setHeadController(ChatViewController headController){
+    public void setHeadController(ViewController headController){
         this.headController=headController;
     }
     @Override

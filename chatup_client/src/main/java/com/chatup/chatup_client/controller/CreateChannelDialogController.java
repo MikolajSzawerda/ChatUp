@@ -37,7 +37,7 @@ public class CreateChannelDialogController implements Initializable {
     private final ObservableList<UserInfo> usersInChannel;
     private final RestClient restClient;
     private final MainApplication application;
-    private ChatViewController headController;
+    private ViewController headController;
     @FXML
     public TextField channelName;
 
@@ -202,7 +202,7 @@ public class CreateChannelDialogController implements Initializable {
             searchUserResultsView.prefHeightProperty().bind(Bindings.size((searchResultsList)).multiply(33));
         }
     }
-    public void setHeadController(ChatViewController headController){
+    public void setHeadController(ViewController headController){
         this.headController=headController;
     }
     @Override
