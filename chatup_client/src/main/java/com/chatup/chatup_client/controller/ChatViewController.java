@@ -109,8 +109,6 @@ public class ChatViewController implements Initializable {
     @FXML
     public Button closeDMDialogButton;
 
-    @FXML
-    public Button createDMButton;
 
     @FXML
     public ListView<UserInfo> searchUserResultsView;
@@ -119,7 +117,7 @@ public class ChatViewController implements Initializable {
     public  ListView<UserInfo> usersAddedToChannelList;
 
     @FXML
-    public ListView<String> searchUserResultsDM;
+    public ListView<UserInfo> searchUserResultsDM;
 
     @FXML
     public TextField searchField;
@@ -172,6 +170,19 @@ public class ChatViewController implements Initializable {
             searchField.setText("");
             searchUserResultsView.setVisible(false);
         }
+    }
+
+    @FXML
+    public void createDM(){
+        UserInfo currentUser = restClient.getCurrentUser();
+        UserInfo selectedUser = searchUserResultsDM.getSelectionModel().getSelectedItem();
+        HashSet<Long> userIds = new HashSet<>();
+        userIds.add(selectedUser.getId());
+        userIds.add(currentUser.getId());
+        //TODO check if DM channel with given person does not exist
+        restClient.createChannel(selectedUser.getFirstName()+" "+selectedUser.getLastName(), true,  true, userIds);
+        addDMDialog.setVisible(false);
+        backdrop.setVisible(false);
     }
 
     public void createChannel(){
@@ -302,21 +313,32 @@ public class ChatViewController implements Initializable {
     }
 
     @FXML
-    public void onSearchUser(){
+    public void onSearchUserChannel(){
         if(searchField.getText().length() == 0) searchUserResultsView.setVisible(false);
-        else searchUserResultsView.setVisible(true);
-        Collection <UserInfo>  searchResultsCollection =  restClient.searchUsers(searchField.getText());
-        ObservableList<UserInfo>  searchResultsList= FXCollections.observableArrayList(searchResultsCollection);
-        searchUserResultsView.setItems(searchResultsList);
-        searchUserResultsView.prefHeightProperty().bind(Bindings.size((searchResultsList)).multiply(33));
-
+        else {
+            UserInfo currentUser = restClient.getCurrentUser();
+            searchUserResultsView.setVisible(true);
+            Collection<UserInfo> searchResultsCollection = restClient.searchUsers(searchField.getText());
+            searchResultsCollection.remove(currentUser);
+            ObservableList<UserInfo> searchResultsList = FXCollections.observableArrayList(searchResultsCollection);
+            searchUserResultsView.setItems(searchResultsList);
+            searchUserResultsView.prefHeightProperty().bind(Bindings.size((searchResultsList)).multiply(33));
+        }
     }
+
 
     @FXML
     public void onSearchUserDM(){
-        if(searchField.getText().length() == 0) searchUserResultsDM.setVisible(false);
-        else searchUserResultsDM.setVisible(true);
-        // in future ask API about results;
+        if(searchFieldDM.getText().length() == 0) searchUserResultsDM.setVisible(false);
+        else {
+            UserInfo currentUser = restClient.getCurrentUser();
+            searchUserResultsDM.setVisible(true);
+            Collection<UserInfo> searchResultsCollection = restClient.searchUsers(searchFieldDM.getText());
+            searchResultsCollection.remove(currentUser);
+            ObservableList<UserInfo> searchResultsList = FXCollections.observableArrayList(searchResultsCollection);
+            searchUserResultsDM.setItems(searchResultsList);
+            searchUserResultsDM.prefHeightProperty().bind(Bindings.size((searchResultsList)).multiply(33));
+        }
     }
 
     public void changeChannel(Channel channel){
@@ -403,6 +425,29 @@ public class ChatViewController implements Initializable {
                  }
              }
          });
+
+        searchUserResultsDM.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(UserInfo item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else if (item != null) {
+
+                    Insets padding = new Insets(0, 5, 0, 0);
+                    StackPane avatar = AvatarFactory.createAvatar(item.getFirstName()+" "+item.getLastName(), 13.0, padding);
+//                     Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
+//
+//                     setGraphic(directMessageButton);
+                    setText(item.getFirstName()+" "+item.getLastName());
+                    setGraphic(avatar);
+
+
+                }
+            }
+        });
+
 
         usersAddedToChannelList.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -495,10 +540,6 @@ public class ChatViewController implements Initializable {
         });
         closeChannelDialogButton.setSkin(new MyButtonSkin2(closeChannelDialogButton));
 
-        createDMButton.setOnAction(e->{
-
-        });
-        createDMButton.setSkin(new MyButtonSkin2(createDMButton));
         closeDMDialogButton.setOnAction(e->{
             onCloseDMDialogButton();
         });
