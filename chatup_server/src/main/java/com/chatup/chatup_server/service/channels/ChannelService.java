@@ -35,12 +35,20 @@ public class ChannelService {
 
         List<Long> userIds = new ArrayList<>(channelRequest.user_ids());
         Set<AppUser> channelUsers = new HashSet<>();
-        for (Long userId : userIds) {
-            Optional<AppUser> optionalUser = appUserRepository.findById(userId);
-            if (optionalUser.isEmpty())
-                throw new EntityNotFoundException("Invalid userId: "+userId);
 
-            channelUsers.add(optionalUser.get());
+        if (channelRequest.is_private()) {
+            for (Long userId : userIds) {
+                Optional<AppUser> optionalUser = appUserRepository.findById(userId);
+                if (optionalUser.isEmpty())
+                        throw new EntityNotFoundException("Invalid userId: " + userId);
+
+                channelUsers.add(optionalUser.get());
+            }
+        } else {
+            if (userIds.size() != 0)
+                throw new IllegalArgumentException("Public channels shouldn't have specified members.");
+
+            channelUsers = new HashSet<>(appUserRepository.findAll());
         }
 
         if (channelRequest.is_direct_message()) {

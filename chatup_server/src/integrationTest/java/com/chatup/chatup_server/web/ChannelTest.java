@@ -23,7 +23,6 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -57,13 +56,10 @@ public class ChannelTest extends BaseInitializedDbTest {
 
     @Test
     public void shouldCreateChannel() {
-        AppUser user = appUserRepository.findAppUserByUsername(USER_1);
         Long oldChannelCount = channelRepository.count();
         String channelName = "xyz";
         ChannelCreateRequest request = new ChannelCreateRequest(
-                channelName, false, false, new HashSet<>(){{
-                    add(user.getId());
-            }}
+                channelName, false, false, new HashSet<>()
         );
 
         ResponseEntity<ChannelInfo> response = getCreateChannelRequest(createUserToken(USER_1), request);
