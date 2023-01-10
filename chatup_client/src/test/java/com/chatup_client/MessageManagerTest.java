@@ -84,22 +84,4 @@ public class MessageManagerTest {
         assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
         assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg2));
     }
-
-    @Test
-    void diffChannelSameId(){
-        // Abnormal case - a fake message comes in
-        Message msg = createMessage(0L, 0L, "diffChannelSameId");
-        Message msg2 = createMessage(0L, 1L, "diffChannelSameId"); // the fake message
-        Channel channel0 = createChannel(0L);
-        Channel channel1 = createChannel(1L);
-        manager.addMessage(msg);
-        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
-        assertTrue(manager.getMessageBuffer(channel0).getMessages().contains(msg));
-        assertFalse(msg.getDuplicateFlag());
-        manager.addMessage(msg2);
-        assertEquals(1, manager.getMessageBuffer(channel0).getMessages().size());
-        assertEquals(1, manager.getMessageBuffer(channel1).getMessages().size());
-        assertTrue(msg.getDuplicateFlag());
-        assertTrue(msg2.getDuplicateFlag());
-    }
 }

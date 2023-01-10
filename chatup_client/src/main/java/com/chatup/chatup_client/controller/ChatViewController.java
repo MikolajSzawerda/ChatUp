@@ -76,6 +76,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     public void onSendMessage(){
+        if(currentChannel == null) return;
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
             socketClient.sendMessage("/app/channel."+currentChannel.getId(), message.getText());
@@ -110,7 +111,13 @@ public class ChatViewController implements Initializable {
     }
 
     public void changeChannel(Channel channel){
-        messageManager.getMessageBuffer(currentChannel).getMessages().removeListener(listChangeListener);
+        if(channel.equals(currentChannel)) {
+            return;
+        }
+        logger.info("Changing channel to: " + channel.getName());
+        if(currentChannel != null) {
+            messageManager.getMessageBuffer(currentChannel).getMessages().removeListener(listChangeListener);
+        }
         currentChannel = channel;
         messages.setItems(messageManager.getMessageBuffer(currentChannel).getMessages());
         messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
