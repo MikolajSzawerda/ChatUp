@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -150,6 +151,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     public void onSendMessage(){
+        if(currentChannel == null) return;
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
             socketClient.sendMessage("/app/channel."+currentChannel.getId(), message.getText());
@@ -288,7 +290,13 @@ public class ChatViewController implements Initializable {
     }
 
     public void changeChannel(Channel channel){
-        messageManager.getMessageBuffer(currentChannel).getMessages().removeListener(listChangeListener);
+        if(channel.equals(currentChannel)) {
+            return;
+        }
+        logger.info("Changing channel to: " + channel.getName());
+        if(currentChannel != null) {
+            messageManager.getMessageBuffer(currentChannel).getMessages().removeListener(listChangeListener);
+        }
         currentChannel = channel;
         messages.setItems(messageManager.getMessageBuffer(currentChannel).getMessages());
         messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
@@ -344,6 +352,9 @@ public class ChatViewController implements Initializable {
 
                     Button channelButton = ChangeChatButtonFactory.createChangeChatButton(channelIcon, item, param.getWidth());
                     channelButton.getStyleClass().add("my-button");
+                    channelButton.addEventHandler(ActionEvent.ACTION, event -> {
+                        changeChannel(item);
+                    });
                     setGraphic(channelButton);
                 }
             }
@@ -380,6 +391,9 @@ public class ChatViewController implements Initializable {
                     Insets padding = new Insets(0, 5, 0, 0);
                     StackPane avatar = AvatarFactory.createAvatar(item.getName(), 18.0, padding);
                     Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
+                    directMessageButton.addEventHandler(ActionEvent.ACTION, event -> {
+                        changeChannel(item);
+                    });
 
                     setGraphic(directMessageButton);
 
@@ -399,18 +413,8 @@ public class ChatViewController implements Initializable {
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 25.0, padding));
         channels.setItems(channelManager.getStandardChannels());
         direct.setItems(channelManager.getDirectMessages());
-        Collection<Channel> channels = restClient.listChannels();
-
-        // temporary lines for testing
-        assert channels.size() > 0;
-        channels.forEach((ch) -> {currentChannel = ch;});
-
         restClient.listChannels().forEach(channelManager::addChannel);
         setCellFactories();
-        messages.setItems(messageManager.getMessageBuffer(currentChannel).getMessages());
-        messageManager.getMessageBuffer(currentChannel).getMessages().addListener(listChangeListener);
-        restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
-
         ObservableList<String> searchResults = FXCollections.observableArrayList();
         searchResults.add("Dawid Kaszyński");
         searchResults.add("Jan Kowalczewski");

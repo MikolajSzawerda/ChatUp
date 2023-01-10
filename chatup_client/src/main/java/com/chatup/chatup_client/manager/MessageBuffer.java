@@ -28,8 +28,8 @@ public class MessageBuffer {
             messages.sort(Comparator.comparing(Message::getTimeCreated));
             return;
         }
+        messages.add(msg);
         Platform.runLater(() -> {
-            messages.add(msg);
             messages.sort(Comparator.comparing(Message::getTimeCreated));
         });
     }

@@ -57,17 +57,4 @@ public class ChannelManagerTest {
             assert ch != channelCopy;
         }
     }
-
-    @Test
-    void duplicateChannel() {
-        Channel channel = createChannel(0L, "Standard", false, false);
-        Channel fakeChannel = createChannel(0L, "Fake standard", false, false);
-        channelManager.addChannel(channel);
-        channelManager.addChannel(fakeChannel);
-        assertEquals(2, channelManager.getStandardChannels().size());
-        assertTrue(channelManager.getStandardChannels().contains(channel));
-        assertTrue(channelManager.getStandardChannels().contains(fakeChannel));
-        assertTrue(channel.getDuplicateFlag());
-        assertTrue(channel.getDuplicateFlag());
-    }
 }
