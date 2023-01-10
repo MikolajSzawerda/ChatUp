@@ -14,6 +14,9 @@ import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.IntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
@@ -70,6 +73,7 @@ public class SidebarController implements Initializable {
     public void setHeadController(ViewController headController){
         this.headController=headController;
     }
+
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources){
         channels.setItems(channelManager.getStandardChannels());
@@ -98,6 +102,9 @@ public class SidebarController implements Initializable {
                             headController.changeChannel(item)
                     );
                     channelButton.setSkin(new MyButtonSkin(channelButton));
+                    if(headController.getCurrentChannel() != null) {
+                        logger.info(headController.getCurrentChannel().getName());
+                    }
                     if(item.equals(headController.getCurrentChannel())){
                         channelButton.setBackground(new Background(new BackgroundFill(new Color(0.33, 0.42, 0.86, 1), CornerRadii.EMPTY, Insets.EMPTY)));
                     }

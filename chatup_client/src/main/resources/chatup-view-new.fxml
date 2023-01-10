@@ -32,7 +32,7 @@
       </children>
    </AnchorPane>
    <fx:include fx:id="sidebar" source="sidebar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="85.0" />
-   <fx:include fx:id="headbar" source="headbar.fxml" AnchorPane.bottomAnchor="710.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   <fx:include fx:id="headbar" source="headbar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    <Rectangle fx:id="backdrop" arcHeight="5.0" arcWidth="5.0" height="1080.0" layoutX="-10.0" layoutY="-4.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-opacity: 50%;" visible="false" width="1900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    <fx:include fx:id="createChannelDialog" source="createChannelDialog.fxml" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="140.0" />
    <fx:include fx:id="createDMDialog" source="createDMdialog.fxml" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="140.0" />

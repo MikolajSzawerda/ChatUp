@@ -39,7 +39,7 @@ import javafx.util.Duration;
 public class MyButtonSkin2 extends ButtonSkin {
     public MyButtonSkin2(Button control){
         super(control);
-        final FadeTransition fadeIn = new FadeTransition(Duration.millis(150));
+        final FadeTransition fadeIn = new FadeTransition(Duration.millis(75));
         EventHandler<ActionEvent> current = control.getOnAction();
         fadeIn.setNode(control);
         fadeIn.setToValue(0.5);

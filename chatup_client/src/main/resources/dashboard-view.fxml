@@ -39,7 +39,7 @@
             <Font size="21.0" />
          </font>
       </Text>
-      <Button layoutX="323.0" layoutY="406.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="72.0" styleClass="customized-button" text="Log out" />
+      <Button fx:id="logOutButton" layoutX="323.0" layoutY="406.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="72.0" styleClass="customized-button" text="Log out" />
       <Text fx:id="username" layoutX="395.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="username" wrappingWidth="770.7294921875">
          <font>
             <Font size="21.0" />

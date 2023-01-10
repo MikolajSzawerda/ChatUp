@@ -7,13 +7,17 @@ import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.ListViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +89,11 @@ public class ChatViewController extends ViewController {
     }
 
     @Override
+    public Channel getCurrentChannel(){
+        return currentChannel;
+    }
+
+    @Override
     public void openChannelDialog(){
         enableBackdrop();
         createChannelDialogController.show();
@@ -136,7 +145,12 @@ public class ChatViewController extends ViewController {
     }
 
     private void setCellFactories() {
+ //       Message lastItem = messageManager.getMessageBuffer(currentChannel).getMessages().get(messageManager.getMessageBuffer(currentChannel).getMessages().size()-1);
         messages.setCellFactory(param -> new ListCell<>() {
+
+//            private ChangeListener listener = (obs, ov, nv) ->{
+//                if(getText() != null && getText() == lastItem.getMessageID())
+//            }
             @Override
             protected void updateItem(Message item, boolean empty) {
                 super.updateItem(item, empty);
@@ -161,7 +175,16 @@ public class ChatViewController extends ViewController {
     }
 
     @Override
+    public void goToMessage(Message message) {
+        //TODO change channel (if necessary) and scroll to found message
+    }
+
+
+
+    @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
+        sidebarController.addChannel.setVisible(true);
+        sidebarController.addDM.setVisible(true);
         headbarController.setHeadController(this);
         sidebarController.setHeadController(this);
         createDMDialogController.setHeadController(this);
@@ -178,14 +201,25 @@ public class ChatViewController extends ViewController {
         restClient.getLastFeed(currentChannel).forEach(messageManager::addMessage);
 
         backdrop.setVisible(false);
+        sidebarController.direct.refresh();
+        sidebarController.channels.refresh();
         closeDMDialog();
         closeChannelDialog();
+
+        messages.setOnScroll(e->{
+            ListViewSkin <?> ts = (ListViewSkin<?>) messages.getSkin();
+            VirtualFlow<?> vf = (VirtualFlow<?>) ts.getChildren().get(0);
+            if(vf.getFirstVisibleCell().getIndex() == 0) {
+                // TODO Add fetching of more messages
+            }
+        });
 
         try{
             socketClient.connect();
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+
     }
 
 }

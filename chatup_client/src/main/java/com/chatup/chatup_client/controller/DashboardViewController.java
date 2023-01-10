@@ -4,6 +4,7 @@ import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
+import com.chatup.chatup_client.component.skin.MyButtonSkin2;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.UserInfo;
@@ -73,6 +74,9 @@ public class DashboardViewController extends ViewController {
     @FXML
     public Button goBack;
 
+    @FXML
+    public Button logOutButton;
+
     boolean isKeyGenerated;
 
     @FXML
@@ -102,7 +106,7 @@ public class DashboardViewController extends ViewController {
             ft.play();
 
             isKeyGenerated = true;
-            generateAPIKey.setText("Regenerate");
+            generateAPIKey.setDisable(true);
         }
     }
 
@@ -118,25 +122,46 @@ public class DashboardViewController extends ViewController {
 
     }
 
+    @Override
+    public Channel getCurrentChannel(){return null;}
+
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public DashboardViewController(SocketClient socketClient, RestClient restClient, Application application) {
         super(socketClient, restClient, application);
     }
+
+    public void onLogOut(ActionEvent e) throws IOException{
+        application.switchToLoginView(e, (Stage) username.getScene().getWindow());
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        sidebarController.addChannel.setVisible(false);
+        sidebarController.addDM.setVisible(false);
+        headbarController.setHeadController(this);
+        sidebarController.setHeadController(this);
         UserInfo currentUser = restClient.getCurrentUser();
         userNameSurname.setText(currentUser.toString());
         username.setText(currentUser.getUsername());
+        headbarController.searchMessage.setVisible(false);
+        headbarController.searchMessageResults.setVisible(false);
         Insets padding = new Insets(0, 0, 0, 0);
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 40.0, padding));
-        headbarController.setHeadController(this);
-        sidebarController.setHeadController(this);
-        Collection<Channel> channels = restClient.listChannels();
-
 
         closeDMDialog();
         closeChannelDialog();
+        sidebarController.direct.refresh();
+        sidebarController.channels.refresh();
+
+        logOutButton.setOnAction(event->{
+            try {
+                onLogOut(event);
+            }
+            catch (IOException e){
+                throw new UncheckedIOException(e);
+            }
+        });
+        logOutButton.setSkin(new MyButtonSkin2(logOutButton));
 
         try{
             socketClient.connect();
