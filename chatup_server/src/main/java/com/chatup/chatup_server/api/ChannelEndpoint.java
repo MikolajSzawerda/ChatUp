@@ -34,14 +34,13 @@ public class ChannelEndpoint {
     public ChannelInfo createChannel(Principal user, @Valid @RequestBody ChannelCreateRequest channelCreateRequest){
         AppUser currentUser = appUserService.loadUserByUsername(user.getName());
 
-        if (!channelCreateRequest.user_ids().contains(currentUser.getId()))
+        if (!channelCreateRequest.user_ids().contains(currentUser.getId()) && channelCreateRequest.is_private())
             throw new IllegalArgumentException("Current user must be contained in the new channel.");
 
         Channel newChannel;
         newChannel = channelService.createChannel(channelCreateRequest);
 
         logger.info("New channel created, id: " + newChannel.getId());
-
         return ChannelInfo.from(currentUser.getId(), newChannel);
     }
 

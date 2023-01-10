@@ -24,7 +24,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ExceptionResponse handleIllegalArgumentException(
             IllegalArgumentException ex, ServletWebRequest request) {
-        String msg = "Invalid arguments were provided:"
+        String msg = "Invalid arguments were provided: "
                 + ex.getMessage();
         logger.info(msg);
         return new ExceptionResponse(msg, request.getRequest().getRequestURI());
@@ -33,7 +33,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public @ResponseBody ExceptionResponse handleIllegalStateException(
             Exception ex, ServletWebRequest request) {
-        String msg = "Data are in wrong state!:"
+        String msg = "Data are in wrong state!: "
                 + ex.getMessage();
         logger.error(msg);
         return new ExceptionResponse(msg, request.getRequest().getRequestURI());
@@ -43,7 +43,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public @ResponseBody ExceptionResponse handleEntityNotFound(
             IllegalArgumentException ex, ServletWebRequest request) {
-        String msg = "Can't find entity of given data:"
+        String msg = "Can't find entity of given data: "
                 + ex.getMessage();
         logger.info(msg);
         return new ExceptionResponse(msg, request.getRequest().getRequestURI());
