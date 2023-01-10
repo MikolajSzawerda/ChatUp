@@ -25,9 +25,9 @@ public class SocketClientFactory {
     }
 
     public SocketClient getClient(String username, List<String> topics){
-        ConnectionHandler connectionHandler = new ConnectionHandler(topics);
-        StompSocketClient socketClient = new StompSocketClient(format(CHAT_ENDPOINT, port), connectionHandler);
         String userToken = getToken(username);
+        ConnectionHandler connectionHandler = new ConnectionHandler(userToken);
+        StompSocketClient socketClient = new StompSocketClient(format(CHAT_ENDPOINT, port), connectionHandler);
         try {
             socketClient.connect(userToken);
         } catch (ExecutionException | InterruptedException e) {

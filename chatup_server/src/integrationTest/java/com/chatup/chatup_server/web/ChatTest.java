@@ -8,6 +8,7 @@ import com.chatup.chatup_server.service.utils.InstantService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
@@ -29,11 +30,12 @@ public class ChatTest extends BaseInitializedDbTest {
     @Autowired
     private MessageRepository messageRepository;
 
+
     SocketClient client1;
     SocketClient client2;
     private static final Long CHANNEL = 3L;
     private static final LinkedList<String> topics = new LinkedList<>() {{
-        add("/topic/channel." + CHANNEL);
+        add("/amq/channel." + CHANNEL);
     }};
 
     private static final String BROADCAST_ENDPOINT = "/app/channel." + CHANNEL;
@@ -81,7 +83,7 @@ public class ChatTest extends BaseInitializedDbTest {
         long messageCount = messageRepository.count();
 
         //When
-        client1.sendMessage(BROADCAST_ENDPOINT, msg);
+        client1.sendMessage("/app/"+CHANNEL, msg);
 
         //Then
         timedAssertEquals(1, client2.getMessages()::size);

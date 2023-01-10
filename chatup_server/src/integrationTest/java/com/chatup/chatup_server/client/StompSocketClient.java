@@ -87,6 +87,6 @@ public class StompSocketClient implements SocketClient{
 
     @Override
     public void subscribe(String topic){
-        connectionHandler.addSubscription(topic);
+//        connectionHandler.addSubscription(topic);
     }
 }
