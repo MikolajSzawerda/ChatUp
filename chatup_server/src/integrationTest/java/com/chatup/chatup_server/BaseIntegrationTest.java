@@ -56,7 +56,8 @@ public abstract class BaseIntegrationTest {
 
     static {
         postgreContainer = (PostgreSQLContainer) new PostgreSQLContainer("postgres")
-                .withLogConsumer(new Slf4jLogConsumer(posgresLogger));
+                .withLogConsumer(new Slf4jLogConsumer(posgresLogger))
+                .withReuse(true);
         elasticContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:8.5.3")
                 .withEnv("xpack.security.enabled", "false")
                 .withEnv("discovery.type", "single-node")
@@ -71,14 +72,16 @@ public abstract class BaseIntegrationTest {
                 .waitingFor(Wait
                         .forHttp("/_cluster/health")
                         .forStatusCode(200)
-                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)));
+                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)))
+                .withReuse(true);
         rabbitContainer = new RabbitMQContainer("rabbitmq:3.9-management")
                 .withExposedPorts(5672, 61613, 15672)
                 .withLogConsumer(new Slf4jLogConsumer(rabbitLogger))
                 .withPluginsEnabled("rabbitmq_management", "rabbitmq_management_agent", "rabbitmq_stomp", "rabbitmq_web_dispatch")
                 .waitingFor(Wait.forHttp("/api/vhosts")
                         .forPort(15672)
-                        .withBasicCredentials("guest", "guest"));
+                        .withBasicCredentials("guest", "guest"))
+                        .withReuse(true);
         rabbitContainer.start();
         postgreContainer.start();
         elasticContainer.start();

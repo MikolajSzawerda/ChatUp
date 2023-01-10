@@ -38,8 +38,7 @@ public class MessageService {
         PAGESIZE = pageSize;
     }
 
-    public Message preserve(String content, Principal user, Long channelID){
-        String username = jwtTokenService.getUsernameFromToken(user.getName());
+    public Message preserve(String content, String username, Long channelID){
         AppUser appUser = appUserRepository.findAppUserByUsername(username);
         Channel channel = channelRepository.getReferenceById(channelID);
         return messageRepository.save(new Message(content, instantService.getNow(), appUser, channel, false));

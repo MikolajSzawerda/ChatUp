@@ -24,24 +24,24 @@ public class ConnectionHandler implements StompSessionHandler{
         return messageBuffer;
     }
 
-    private final List<String> topics;
+    private final String userToken;
 
-    public ConnectionHandler(List<String> topics){
+    public ConnectionHandler(String userToken){
         this.messageBuffer = new LinkedList<>();
         this.channelCreationBuffer = new LinkedList<>();
-        this.topics = new LinkedList<>(topics);
+        this.userToken = userToken;
     }
 
     public void addSubscription(String topic){
-        topics.add(topic);
-        if(this.session != null){
-            this.session.subscribe(topic, this);
-            try {
-                Thread.sleep(2 * 1000);
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-            }
-        }
+//        topics.add(topic);
+//        if(this.session != null){
+//            this.session.subscribe(topic, this);
+//            try {
+//                Thread.sleep(2 * 1000);
+//            } catch (InterruptedException ie) {
+//                Thread.currentThread().interrupt();
+//            }
+//        }
     }
 
     public StompSession getSession() {
@@ -52,7 +52,14 @@ public class ConnectionHandler implements StompSessionHandler{
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         this.session = session;
-        this.topics.forEach(this::addSubscription);
+        if(this.session != null){
+            this.session.subscribe("/exchange/"+this.userToken, this);
+            try {
+                Thread.sleep(2 * 1000);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     @Override
