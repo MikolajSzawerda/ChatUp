@@ -34,7 +34,7 @@ public class MessageManager {
     public void addMessage(Message msg) {
         boolean added = false;
         if(buffers.containsKey(msg.getChannelID())) {
-            buffers.get(msg.getChannelID()).addMessage(msg);
+            added = buffers.get(msg.getChannelID()).addMessage(msg);
         } else {
             MessageBuffer buffer = new MessageBuffer(testMode);
             added = buffer.addMessage(msg);

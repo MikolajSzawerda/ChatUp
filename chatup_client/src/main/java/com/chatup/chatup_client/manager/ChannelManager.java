@@ -58,8 +58,8 @@ public class ChannelManager {
             checkForDuplicates(channel);
             return;
         }
+        listToAdd.add(channel);
         Platform.runLater(() -> {
-            listToAdd.add(channel);
             listToAdd.sort(Comparator.comparing(Channel::getName));
         });
         Platform.runLater(() -> {

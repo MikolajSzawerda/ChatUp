@@ -28,15 +28,9 @@ public class MessageBuffer {
             messages.sort(Comparator.comparing(Message::getTimeCreated));
             return true;
         }
+        messages.add(msg);
         Platform.runLater(() -> {
-            synchronized (this) {
-                if(!messages.contains(msg)) {
-                    messages.add(msg);
-                    Platform.runLater(() -> {
-                        messages.sort(Comparator.comparing(Message::getTimeCreated));
-                    });
-                }
-            }
+            messages.sort(Comparator.comparing(Message::getTimeCreated));
         });
         return true;
     }

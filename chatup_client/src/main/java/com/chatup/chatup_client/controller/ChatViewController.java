@@ -151,6 +151,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     public void onSendMessage(){
+        if(currentChannel == null) return;
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
             socketClient.sendMessage("/app/channel."+currentChannel.getId(), message.getText());

@@ -5,6 +5,7 @@ import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
+import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,9 +103,11 @@ public class ConnectionHandler implements StompSessionHandler{
             return;
         }
         logger.info("Received message");
-        synchronized (this) {
-            messageManager.addMessage((Message) payload);
-        }
+        Platform.runLater(() -> {
+            synchronized (this) {
+                messageManager.addMessage((Message) payload);
+            }
+        });
     }
 }
 
