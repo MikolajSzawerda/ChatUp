@@ -24,7 +24,7 @@ public class SocketClientFactory {
         return authService.generateTokenForUser(user);
     }
 
-    public SocketClient getClient(String username, List<String> topics){
+    public SocketClient getClient(String username){
         String userToken = getToken(username);
         ConnectionHandler connectionHandler = new ConnectionHandler(userToken);
         StompSocketClient socketClient = new StompSocketClient(format(CHAT_ENDPOINT, port), connectionHandler);

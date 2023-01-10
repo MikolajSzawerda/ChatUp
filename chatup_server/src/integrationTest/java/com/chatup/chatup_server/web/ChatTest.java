@@ -2,6 +2,7 @@ package com.chatup.chatup_server.web;
 
 import com.chatup.chatup_server.BaseInitializedDbTest;
 import com.chatup.chatup_server.client.SocketClient;
+import com.chatup.chatup_server.client.SocketClientFactory;
 import com.chatup.chatup_server.repository.MessageRepository;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 import com.chatup.chatup_server.service.utils.InstantService;
@@ -34,16 +35,11 @@ public class ChatTest extends BaseInitializedDbTest {
     SocketClient client1;
     SocketClient client2;
     private static final Long CHANNEL = 3L;
-    private static final LinkedList<String> topics = new LinkedList<>() {{
-        add("/amq/channel." + CHANNEL);
-    }};
-
-    private static final String BROADCAST_ENDPOINT = "/app/channel." + CHANNEL;
 
     @BeforeEach
     void initClient() {
-        client1 = socketClientFactory.getClient(USER_1, topics);
-        client2 = socketClientFactory.getClient(USER_2, topics);
+        client1 = socketClientFactory.getClient(USER_1);
+        client2 = socketClientFactory.getClient(USER_2);
     }
 
     @AfterEach
@@ -59,8 +55,8 @@ public class ChatTest extends BaseInitializedDbTest {
         int userCount = simpUserRegistry.getUserCount();
 
         //When
-        SocketClient client1 = socketClientFactory.getClient(USER_3, topics);
-        SocketClient client2 = socketClientFactory.getClient(USER_4, topics);
+        SocketClient client1 = socketClientFactory.getClient(USER_3);
+        SocketClient client2 = socketClientFactory.getClient(USER_4);
 
         //Then
         timedAssertEquals(userCount+2, simpUserRegistry::getUserCount);
@@ -108,16 +104,17 @@ public class ChatTest extends BaseInitializedDbTest {
     void shouldReceiveOnlyWhenSubscribed() {
         //Given
         Long id  = addNewChannel(createUserToken(USER_2), USER_2);
-        String newTopic = "/topic/channel."+id;
+        SocketClient client3 = socketClientFactory.getClient(USER_3);
+        SocketClient client4 = socketClientFactory.getClient(USER_4);
 
         //When
-        client2.subscribe(newTopic);
-        client1.sendMessage("/app/channel."+id, "Test");
-
+        client1.sendMessage("/app/"+id, "Test");
 
         //Then
-        timedAssertEquals(1, client2.getMessages()::size);
         timedAssertEquals(0, client1.getMessages()::size);
+        timedAssertEquals(1, client2.getMessages()::size);
+        timedAssertEquals(0, client3.getMessages()::size);
+        timedAssertEquals(0, client4.getMessages()::size);
     }
 
 

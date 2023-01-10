@@ -45,8 +45,8 @@ public class ChannelTest extends BaseInitializedDbTest {
     void initClient() {
         user1 = appUserRepository.findAppUserByUsername(USER_1);
         user2 = appUserRepository.findAppUserByUsername(USER_2);
-        client1 = socketClientFactory.getClient(USER_1, List.of(ChannelService.createBroadcastTopicName(user1)));
-        client2 = socketClientFactory.getClient(USER_2, List.of(ChannelService.createBroadcastTopicName(user2)));
+        client1 = socketClientFactory.getClient(USER_1);
+        client2 = socketClientFactory.getClient(USER_2);
     }
 
     @AfterEach

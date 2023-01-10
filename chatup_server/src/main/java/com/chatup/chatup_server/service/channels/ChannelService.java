@@ -5,6 +5,10 @@ import com.chatup.chatup_server.domain.Channel;
 import com.chatup.chatup_server.domain.exceptions.InvalidRequestException;
 import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.repository.ChannelRepository;
+import com.chatup.chatup_server.service.messaging.BrokerService;
+import com.chatup.chatup_server.service.messaging.OutgoingEvent;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +17,24 @@ import java.util.*;
 
 @Service
 public class ChannelService {
-    private static final String CHANNEL_CREATION_ENDPOINT = "/topic/create.";
+    private static final String CHANNEL_CREATION_ENDPOINT = "/exchange/";
+    private final String CHANNEL_CREATION_FLAG;
     private final ChannelRepository channelRepository;
     private final AppUserRepository appUserRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final BrokerService brokerService;
 
-    public ChannelService(ChannelRepository channelRepository, AppUserRepository appUserRepository, SimpMessagingTemplate simpMessagingTemplate) {
+    public ChannelService(ChannelRepository channelRepository,
+                          AppUserRepository appUserRepository,
+                          SimpMessagingTemplate simpMessagingTemplate,
+                          BrokerService brokerService,
+                          @Value("${app.events.channel-creation}") String channel_flag
+                          ) {
         this.channelRepository = channelRepository;
         this.appUserRepository = appUserRepository;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.brokerService = brokerService;
+        this.CHANNEL_CREATION_FLAG = channel_flag;
     }
 
     public Channel createChannel(ChannelCreateRequest channelRequest) throws InvalidRequestException {
@@ -54,6 +67,7 @@ public class ChannelService {
                 new Channel(channelRequest.name(), channelRequest.is_private(),
                         channelRequest.is_direct_message(), channelUsers, Collections.emptyList())
         );
+        brokerService.addChannel(channel);
         notifyAboutChannelCreation(channelUsers, channel);
         return channel;
     }
@@ -61,7 +75,8 @@ public class ChannelService {
     void notifyAboutChannelCreation(Set<AppUser> users, Channel channel) {
         for (var user : users) {
             simpMessagingTemplate.convertAndSend(createBroadcastTopicName(user),
-                    ChannelInfo.from(user.getId(), channel));
+                    new OutgoingEvent(CHANNEL_CREATION_FLAG,
+                            ChannelInfo.from(user.getId(), channel)));
         }
     }
 

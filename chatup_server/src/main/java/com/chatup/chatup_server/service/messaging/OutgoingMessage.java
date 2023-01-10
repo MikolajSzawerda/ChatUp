@@ -14,7 +14,7 @@ public record OutgoingMessage(
         Long channelID,
         Instant timeCreated,
         Boolean isDeleted
-) {
+) implements Event{
     public static OutgoingMessage from(Message message){
         return new OutgoingMessage(
                 message.getID(),
