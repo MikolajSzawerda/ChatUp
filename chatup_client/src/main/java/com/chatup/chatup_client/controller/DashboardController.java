@@ -2,27 +2,19 @@ package com.chatup.chatup_client.controller;
 
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
-import com.chatup.chatup_client.manager.MessageManager;
-import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.UserInfo;
-import com.chatup.chatup_client.web.RestClient;
-import com.chatup.chatup_client.web.SocketClient;
 import javafx.animation.FadeTransition;
 import javafx.animation.PathTransition;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +23,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 @Component
 public class DashboardController implements Initializable {
@@ -52,12 +43,6 @@ public class DashboardController implements Initializable {
     public Text apiKey;
 
     @FXML
-    public ListView<String> direct;
-
-    @FXML
-    public ListView<String> channels;
-
-    @FXML
     public Button goBack;
 
     @FXML
@@ -68,10 +53,10 @@ public class DashboardController implements Initializable {
 
     boolean isKeyGenerated;
 
-    private ChatViewController headController;
+    private final ChatViewController headController;
 
     @FXML
-    public void onGoBack(ActionEvent e) throws IOException{
+    public void onGoBack(){
         headController.switchToMessaging();
     }
 
@@ -101,7 +86,6 @@ public class DashboardController implements Initializable {
         }
     }
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public DashboardController(ChatViewController chatViewController) {
         this.headController = chatViewController;
@@ -109,7 +93,7 @@ public class DashboardController implements Initializable {
 
 
 
-    public void onLogOut(ActionEvent e) throws IOException{
+    public void onLogOut() throws IOException{
         headController.switchToLoginView();
         //TODO on log out
     }
@@ -122,14 +106,9 @@ public class DashboardController implements Initializable {
         Insets padding = new Insets(0, 0, 0, 0);
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 40.0, padding));
 
-//        closeDMDialog();
-//        closeChannelDialog();
-//        sidebarController.direct.refresh();
-//        sidebarController.channels.refresh();
-
         logOutButton.setOnAction(event->{
             try {
-                onLogOut(event);
+                onLogOut();
             }
             catch (IOException e){
                 throw new UncheckedIOException(e);

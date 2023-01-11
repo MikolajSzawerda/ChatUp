@@ -1,15 +1,9 @@
 package com.chatup.chatup_client.controller;
 
-import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.MessageFactory;
-import com.chatup.chatup_client.manager.ChannelManager;
-import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
-import com.chatup.chatup_client.web.RestClient;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -17,21 +11,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.result.view.View;
-
-import java.io.IOException;
 import java.util.ResourceBundle;
 
 @Component
 public class HeadbarController implements Initializable {
 
 
-    private ChatViewController headController;
+    private final ChatViewController headController;
 
     @FXML
     public Text userNameSurname;
@@ -48,7 +36,6 @@ public class HeadbarController implements Initializable {
     @FXML
     public TextField searchMessage;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public HeadbarController(ChatViewController chatViewController) {
         this.headController = chatViewController;
@@ -56,7 +43,7 @@ public class HeadbarController implements Initializable {
     }
 
     @FXML
-    public void onGoToDashboard(ActionEvent e) throws IOException {
+    public void onGoToDashboard() {
         headController.switchToDashboard();
     }
 

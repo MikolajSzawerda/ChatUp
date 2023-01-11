@@ -5,15 +5,22 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="addChannelDialog" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="548.0" style="-fx-background-color: #7896cf; -fx-background-radius: 30px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);;" stylesheets="@test.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.CreateChannelDialogController">
+<AnchorPane fx:id="addChannelDialog" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="561.0" prefWidth="548.0" style="-fx-background-color: #7896cf; -fx-background-radius: 30px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);;" stylesheets="@../../test.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.CreateChannelDialogController">
    <children>
-      <ListView fx:id="usersAddedToChannelList" layoutX="81.0" layoutY="154.0" prefHeight="334.0" prefWidth="394.0" styleClass="dm-list" visible="false" />
+      <ListView fx:id="usersAddedToChannelList" layoutX="74.0" layoutY="198.0" prefHeight="290.0" prefWidth="375.0" styleClass="dm-list" visible="false" AnchorPane.leftAnchor="74.0" AnchorPane.rightAnchor="99.0" />
       <TextField fx:id="channelName" layoutX="40.0" layoutY="27.0" prefHeight="38.0" prefWidth="323.0" promptText="Channel name ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="185.0" />
       <TextField fx:id="searchField" layoutX="24.0" layoutY="91.0" onKeyTyped="#onSearchUserChannel" prefHeight="38.0" prefWidth="505.0" promptText="Search Users ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="19.0" />
       <CheckBox fx:id="isPrivate" layoutX="417.0" layoutY="37.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#checkIsPrivate" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="is private?" AnchorPane.rightAnchor="39.0" />
-      <ListView fx:id="searchUserResultsView" layoutX="37.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#addUserToChannel" prefHeight="170.0" prefWidth="480.0" style="-fx-padding: 0 0 0;" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="31.0" />
+      <ListView fx:id="searchUserResultsView" layoutX="37.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#addUserToChannel" prefHeight="170.0" prefWidth="480.0" style="-fx-padding: 0 0 0;" visible="false" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="31.0" />
       <Button fx:id="closeChannelDialogButton" layoutX="417.0" layoutY="91.0" mnemonicParsing="false" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Close" AnchorPane.rightAnchor="75.0" />
       <Button fx:id="createChannelButton" layoutX="81.0" layoutY="91.0" mnemonicParsing="false" style="-fx-background-radius: 8px; -fx-background-color: #6aba9c; -fx-border-color: #000000; -fx-border-radius: 8px; -fx-font-family: &quot;Roboto Slab&quot;;" text="Create" AnchorPane.leftAnchor="81.0" />
+      <Text fx:id="usersInChannelText" layoutX="37.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="Users added to channel:" wrappingWidth="237.7294921875">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

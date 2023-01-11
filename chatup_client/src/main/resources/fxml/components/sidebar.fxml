@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane maxWidth="228.0" minHeight="0.0" minWidth="150.0" prefHeight="566.0" prefWidth="228.0" style="-fx-background-color: #7896cf;" styleClass="channels-list" stylesheets="@test.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.SidebarController">
+<AnchorPane maxWidth="228.0" minHeight="0.0" minWidth="150.0" prefHeight="566.0" prefWidth="228.0" style="-fx-background-color: #7896cf;" styleClass="channels-list" stylesheets="@../../test.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.SidebarController">
    <children>
       <AnchorPane layoutY="-1.0" prefHeight="283.0" prefWidth="228.0" style="-fx-background-color: #7896cf;" AnchorPane.bottomAnchor="284.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
          <children>

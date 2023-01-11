@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane fx:id="messaging" stylesheets="@test.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.MessagingController">
+<AnchorPane fx:id="messaging" stylesheets="@../../test.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chatup.chatup_client.controller.MessagingController">
    <children>
       <TextField fx:id="message" layoutX="12.0" layoutY="294.0" onKeyPressed="#setOnKeyPressed" prefHeight="38.0" prefWidth="956.0" promptText="Write something here..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-color: #6aba9c; -fx-border-radius: 10; -fx-background-radius: 10;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="84.0" />
       <ListView fx:id="messages" layoutX="14.0" layoutY="14.0" prefHeight="655.0" prefWidth="1031.0" styleClass="message-list" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="14.0" />

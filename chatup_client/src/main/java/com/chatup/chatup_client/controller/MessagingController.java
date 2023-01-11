@@ -4,9 +4,6 @@ import com.chatup.chatup_client.component.MessageFactory;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.web.RestClient;
-import com.chatup.chatup_client.web.SocketClient;
-import javafx.application.Application;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,10 +40,7 @@ public class MessagingController implements Initializable {
         }
     };
 
-
-
-
-    private ChatViewController headController;
+    private final ChatViewController headController;
 
     private final MessageManager messageManager;
 
@@ -78,9 +72,8 @@ public class MessagingController implements Initializable {
 
     }
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public MessagingController(RestClient restClient, Application application, MessageManager messageManager, ChatViewController chatViewController) {
+    public MessagingController(MessageManager messageManager, ChatViewController chatViewController) {
         this.messageManager = messageManager;
         this.headController = chatViewController;
     }

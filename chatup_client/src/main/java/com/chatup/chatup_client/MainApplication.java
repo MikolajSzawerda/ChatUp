@@ -3,7 +3,6 @@ package com.chatup.chatup_client;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -31,7 +30,7 @@ public class MainApplication extends Application {
     }
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/views/login-view.fxml"));
         loader.setControllerFactory(context::getBean);
         Parent root  = loader.load();
         Scene scene = new Scene(root);
@@ -48,7 +47,7 @@ public class MainApplication extends Application {
     }
 
     public void switchToChatView(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatup-view-new.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/views/chatup-view-new.fxml"));
         loadView(loader, stage);
     }
 
@@ -64,7 +63,7 @@ public class MainApplication extends Application {
 
 
     public void switchToLoginView(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/views/login-view.fxml"));
         loadView(loader, stage);
     }
 

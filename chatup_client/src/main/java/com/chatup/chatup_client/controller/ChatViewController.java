@@ -1,24 +1,14 @@
 package com.chatup.chatup_client.controller;
 
 import com.chatup.chatup_client.MainApplication;
-import com.chatup.chatup_client.component.MessageFactory;
-import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.control.skin.ListViewSkin;
-import javafx.scene.control.skin.VirtualFlow;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -36,7 +26,6 @@ import java.util.concurrent.ExecutionException;
 public class ChatViewController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
 
-    private ChatViewController headController;
     private final RestClient restClient;
     private final MainApplication application;
     private final SocketClient socketClient;
@@ -72,8 +61,6 @@ public class ChatViewController implements Initializable {
         this.application = (MainApplication) application;
         logger.info("ChatViewController created");
     }
-
-
 
     public void switchToMessaging(){
         dashboardController.dashboard.setVisible(false);
@@ -117,7 +104,7 @@ public class ChatViewController implements Initializable {
 
             // temporary lines for testing
             assert channels.size() > 0;
-            channels.forEach((ch) -> {currentChannel = ch;});
+            channels.forEach((ch) -> currentChannel = ch);
         }
         return currentChannel;
     }
@@ -170,19 +157,12 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
-
-        sidebarController.addChannel.setVisible(true);
-        sidebarController.addDM.setVisible(true);
-
-
-
-
         backdrop.setVisible(false);
+        dashboardController.dashboard.setVisible(false);
         sidebarController.direct.refresh();
         sidebarController.channels.refresh();
         closeDMDialog();
         closeChannelDialog();
-
 
         try{
             socketClient.connect();
