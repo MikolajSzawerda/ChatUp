@@ -69,8 +69,8 @@ public class MessageBuffer {
         synchronized (this) {
             Collection<Message> messages;
             if(initialized) {
-                logger.info("Requesting messages from messageID " + (messageLoaded - 1) + " for channelID: " + channelID);
-                messages = restClient.getFeedFrom(channelID, messageLoaded - 1);
+                logger.info("Requesting messages from messageID " + (messageLoaded) + " for channelID: " + channelID);
+                messages = restClient.getFeedFrom(channelID, messageLoaded);
             }
             else {
                 logger.info("Requesting initial messages for channelID " + channelID);

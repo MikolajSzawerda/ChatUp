@@ -93,4 +93,8 @@ public class RestClient {
         return getAsCollection("/channel/list", Channel.class);
     }
 
+    public Collection<Message> searchMessages(String messagePhrase) {
+        return getAsCollection("/search/messages?phrase=" + messagePhrase, Message.class);
+    }
+
 }
