@@ -3,6 +3,7 @@ package com.chatup.chatup_client.controller;
 import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
+import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
@@ -32,6 +33,8 @@ abstract public class ViewController implements Initializable {
 
     public void changeChannel(Channel channel){
     }
+
+    public void scrollToMessage(Message message) {}
 
     public ViewController(SocketClient socketClient, RestClient restClient, Application application) {
         this.socketClient = socketClient;

@@ -25,11 +25,11 @@ public class SearchEndpoint {
     @GetMapping("/search/messages")
     List<OutgoingMessage> byContentSearch(@RequestParam("phrase") String phrase,
                                           @RequestParam(value = "page", defaultValue = "0") int page,
-                                          @RequestParam(value="channels") Set<Long> channels,
+                                          @RequestParam(value="channels", required = false) Set<Long> channels,
                                           Principal principal){
         Set<Long> filteredChannels = appUserService.getUserChannelsByUsername(principal.getName()).stream()
                 .map(Channel::getId)
-                .filter(channels::contains)
+                .filter(id -> channels == null || channels.contains(id))
                 .collect(Collectors.toSet());
         return messageService.searchByContent(phrase, filteredChannels, page)
                 .stream()

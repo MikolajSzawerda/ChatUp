@@ -108,10 +108,13 @@ public class CreateChannelDialogController implements Initializable {
 
     public void createChannel(){
         HashSet<Long> userIds = new HashSet<>();
-        usersInChannel.forEach(userInfo -> userIds.add(userInfo.getId()));
-        if(!channelName.getText().isEmpty())
-            restClient.createChannel(channelName.getText(), isPrivate.isSelected(),  false, userIds);
-        headController.closeChannelDialog();
+        if(isPrivate.isSelected())
+            usersInChannel.forEach(userInfo -> userIds.add(userInfo.getId()));
+
+        if(!channelName.getText().isEmpty()) {
+            restClient.createChannel(channelName.getText(), isPrivate.isSelected(), false, userIds);
+            headController.closeChannelDialog();
+        }
     }
 
     @FXML

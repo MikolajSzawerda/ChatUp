@@ -9,6 +9,8 @@ import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -34,6 +36,7 @@ import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 @Component
@@ -70,6 +73,7 @@ public class ChatViewController extends ViewController {
     private CreateChannelDialogController createChannelDialogController;
 
     private Channel currentChannel;
+    private final AtomicBoolean loadingMessagesAfterScroll = new AtomicBoolean(false);
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -137,16 +141,19 @@ public class ChatViewController extends ViewController {
         }
         logger.info("Changing channel to: " + channel.getName());
         if(currentChannel != null) {
-            messageManager.getMessageBuffer(currentChannel.getId()).getMessages().removeListener(listChangeListener);
+            removeMessagesChangeListener();
         }
         currentChannel = channel;
         sidebarController.channels.refresh();
         sidebarController.direct.refresh();
         messages.setItems(messageManager.getMessageBuffer(currentChannel.getId()).getMessages());
-        messageManager.getMessageBuffer(currentChannel.getId()).getMessages().addListener(listChangeListener);
+        addMessagesChangeListener();
         try {
             messageManager.getMessageBuffer(currentChannel.getId()).loadNextMessages();
         } catch (OutOfMessagesException ignored) {} // TODO: Handle this exception
+
+        int messagesSize = messageManager.getMessageBuffer(channel.getId()).getMessages().size();
+        messages.scrollTo(messagesSize - 1);
     }
 
     public void jumpToDM(String name, Long userID) {
@@ -162,12 +169,14 @@ public class ChatViewController extends ViewController {
         restClient.createChannel("", true, true, userIDs);
     }
 
+    @Override
     public void scrollToMessage(Message message) {
         Channel channel = channelManager.getChannelForMessage(message);
         if(channel == null) {
             throw new RuntimeException();
         }
         changeChannel(channel);
+        removeMessagesChangeListener();
         try {
             while (!messageManager.getMessageBuffer(channel.getId()).getMessages().contains(message)) {
                 messageManager.getMessageBuffer(channel.getId()).loadNextMessages();
@@ -176,8 +185,13 @@ public class ChatViewController extends ViewController {
         catch (OutOfMessagesException e) {
             throw new RuntimeException();
         }
-        messages.scrollTo(message);
+
+        Platform.runLater(() -> {
+            messages.scrollTo(message);
+            addMessagesChangeListener();
+        });
     }
+
     @FXML
     public void setOnKeyPressed(KeyEvent e){
         if(e.getCode() == KeyCode.ENTER){
@@ -222,11 +236,44 @@ public class ChatViewController extends ViewController {
         closeDMDialog();
         closeChannelDialog();
 
+        setMessagesScrollHandler();
+
         try{
             socketClient.connect();
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    private void setMessagesScrollHandler() {
+        messages.setOnScroll(e -> {
+            if(currentChannel != null &&
+                    e.getDeltaY() > 0 &&
+                    loadingMessagesAfterScroll.compareAndSet(false, true)
+            ) {
+                removeMessagesChangeListener();
+                int prevSize = messages.getItems().size();
+                try {
+                    messageManager.getMessageBuffer(currentChannel.getId()).loadNextMessages();
+                } catch (OutOfMessagesException ex) {}
+                int currentSize = messages.getItems().size();
+                if(currentSize > 0)
+                    messages.scrollTo(Math.max(currentSize - prevSize - 1, 0));
+                addMessagesChangeListener();
+                loadingMessagesAfterScroll.set(false);
+            }
+        });
+    }
+
+    private void addMessagesChangeListener() {
+        if(currentChannel != null)
+            messageManager.getMessageBuffer(currentChannel.getId()).getMessages().addListener(listChangeListener);
+    }
+
+    private void removeMessagesChangeListener() {
+        if(currentChannel != null)
+            messageManager.getMessageBuffer(currentChannel.getId()).getMessages().removeListener(listChangeListener);
     }
 
 }
