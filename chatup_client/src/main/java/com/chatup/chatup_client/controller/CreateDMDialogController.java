@@ -32,10 +32,7 @@ import java.util.ResourceBundle;
 @Component
 public class CreateDMDialogController implements Initializable {
 
-    final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
-    private ViewController headController;
-    private final RestClient restClient;
-    private final MainApplication application;
+    private ChatViewController headController;
     @FXML
     public Pane addDMDialog;
     @FXML
@@ -49,21 +46,20 @@ public class CreateDMDialogController implements Initializable {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public CreateDMDialogController(RestClient restClient, Application application) {
-        this.restClient = restClient;
-        this.application = (MainApplication) application;
-        logger.info("ChatViewController created");
+    public CreateDMDialogController(ChatViewController chatViewController) {
+        this.headController = chatViewController;
+        headController.logger.info("DMDialogController created");
     }
 
     @FXML
     public void createDM(){
-        UserInfo currentUser = restClient.getCurrentUser();
+        UserInfo currentUser = headController.getRestClient().getCurrentUser();
         UserInfo selectedUser = searchUserResultsDM.getSelectionModel().getSelectedItem();
         HashSet<Long> userIds = new HashSet<>();
         userIds.add(selectedUser.getId());
         userIds.add(currentUser.getId());
         //TODO check if DM channel with given person does not exist
-        restClient.createChannel(selectedUser.getFirstName()+" "+selectedUser.getLastName(), true,  true, userIds);
+        headController.getRestClient().createChannel(selectedUser.getFirstName()+" "+selectedUser.getLastName(), true,  true, userIds);
         headController.closeDMDialog();
     }
 
@@ -82,9 +78,9 @@ public class CreateDMDialogController implements Initializable {
     public void onSearchUserDM(){
         if(searchFieldDM.getText().length() == 0) searchUserResultsDM.setVisible(false);
         else {
-            UserInfo currentUser = restClient.getCurrentUser();
+            UserInfo currentUser = headController.getRestClient().getCurrentUser();
             searchUserResultsDM.setVisible(true);
-            Collection<UserInfo> searchResultsCollection = restClient.searchUsers(searchFieldDM.getText());
+            Collection<UserInfo> searchResultsCollection = headController.getRestClient().searchUsers(searchFieldDM.getText());
             searchResultsCollection.remove(currentUser);
             ObservableList<UserInfo> searchResultsList = FXCollections.observableArrayList(searchResultsCollection);
             searchUserResultsDM.setItems(searchResultsList);
@@ -111,7 +107,7 @@ public class CreateDMDialogController implements Initializable {
         ft.play();
     }
 
-    public void setHeadController(ViewController headController){
+    public void setHeadController(ChatViewController headController){
         this.headController=headController;
     }
     @Override

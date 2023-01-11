@@ -60,7 +60,7 @@ public class LoginViewController implements Initializable {
         boolean success = authClient.authenticate(username, password);
 
         if(success) {
-            application.switchToChatView(e, (Stage) loginButton.getScene().getWindow());
+            application.switchToChatView((Stage) loginButton.getScene().getWindow());
             return;
         }
         else {

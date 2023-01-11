@@ -1,33 +1,26 @@
 package com.chatup.chatup_client.controller;
 
-import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
-import com.chatup.chatup_client.component.ChangeChatButtonFactory;
-import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.PathTransition;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.HLineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -37,18 +30,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class DashboardViewController extends ViewController {
-
-    @FXML
-    private HeadbarController headbarController;
-
-    @FXML
-    private SidebarController sidebarController;
+public class DashboardController implements Initializable {
 
     @FXML
     public Text userNameSurname;
@@ -77,11 +63,16 @@ public class DashboardViewController extends ViewController {
     @FXML
     public Button logOutButton;
 
+    @FXML
+    public AnchorPane dashboard;
+
     boolean isKeyGenerated;
+
+    private ChatViewController headController;
 
     @FXML
     public void onGoBack(ActionEvent e) throws IOException{
-        application.switchToChatView(e, (Stage) goBack.getScene().getWindow());
+        headController.switchToMessaging();
     }
 
     @FXML
@@ -110,48 +101,31 @@ public class DashboardViewController extends ViewController {
         }
     }
 
-    @Override
-    public void changeChannel(Channel channel){
-        try{
-            this.application.switchToChatView(new ActionEvent(), (Stage) username.getScene().getWindow());
-        }
-        catch (IOException e)
-        {
-            throw  new UncheckedIOException(e);
-        }
-
-    }
-
-    @Override
-    public Channel getCurrentChannel(){return null;}
-
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public DashboardViewController(SocketClient socketClient, RestClient restClient, Application application) {
-        super(socketClient, restClient, application);
+    public DashboardController(ChatViewController chatViewController) {
+        this.headController = chatViewController;
     }
 
+
+
     public void onLogOut(ActionEvent e) throws IOException{
-        application.switchToLoginView(e, (Stage) username.getScene().getWindow());
+        headController.switchToLoginView();
+        //TODO on log out
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        sidebarController.addChannel.setVisible(false);
-        sidebarController.addDM.setVisible(false);
-        headbarController.setHeadController(this);
-        sidebarController.setHeadController(this);
-        UserInfo currentUser = restClient.getCurrentUser();
+        UserInfo currentUser = headController.getRestClient().getCurrentUser();
         userNameSurname.setText(currentUser.toString());
         username.setText(currentUser.getUsername());
-        headbarController.searchMessage.setVisible(false);
-        headbarController.searchMessageResults.setVisible(false);
+
         Insets padding = new Insets(0, 0, 0, 0);
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 40.0, padding));
 
-        closeDMDialog();
-        closeChannelDialog();
-        sidebarController.direct.refresh();
-        sidebarController.channels.refresh();
+//        closeDMDialog();
+//        closeChannelDialog();
+//        sidebarController.direct.refresh();
+//        sidebarController.channels.refresh();
 
         logOutButton.setOnAction(event->{
             try {
@@ -163,11 +137,6 @@ public class DashboardViewController extends ViewController {
         });
         logOutButton.setSkin(new MyButtonSkin2(logOutButton));
 
-        try{
-            socketClient.connect();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

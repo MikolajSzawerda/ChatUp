@@ -42,12 +42,8 @@ import java.util.Stack;
 @Component
 public class SidebarController implements Initializable {
 
-    final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
     private final ChannelManager channelManager;
-    private final RestClient restClient;
-    private final MainApplication application;
-
-    private  ViewController headController;
+    private  ChatViewController headController;
 
     public ListView<Channel> channels;
 
@@ -62,23 +58,18 @@ public class SidebarController implements Initializable {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public SidebarController(ChannelManager channelManager, RestClient restClient, Application application) {
+    public SidebarController(ChannelManager channelManager, ChatViewController chatViewController) {
         this.channelManager = channelManager;
-        this.restClient = restClient;
-        this.application = (MainApplication) application;
-        logger.info("ChatViewController created");
+        this.headController = chatViewController;
+        headController.logger.info("SidebarController created");
     }
 
-
-    public void setHeadController(ViewController headController){
-        this.headController=headController;
-    }
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources){
         channels.setItems(channelManager.getStandardChannels());
         direct.setItems(channelManager.getDirectMessages());
-        restClient.listChannels().forEach(channelManager::addChannel);
+        headController.getRestClient().listChannels().forEach(channelManager::addChannel);
         channels.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Channel item, boolean empty) {
@@ -102,9 +93,7 @@ public class SidebarController implements Initializable {
                             headController.changeChannel(item)
                     );
                     channelButton.setSkin(new MyButtonSkin(channelButton));
-                    if(headController.getCurrentChannel() != null) {
-                        logger.info(headController.getCurrentChannel().getName());
-                    }
+
                     if(item.equals(headController.getCurrentChannel())){
                         channelButton.setBackground(new Background(new BackgroundFill(new Color(0.33, 0.42, 0.86, 1), CornerRadii.EMPTY, Insets.EMPTY)));
                     }

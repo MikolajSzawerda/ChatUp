@@ -47,13 +47,13 @@ public class MainApplication extends Application {
         Platform.exit();
     }
 
-    public void switchToChatView(ActionEvent e, Stage stage) throws IOException {
+    public void switchToChatView(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatup-view-new.fxml"));
-        loadView(e, loader, stage);
+        loadView(loader, stage);
     }
 
 
-    private void loadView(ActionEvent e, FXMLLoader loader, Stage stage) throws IOException {
+    private void loadView(FXMLLoader loader, Stage stage) throws IOException {
         loader.setControllerFactory(context::getBean);
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -63,13 +63,9 @@ public class MainApplication extends Application {
     }
 
 
-    public void switchToLoginView(ActionEvent e, Stage stage) throws IOException {
+    public void switchToLoginView(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-view.fxml"));
-        loadView(e, loader, stage);
+        loadView(loader, stage);
     }
 
-    public void switchToDashboardView(ActionEvent e, Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard-view.fxml"));
-        loadView(e, loader, stage);
-    }
 }

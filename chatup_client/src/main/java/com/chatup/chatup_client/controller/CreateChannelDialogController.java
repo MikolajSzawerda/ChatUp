@@ -32,12 +32,9 @@ import java.util.ResourceBundle;
 @Component
 public class CreateChannelDialogController implements Initializable {
 
-    final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
 
     private final ObservableList<UserInfo> usersInChannel;
-    private final RestClient restClient;
-    private final MainApplication application;
-    private ViewController headController;
+    private ChatViewController headController;
     @FXML
     public TextField channelName;
 
@@ -64,11 +61,10 @@ public class CreateChannelDialogController implements Initializable {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public CreateChannelDialogController(RestClient restClient, Application application) {
-        this.restClient = restClient;
-        this.application = (MainApplication) application;
+    public CreateChannelDialogController(ChatViewController chatViewController) {
+        this.headController = chatViewController;
         this.usersInChannel = FXCollections.observableArrayList();
-        logger.info("ChatViewController created");
+        headController.logger.info("ChanellDialogController created");
     }
 
     @FXML
@@ -82,13 +78,13 @@ public class CreateChannelDialogController implements Initializable {
     }
 
     public void show(){
-        addChannelDialog.setMaxHeight(130);
         addChannelDialog.setVisible(true);
         searchField.setText("");
         searchUserResultsView.setVisible(false);
         usersInChannel.clear();
+        addChannelDialog.setMaxHeight(130);
 
-        UserInfo currentUser = restClient.getCurrentUser();
+        UserInfo currentUser = headController.getRestClient().getCurrentUser();
         usersInChannel.add(currentUser);
 
         FadeTransition ft = new FadeTransition(Duration.millis(200), addChannelDialog);
@@ -110,7 +106,7 @@ public class CreateChannelDialogController implements Initializable {
         HashSet<Long> userIds = new HashSet<>();
         usersInChannel.forEach(userInfo -> userIds.add(userInfo.getId()));
         if(!channelName.getText().isEmpty())
-            restClient.createChannel(channelName.getText(), isPrivate.isSelected(),  false, userIds);
+            headController.getRestClient().createChannel(channelName.getText(), isPrivate.isSelected(),  false, userIds);
         headController.closeChannelDialog();
     }
 
@@ -193,16 +189,16 @@ public class CreateChannelDialogController implements Initializable {
     public void onSearchUserChannel(){
         if(searchField.getText().length() == 0) searchUserResultsView.setVisible(false);
         else {
-            UserInfo currentUser = restClient.getCurrentUser();
+            UserInfo currentUser = headController.getRestClient().getCurrentUser();
             searchUserResultsView.setVisible(true);
-            Collection<UserInfo> searchResultsCollection = restClient.searchUsers(searchField.getText());
+            Collection<UserInfo> searchResultsCollection = headController.getRestClient().searchUsers(searchField.getText());
             searchResultsCollection.remove(currentUser);
             ObservableList<UserInfo> searchResultsList = FXCollections.observableArrayList(searchResultsCollection);
             searchUserResultsView.setItems(searchResultsList);
             searchUserResultsView.prefHeightProperty().bind(Bindings.size((searchResultsList)).multiply(33));
         }
     }
-    public void setHeadController(ViewController headController){
+    public void setHeadController(ChatViewController headController){
         this.headController=headController;
     }
     @Override
