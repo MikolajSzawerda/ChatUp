@@ -83,6 +83,9 @@ public class RestClient {
         return getAsCollection("/search/users?name=" + searchName, UserInfo.class);
     }
 
+    public String getToken(){
+        return authClient.getToken();
+    }
     public UserInfo getCurrentUser() {
         return getAsClass("/me", UserInfo.class);
     }

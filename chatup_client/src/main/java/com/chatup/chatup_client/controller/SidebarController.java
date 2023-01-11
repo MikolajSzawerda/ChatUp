@@ -63,7 +63,7 @@ public class SidebarController implements Initializable {
         this.channelManager = channelManager;
         this.restClient = restClient;
         this.application = (MainApplication) application;
-        logger.info("ChatViewController created");
+        logger.info("SidebarController created");
     }
 
 
@@ -98,6 +98,9 @@ public class SidebarController implements Initializable {
                             headController.changeChannel(item)
                     );
                     channelButton.setSkin(new MyButtonSkin(channelButton));
+                    if(headController.getCurrentChannel() != null) {
+                        logger.info(headController.getCurrentChannel().getName());
+                    }
                     if(item.equals(headController.getCurrentChannel())){
                         channelButton.setBackground(new Background(new BackgroundFill(new Color(0.33, 0.42, 0.86, 1), CornerRadii.EMPTY, Insets.EMPTY)));
                     }

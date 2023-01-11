@@ -26,7 +26,7 @@ public class ChannelIconFactory {
             icon.setIconColor(Paint.valueOf("#6aba9c"));
             icon.setStroke(Paint.valueOf("#000000"));
             //icon.setStyle("-fx-padding: 0 5 0 0");
-            channelIcon.getChildren().addAll(icon, newMessagesText);
+            channelIcon.getChildren().addAll(icon);
         }
         else {
             Rectangle rect = new Rectangle();
@@ -35,7 +35,7 @@ public class ChannelIconFactory {
             //rect.setStyle("-fx-padding: 0 5 0 0");
             rect.setStroke(Paint.valueOf("#000000"));
             rect.setFill(Paint.valueOf("#6aba9c"));
-            channelIcon.getChildren().addAll(rect, newMessagesText);
+            channelIcon.getChildren().addAll(rect);
 
 
         }

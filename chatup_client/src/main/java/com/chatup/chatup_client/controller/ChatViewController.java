@@ -18,6 +18,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +75,6 @@ public class ChatViewController extends ViewController {
     @FXML
     private CreateChannelDialogController createChannelDialogController;
 
-    private Channel currentChannel;
     private final AtomicBoolean loadingMessagesAfterScroll = new AtomicBoolean(false);
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -139,6 +141,10 @@ public class ChatViewController extends ViewController {
             sidebarController.direct.refresh();
             return;
         }
+        Text placeholder = new Text("This channel is empty. Write your first message!");
+        placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+        messages.setPlaceholder(placeholder);
+        message.setDisable(false);
         logger.info("Changing channel to: " + channel.getName());
         if(currentChannel != null) {
             removeMessagesChangeListener();
@@ -233,10 +239,17 @@ public class ChatViewController extends ViewController {
         setCellFactories();
 
         backdrop.setVisible(false);
+        sidebarController.addDM.setVisible(true);
+        sidebarController.addChannel.setVisible(true);
         closeDMDialog();
         closeChannelDialog();
 
         setMessagesScrollHandler();
+
+        Text placeholder = new Text("Hello! Choose your channel");
+        placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+        messages.setPlaceholder(placeholder);
+        message.setDisable(true);
 
         try{
             socketClient.connect();
