@@ -4,6 +4,7 @@ import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
 import com.chatup.chatup_client.manager.ChannelManager;
+import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import javafx.animation.FadeTransition;
@@ -57,13 +58,8 @@ public class CreateDMDialogController implements Initializable {
 
     @FXML
     public void createDM(){
-        UserInfo currentUser = restClient.getCurrentUser();
         UserInfo selectedUser = searchUserResultsDM.getSelectionModel().getSelectedItem();
-        HashSet<Long> userIds = new HashSet<>();
-        userIds.add(selectedUser.getId());
-        userIds.add(currentUser.getId());
-        //TODO check if DM channel with given person does not exist
-        restClient.createChannel(selectedUser.getFirstName()+" "+selectedUser.getLastName(), true,  true, userIds);
+        headController.createDM(selectedUser.getId());
         headController.closeDMDialog();
     }
 

@@ -29,6 +29,8 @@ abstract public class ViewController implements Initializable {
     public void closeDMDialog(){
     }
 
+    public void createDM(Long userID){}
+
     public Channel getCurrentChannel(){return this.currentChannel;}
 
     public void changeChannel(Channel channel){

@@ -97,13 +97,4 @@ public class ChannelManager {
         }
         return null;
     }
-
-    public Channel getDMByName(String name) {
-        for(Channel ch : directMessages) {
-            if(ch.getName().equals(name)) {
-                return ch;
-            }
-        }
-        return null;
-    }
 }

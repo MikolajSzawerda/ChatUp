@@ -6,6 +6,7 @@ import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.manager.exception.OutOfMessagesException;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
@@ -162,17 +163,16 @@ public class ChatViewController extends ViewController {
         messages.scrollTo(messagesSize - 1);
     }
 
-    public void jumpToDM(String name, Long userID) {
-        Channel existingChannel = channelManager.getDMByName(name);
-        if(existingChannel != null) {
-            changeChannel(existingChannel);
-            return;
-        }
-        Set<Long> userIDs = new HashSet<>();
-        userIDs.add(restClient.getCurrentUser().getId());
-        userIDs.add(userID);
-        channelManager.addWaitingChannel(name, true);
-        restClient.createChannel("", true, true, userIDs);
+    @Override
+    public void createDM(Long userId){
+        UserInfo currentUser = restClient.getCurrentUser();
+        if(userId == currentUser.getId()) return;
+        HashSet<Long> userIds = new HashSet<>();
+        userIds.add(userId);
+        userIds.add(currentUser.getId());
+        Channel newChannel = restClient.createChannel("", true,  true, userIds);
+        this.changeChannel(newChannel);
+
     }
 
     @Override
@@ -226,6 +226,8 @@ public class ChatViewController extends ViewController {
                     setGraphic(message);
 
                 }
+
+                setOnMouseClicked(e->createDM(item.getAuthorID()));
             }
         });
     }

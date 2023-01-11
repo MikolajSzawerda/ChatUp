@@ -3,6 +3,7 @@ package com.chatup.chatup_client.controller;
 import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
+import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import javafx.animation.FadeTransition;
@@ -112,7 +113,8 @@ public class CreateChannelDialogController implements Initializable {
             usersInChannel.forEach(userInfo -> userIds.add(userInfo.getId()));
 
         if(!channelName.getText().isEmpty()) {
-            restClient.createChannel(channelName.getText(), isPrivate.isSelected(), false, userIds);
+            Channel newChannel =  restClient.createChannel(channelName.getText(), isPrivate.isSelected(), false, userIds);
+            headController.changeChannel(newChannel);
             headController.closeChannelDialog();
         }
     }
