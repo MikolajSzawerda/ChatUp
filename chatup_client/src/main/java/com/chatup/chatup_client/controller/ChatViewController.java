@@ -6,11 +6,11 @@ import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.manager.exception.OutOfMessagesException;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -18,23 +18,16 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-
-import javafx.util.Duration;
-
 import javax.annotation.PostConstruct;
-import javax.management.RuntimeErrorException;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -72,7 +65,6 @@ public class ChatViewController extends ViewController {
     @FXML
     private CreateChannelDialogController createChannelDialogController;
 
-    private Channel currentChannel;
     private final AtomicBoolean loadingMessagesAfterScroll = new AtomicBoolean(false);
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -98,7 +90,6 @@ public class ChatViewController extends ViewController {
             message.clear();
         }
     }
-
 
     public void enableBackdrop(){
         backdrop.setVisible(true);
@@ -139,6 +130,10 @@ public class ChatViewController extends ViewController {
             sidebarController.direct.refresh();
             return;
         }
+        Text placeholder = new Text("This channel is empty. Write your first message!");
+        placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+        messages.setPlaceholder(placeholder);
+        message.setDisable(false);
         logger.info("Changing channel to: " + channel.getName());
         if(currentChannel != null) {
             removeMessagesChangeListener();
@@ -156,17 +151,16 @@ public class ChatViewController extends ViewController {
         messages.scrollTo(messagesSize - 1);
     }
 
-    public void jumpToDM(String name, Long userID) {
-        Channel existingChannel = channelManager.getDMByName(name);
-        if(existingChannel != null) {
-            changeChannel(existingChannel);
-            return;
-        }
-        Set<Long> userIDs = new HashSet<>();
-        userIDs.add(restClient.getCurrentUser().getId());
-        userIDs.add(userID);
-        channelManager.addWaitingChannel(name, true);
-        restClient.createChannel("", true, true, userIDs);
+    @Override
+    public void createDM(Long userId){
+        UserInfo currentUser = restClient.getCurrentUser();
+        if(userId.equals(currentUser.getId())) return;
+        HashSet<Long> userIds = new HashSet<>();
+        userIds.add(userId);
+        userIds.add(currentUser.getId());
+        Channel newChannel = restClient.createChannel("", true,  true, userIds);
+        this.changeChannel(newChannel);
+
     }
 
     @Override
@@ -218,8 +212,11 @@ public class ChatViewController extends ViewController {
                             item.getAuthorFirstName() + " " + item.getAuthorLastName(), item.getAuthorUsername(), param.getWidth());
 
                     setGraphic(message);
+                    setOnMouseClicked(e->createDM(item.getAuthorID()));
 
                 }
+
+
             }
         });
     }
@@ -233,10 +230,17 @@ public class ChatViewController extends ViewController {
         setCellFactories();
 
         backdrop.setVisible(false);
+        sidebarController.addDM.setVisible(true);
+        sidebarController.addChannel.setVisible(true);
         closeDMDialog();
         closeChannelDialog();
 
         setMessagesScrollHandler();
+
+        Text placeholder = new Text("Hello! Choose your channel");
+        placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+        messages.setPlaceholder(placeholder);
+        message.setDisable(true);
 
         try{
             socketClient.connect();

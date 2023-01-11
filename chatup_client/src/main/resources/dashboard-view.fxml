@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
@@ -39,7 +40,7 @@
             <Font size="21.0" />
          </font>
       </Text>
-      <Button layoutX="323.0" layoutY="406.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="72.0" styleClass="customized-button" text="Log out" />
+      <Button fx:id="logOutButton" layoutX="323.0" layoutY="406.0" mnemonicParsing="false" onAction="#onLogOut" prefHeight="24.0" prefWidth="72.0" styleClass="customized-button" text="Log out" />
       <Text fx:id="username" layoutX="395.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="username" wrappingWidth="770.7294921875">
          <font>
             <Font size="21.0" />
@@ -51,19 +52,10 @@
          </font>
       </Text>
       <Button disable="true" layoutX="502.0" layoutY="276.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="79.0" styleClass="customized-button" text="Change" />
-      <Text fx:id="username2" layoutX="413.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" wrappingWidth="770.7294921875">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Text>
-      <Button fx:id="generateAPIKey" layoutX="435.0" layoutY="325.0" mnemonicParsing="false" onAction="#onGenerateAPIKey" prefHeight="24.0" prefWidth="96.0" styleClass="customized-button" text="Generate" />
-      <Text fx:id="apiKey" layoutX="413.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: &quot;Roboto Slab&quot;;" text="k37jkdyndd0d" visible="false" wrappingWidth="191.7294921875">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Text>
+      <Button fx:id="generateAPIKey" layoutX="435.0" layoutY="325.0" mnemonicParsing="false" onAction="#onGenerateAPIKey" prefHeight="24.0" prefWidth="96.0" styleClass="customized-button" text="Show" />
       <Button fx:id="goBack" layoutX="798.0" layoutY="463.0" mnemonicParsing="false" onAction="#onGoBack" prefHeight="24.0" prefWidth="79.0" styleClass="customized-button" text="Go back" />
       <fx:include fx:id="sidebar" source="sidebar.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0" />
       <fx:include fx:id="headbar" source="headbar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <TextField fx:id="apiKey" editable="false" layoutX="417.0" layoutY="325.0" prefHeight="24.0" prefWidth="553.0" visible="false" AnchorPane.leftAnchor="417.0" AnchorPane.rightAnchor="310.0" />
    </children>
 </AnchorPane>

@@ -6,11 +6,13 @@ import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
+import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -43,6 +46,8 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class DashboardViewController extends ViewController {
 
+    private final ChatViewController chatViewController;
+
     @FXML
     private HeadbarController headbarController;
 
@@ -62,18 +67,14 @@ public class DashboardViewController extends ViewController {
     public Button generateAPIKey;
 
     @FXML
-    public Text apiKey;
-
-    @FXML
-    public ListView<String> direct;
-
-    @FXML
-    public ListView<String> channels;
+    public TextField apiKey;
 
     @FXML
     public Button goBack;
 
-    boolean isKeyGenerated;
+    @FXML
+    public Button logOutButton;
+
 
     @FXML
     public void onGoBack(ActionEvent e) throws IOException{
@@ -81,12 +82,17 @@ public class DashboardViewController extends ViewController {
     }
 
     @FXML
+    public void onLogOut(ActionEvent e) throws IOException{
+        application.switchToLoginView(e, (Stage) goBack.getScene().getWindow());
+    }
+
+    @FXML
     public void onGenerateAPIKey(){
-        if(!isKeyGenerated) {
+        if(!apiKey.isVisible()) {
             Path path = new Path();
             MoveTo start = new MoveTo(60.0, 12.0);
             path.getElements().add(start);
-            path.getElements().add(new HLineTo(300));
+            path.getElements().add(new HLineTo(600));
             PathTransition pathTransition = new PathTransition();
             pathTransition.setDuration(Duration.millis(200));
             pathTransition.setPath(path);
@@ -101,7 +107,7 @@ public class DashboardViewController extends ViewController {
             ft.setToValue(1.0);
             ft.play();
 
-            isKeyGenerated = true;
+            generateAPIKey.setDisable(true);
             generateAPIKey.setText("Regenerate");
         }
     }
@@ -110,6 +116,7 @@ public class DashboardViewController extends ViewController {
     public void changeChannel(Channel channel){
         try{
             this.application.switchToChatView(new ActionEvent(), (Stage) username.getScene().getWindow());
+            Platform.runLater(()->chatViewController.changeChannel(channel));
         }
         catch (IOException e)
         {
@@ -120,20 +127,23 @@ public class DashboardViewController extends ViewController {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public DashboardViewController(SocketClient socketClient, RestClient restClient, Application application) {
+    public DashboardViewController(SocketClient socketClient, RestClient restClient, Application application, ChatViewController chatViewController) {
         super(socketClient, restClient, application);
+        this.chatViewController = chatViewController;
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         UserInfo currentUser = restClient.getCurrentUser();
         userNameSurname.setText(currentUser.toString());
         username.setText(currentUser.getUsername());
+        apiKey.setText(restClient.getToken());
         Insets padding = new Insets(0, 0, 0, 0);
         userAvatar.getChildren().addAll(AvatarFactory.createAvatar(currentUser.toString(), 40.0, padding));
         headbarController.setHeadController(this);
         sidebarController.setHeadController(this);
-        Collection<Channel> channels = restClient.listChannels();
-
+        sidebarController.addDM.setVisible(false);
+        sidebarController.addChannel.setVisible(false);
+        currentChannel = null;
 
         closeDMDialog();
         closeChannelDialog();

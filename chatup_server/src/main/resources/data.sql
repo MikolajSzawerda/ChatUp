@@ -1,4 +1,4 @@
-    INSERT INTO users(user_id, first_name, last_name, username, password, status, is_enabled) VALUES (0, 'Elwira', 'Chmielewska', 'elwira.chmielewska.0', '$2b$12$mYv6wBV2Nty3ca0GpqpW..98SKtpFrg7GJzi.scqOES3cgLEnQTcC', 'n', true);
+INSERT INTO users(user_id, first_name, last_name, username, password, status, is_enabled) VALUES (0, 'Elwira', 'Chmielewska', 'elwira.chmielewska.0', '$2b$12$mYv6wBV2Nty3ca0GpqpW..98SKtpFrg7GJzi.scqOES3cgLEnQTcC', 'n', true);
 INSERT INTO users(user_id, first_name, last_name, username, password, status, is_enabled) VALUES (1, 'Magda', 'Kwiatkowska', 'magda.kwiatkowska.1', '$2b$12$nT6afp5kjKE2yTE8KwshveRgI1Fv4aAJCiHuCd.H1dO9fmZwIjrdm', 'n', true);
 INSERT INTO users(user_id, first_name, last_name, username, password, status, is_enabled) VALUES (2, 'Żaneta', 'Gajewska', 'zaneta.gajewska.2', '$2b$12$9L3lAVl3AZ3UtbGVYWjee.MPuRTd0p1XESRDAfBlieB3vX0ALc3pS', 'n', true);
 INSERT INTO users(user_id, first_name, last_name, username, password, status, is_enabled) VALUES (3, 'Maksymilian', 'Bąk', 'maksymilian.bak.3', '$2b$12$JxAdFL9c.fOiQNlvW2ID9OyVzuIYVspv7n.6lbqCTs6JRDS3KxiXy', 'n', true);

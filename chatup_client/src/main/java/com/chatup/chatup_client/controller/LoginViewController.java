@@ -61,7 +61,6 @@ public class LoginViewController implements Initializable {
 
         if(success) {
             application.switchToChatView(e, (Stage) loginButton.getScene().getWindow());
-            return;
         }
         else {
             backdrop.setVisible(false);

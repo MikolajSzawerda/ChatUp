@@ -1,14 +1,12 @@
 package com.chatup.chatup_client.controller;
 
 import com.chatup.chatup_client.MainApplication;
-import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
 import javafx.fxml.Initializable;
-import org.springframework.beans.factory.annotation.Autowired;
 
 abstract public class ViewController implements Initializable {
 
@@ -28,6 +26,8 @@ abstract public class ViewController implements Initializable {
     }
     public void closeDMDialog(){
     }
+
+    public void createDM(Long userID){}
 
     public Channel getCurrentChannel(){return this.currentChannel;}
 

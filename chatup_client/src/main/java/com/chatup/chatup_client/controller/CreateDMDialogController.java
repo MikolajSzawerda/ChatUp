@@ -1,13 +1,10 @@
 package com.chatup.chatup_client.controller;
 
-import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
-import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import javafx.animation.FadeTransition;
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,21 +18,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.ResourceBundle;
 @Component
 public class CreateDMDialogController implements Initializable {
 
-    final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
     private ViewController headController;
     private final RestClient restClient;
-    private final MainApplication application;
     @FXML
     public Pane addDMDialog;
     @FXML
@@ -47,23 +38,15 @@ public class CreateDMDialogController implements Initializable {
     @FXML
     public TextField searchFieldDM;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public CreateDMDialogController(RestClient restClient, Application application) {
+    public CreateDMDialogController(RestClient restClient) {
         this.restClient = restClient;
-        this.application = (MainApplication) application;
-        logger.info("ChatViewController created");
     }
 
     @FXML
     public void createDM(){
-        UserInfo currentUser = restClient.getCurrentUser();
         UserInfo selectedUser = searchUserResultsDM.getSelectionModel().getSelectedItem();
-        HashSet<Long> userIds = new HashSet<>();
-        userIds.add(selectedUser.getId());
-        userIds.add(currentUser.getId());
-        //TODO check if DM channel with given person does not exist
-        restClient.createChannel(selectedUser.getFirstName()+" "+selectedUser.getLastName(), true,  true, userIds);
+        headController.createDM(selectedUser.getId());
         headController.closeDMDialog();
     }
 
@@ -117,9 +100,7 @@ public class CreateDMDialogController implements Initializable {
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
         addDMDialog.setVisible(false);
-        closeDMDialogButton.setOnAction(e->{
-            onCloseDMDialogButton();
-        });
+        closeDMDialogButton.setOnAction(e->onCloseDMDialogButton());
         closeDMDialogButton.setSkin(new MyButtonSkin2(closeDMDialogButton));
         searchUserResultsDM.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -132,9 +113,6 @@ public class CreateDMDialogController implements Initializable {
 
                     Insets padding = new Insets(0, 5, 0, 0);
                     StackPane avatar = AvatarFactory.createAvatar(item.getFirstName()+" "+item.getLastName(), 13.0, padding);
-//                     Button directMessageButton = ChangeChatButtonFactory.createChangeChatButton(avatar, item, param.getWidth());
-//
-//                     setGraphic(directMessageButton);
                     setText(item.getFirstName()+" "+item.getLastName());
                     setGraphic(avatar);
 

@@ -2,7 +2,6 @@ package com.chatup.chatup_client.controller;
 
 import com.chatup.chatup_client.MainApplication;
 import com.chatup.chatup_client.component.AvatarFactory;
-import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
@@ -17,8 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -26,13 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.result.view.View;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @Component
 public class HeadbarController implements Initializable {
@@ -63,7 +57,7 @@ public class HeadbarController implements Initializable {
     public HeadbarController(RestClient restClient, Application application) {
         this.restClient = restClient;
         this.application = (MainApplication) application;
-        logger.info("ChatViewController created");
+        logger.info("HeadBarController created");
     }
 
     @FXML
@@ -76,7 +70,7 @@ public class HeadbarController implements Initializable {
     }
 
     @FXML
-    public void onSearchMessage(KeyEvent e){
+    public void onSearchMessage(){
         if(searchMessageField.getText().length() == 0) {
             searchMessageResults.setVisible(false);
         } else {
