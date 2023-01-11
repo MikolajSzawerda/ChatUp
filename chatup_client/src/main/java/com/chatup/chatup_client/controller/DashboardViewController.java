@@ -6,6 +6,7 @@ import com.chatup.chatup_client.component.ChangeChatButtonFactory;
 import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.Channel;
+import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;

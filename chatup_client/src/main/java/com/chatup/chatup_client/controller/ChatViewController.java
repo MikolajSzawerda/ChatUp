@@ -11,7 +11,6 @@ import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,19 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-
-import javafx.util.Duration;
-
 import javax.annotation.PostConstruct;
-import javax.management.RuntimeErrorException;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -101,7 +90,6 @@ public class ChatViewController extends ViewController {
             message.clear();
         }
     }
-
 
     public void enableBackdrop(){
         backdrop.setVisible(true);
@@ -166,7 +154,7 @@ public class ChatViewController extends ViewController {
     @Override
     public void createDM(Long userId){
         UserInfo currentUser = restClient.getCurrentUser();
-        if(userId == currentUser.getId()) return;
+        if(userId.equals(currentUser.getId())) return;
         HashSet<Long> userIds = new HashSet<>();
         userIds.add(userId);
         userIds.add(currentUser.getId());
@@ -224,10 +212,11 @@ public class ChatViewController extends ViewController {
                             item.getAuthorFirstName() + " " + item.getAuthorLastName(), item.getAuthorUsername(), param.getWidth());
 
                     setGraphic(message);
+                    setOnMouseClicked(e->createDM(item.getAuthorID()));
 
                 }
 
-                setOnMouseClicked(e->createDM(item.getAuthorID()));
+
             }
         });
     }

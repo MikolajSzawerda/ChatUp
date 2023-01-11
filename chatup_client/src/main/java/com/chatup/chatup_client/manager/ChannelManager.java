@@ -12,20 +12,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class ChannelManager {
     private final Logger logger = LoggerFactory.getLogger(ChannelManager.class);
     private ConnectionHandler connectionHandler;
     private ChatViewController chatViewController;
-    private boolean testMode;
+    private final boolean testMode;
     private List<Pair<String, Boolean>> waitingChannels = new ArrayList<>();
     public void addWaitingChannel(String name, boolean isDM) {
         waitingChannels.add(new Pair<>(name, isDM));

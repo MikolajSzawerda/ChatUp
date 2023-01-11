@@ -25,7 +25,6 @@ public class ChannelIconFactory {
             icon.setIconLiteral("fa-lock");
             icon.setIconColor(Paint.valueOf("#6aba9c"));
             icon.setStroke(Paint.valueOf("#000000"));
-            //icon.setStyle("-fx-padding: 0 5 0 0");
             channelIcon.getChildren().addAll(icon);
         }
         else {
