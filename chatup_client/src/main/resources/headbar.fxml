@@ -33,7 +33,7 @@
       <TextField fx:id="searchMessageField" onKeyTyped="#onSearchMessage" layoutX="517.0" layoutY="21.0" prefHeight="38.0" prefWidth="310.0" promptText="Search ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.leftAnchor="517.0" AnchorPane.rightAnchor="453.0" />
       <ImageView fitHeight="72.0" fitWidth="123.0" layoutX="51.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.leftAnchor="51.0" AnchorPane.rightAnchor="1157.0">
          <image>
-            <Image url="@pngwing.com.png" />
+            <Image url="@img/pngwing.com.png" />
          </image>
       </ImageView>
       <Button fx:id="goToDashboard1" layoutX="842.0" mnemonicParsing="false" onAction="#onGoToDashboard" prefHeight="83.0" prefWidth="81.0" style="-fx-background-color: #645a5a; -fx-opacity: 0;" AnchorPane.rightAnchor="357.0">
