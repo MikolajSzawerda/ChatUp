@@ -147,12 +147,6 @@ public class DashboardViewController extends ViewController {
 
         closeDMDialog();
         closeChannelDialog();
-
-        try{
-            socketClient.connect();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }
