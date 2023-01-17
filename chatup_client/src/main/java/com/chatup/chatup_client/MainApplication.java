@@ -3,7 +3,6 @@ package com.chatup.chatup_client;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +16,8 @@ import java.io.IOException;
 
 public class MainApplication extends Application {
     ConfigurableApplicationContext context;
+
+    Stage stage;
 
     @Override
     public void init() {
@@ -39,6 +40,7 @@ public class MainApplication extends Application {
         stage.setTitle("ChatUp");
         stage.setScene(scene);
         stage.show();
+        this.stage = (Stage) scene.getWindow();
     }
 
     @Override
@@ -47,13 +49,22 @@ public class MainApplication extends Application {
         Platform.exit();
     }
 
-    public void switchToChatView(ActionEvent e, Stage stage) throws IOException {
+    public void switchToChatView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatup-view-new.fxml"));
-        loadView(e, loader, stage);
+        loadView(loader);
     }
 
+    public void switchToLoginView() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-view.fxml"));
+        loadView(loader);
+    }
 
-    private void loadView(ActionEvent e, FXMLLoader loader, Stage stage) throws IOException {
+    public void switchToDashboardView() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard-view.fxml"));
+        loadView(loader);
+    }
+
+    private void loadView(FXMLLoader loader) throws IOException {
         loader.setControllerFactory(context::getBean);
         Parent root = loader.load();
         Scene scene = new Scene(root);
@@ -63,13 +74,5 @@ public class MainApplication extends Application {
     }
 
 
-    public void switchToLoginView(ActionEvent e, Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-view.fxml"));
-        loadView(e, loader, stage);
-    }
 
-    public void switchToDashboardView(ActionEvent e, Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard-view.fxml"));
-        loadView(e, loader, stage);
-    }
 }

@@ -30,7 +30,7 @@
             <Font size="30.0" />
          </font>
       </Text>
-      <TextField fx:id="searchMessageField" onKeyTyped="#onSearchMessage" layoutX="517.0" layoutY="21.0" prefHeight="38.0" prefWidth="310.0" promptText="Search ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.leftAnchor="517.0" AnchorPane.rightAnchor="453.0" />
+      <TextField fx:id="searchMessageField" layoutX="517.0" layoutY="21.0" onKeyTyped="#onSearchMessage" prefHeight="38.0" prefWidth="310.0" promptText="Search ..." style="-fx-font-family: &quot;Roboto Slab&quot;; -fx-background-color: #e8e7e3; -fx-border-radius: 10; -fx-border-color: #6aba9c; -fx-background-radius: 10;" AnchorPane.leftAnchor="517.0" AnchorPane.rightAnchor="453.0" />
       <ImageView fitHeight="72.0" fitWidth="123.0" layoutX="51.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.leftAnchor="51.0" AnchorPane.rightAnchor="1157.0">
          <image>
             <Image url="@pngwing.com.png" />
@@ -41,6 +41,6 @@
             <Font size="23.0" />
          </font>
       </Button>
-      <ListView fx:id="searchMessageResults" onMouseClicked="#scrollToMessage" layoutX="517.0" layoutY="52.0" prefHeight="270.0" prefWidth="310.0" visible="false" AnchorPane.leftAnchor="517.0" AnchorPane.rightAnchor="453.0" />
+      <ListView fx:id="searchMessageResults" layoutX="517.0" layoutY="52.0" onMouseClicked="#scrollToMessage" prefHeight="270.0" prefWidth="310.0" visible="false" AnchorPane.leftAnchor="517.0" AnchorPane.rightAnchor="453.0" />
    </children>
 </AnchorPane>

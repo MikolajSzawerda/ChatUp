@@ -1,6 +1,6 @@
 package com.chatup.chatup_client.controller;
 
-import com.chatup.chatup_client.component.MessageFactory;
+import com.chatup.chatup_client.component.CellFactories;
 import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.manager.exception.OutOfMessagesException;
@@ -9,14 +9,18 @@ import com.chatup.chatup_client.model.Message;
 import com.chatup.chatup_client.model.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
-import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -25,133 +29,177 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import javax.annotation.PostConstruct;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
 @Component
-public class ChatViewController extends ViewController {
+public class ChatViewController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(ChatViewController.class);
+
+    public SimpleObjectProperty<Channel> currentChannel = new SimpleObjectProperty<>();
+
+    private final SocketClient socketClient;
+    private final RestClient restClient;
     private final MessageManager messageManager;
 
     private final ChannelManager channelManager;
+
+    private final ArrayList<Listener> listeners = new ArrayList<>();
     
     @FXML
-    public ListView<Message> messages;
+    private ListView<Message> messages;
     final ListChangeListener<Message> listChangeListener = new ListChangeListener<>() {
         @Override
         public void onChanged(Change c) {
             messages.scrollTo(messages.getItems().size() - 1);
         }
     };
+
     @FXML
-    public Button sendButton;
+    private Button sendButton;
     @FXML
-    public TextField message;
+    private TextField message;
     @FXML
-    public Rectangle backdrop;
+    private Rectangle backdrop;
     @FXML
     private HeadbarController headbarController;
-
+    private HeadbarController.Listener headbarListener;
     @FXML
     private SidebarController sidebarController;
-
+    private SidebarController.Listener sidebarListener;
     @FXML
     private CreateDMDialogController createDMDialogController;
-
+    private CreateDMDialogController.Listener createDMDialogListener;
     @FXML
     private CreateChannelDialogController createChannelDialogController;
+    private CreateChannelDialogController.Listener createChannelDialogListener;
+
+    private BooleanProperty isCreateDMDialogOpen = new SimpleBooleanProperty(false);
+    private BooleanProperty isCreateChannelDialogOpen = new SimpleBooleanProperty(false);
 
     private final AtomicBoolean loadingMessagesAfterScroll = new AtomicBoolean(false);
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    public ChatViewController(MessageManager messageManager, SocketClient socketClient, RestClient restClient, Application application, ChannelManager channelManager) {
-        super(socketClient, restClient, application);
+    public ChatViewController(MessageManager messageManager, SocketClient socketClient, RestClient restClient, ChannelManager channelManager) {
+        this.socketClient = socketClient;
+        this.restClient = restClient;
         this.messageManager = messageManager;
         this.channelManager = channelManager;
         logger.info("ChatViewController created");
+        this.sidebarListener = new SidebarController.Listener() {
+            @Override
+            public void onAddChannel() {
+                backdrop.setVisible(true);
+                isCreateChannelDialogOpen.set(true);
+            }
+
+            @Override
+            public void onAddDM() {
+                backdrop.setVisible(true);
+                isCreateDMDialogOpen.set(true);
+            }
+
+            @Override
+            public void onChangeChannel(Channel channel) {
+                changeChannel(channel);
+            }
+        };
+        this.createChannelDialogListener = new CreateChannelDialogController.Listener() {
+            @Override
+            public void onCloseDialog() {
+                backdrop.setVisible(false);
+                isCreateChannelDialogOpen.set(false);
+            }
+
+            @Override
+            public void onChannelCreate(Channel channel) {
+                changeChannel(channel);
+                this.onCloseDialog();
+            }
+        };
+
+        this.createDMDialogListener = new CreateDMDialogController.Listener() {
+            @Override
+            public void onDialogClose() {
+                backdrop.setVisible(false);
+                isCreateDMDialogOpen.set(false);
+            }
+
+            @Override
+            public void onDMCreate(UserInfo user) {
+                createDM(user.getId());
+                this.onDialogClose();
+            }
+        };
+
+        this.headbarListener = new HeadbarController.Listener() {
+            @Override
+            public void onAvatarClicked() {
+                for(Listener listener:listeners) listener.onGoToDashboard();
+            }
+
+            @Override
+            public void onMessageSearched(Message selectedMessage) {
+                scrollToMessage(selectedMessage);
+            }
+        };
+
     }
 
-    @PostConstruct
-    public void init() {
-        channelManager.setChatViewController(this);
+    public interface Listener{
+        void onInitialize();
+        void onChannelChange(Channel channel);
+        void onGoToDashboard();
     }
+
+    public void addToListener(Listener listener){
+        listeners.add(listener);
+    }
+    void removeListener(HeadbarController.Listener listener) {listeners.remove(listener);}
 
     @FXML
     public void onSendMessage(){
         if(currentChannel == null) return;
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
-            socketClient.sendMessage("/app/channel."+currentChannel.getId(), message.getText());
+            socketClient.sendMessage("/app/channel."+currentChannel.getValue().getId(), message.getText());
             message.clear();
         }
     }
 
-    public void enableBackdrop(){
-        backdrop.setVisible(true);
-    }
-
-    public void disableBackdrop(){
-        backdrop.setVisible(false);
-    }
-
-    @Override
-    public void openChannelDialog(){
-        enableBackdrop();
-        createChannelDialogController.show();
-    }
-
-    @Override
-    public void closeChannelDialog(){
-        disableBackdrop();
-        createChannelDialogController.close();
-    }
-
-    @Override
-    public void openDMDialog(){
-        enableBackdrop();
-        createDMDialogController.show();
-    }
-
-    @Override
-    public void closeDMDialog(){
-        disableBackdrop();
-        createDMDialogController.close();
-    }
-
-    @Override
-    public void changeChannel(Channel channel){
-        if(channel.equals(currentChannel)) {
-            sidebarController.channels.refresh();
-            sidebarController.direct.refresh();
-            return;
+    @FXML
+    public void setOnKeyPressed(KeyEvent e){
+        if(e.getCode() == KeyCode.ENTER){
+            onSendMessage();
         }
+    }
+
+
+    public void subscribeAll(){
+        headbarController.setListener(headbarListener);
+        sidebarController.addListener(sidebarListener);
+        createChannelDialogController.addListener(createChannelDialogListener);
+        createDMDialogController.addListener(createDMDialogListener);
+    }
+
+    public void unsubscribeAll(){
+        sidebarController.removeListener(sidebarListener);
+        createChannelDialogController.removeListener(createChannelDialogListener);
+        createDMDialogController.removeListener(createDMDialogListener);
+    }
+
+    public void changeChannel(Channel channel){
         Text placeholder = new Text("This channel is empty. Write your first message!");
         placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
         messages.setPlaceholder(placeholder);
         message.setDisable(false);
-        logger.info("Changing channel to: " + channel.getName());
-        if(currentChannel != null) {
-            removeMessagesChangeListener();
-        }
-        currentChannel = channel;
-        sidebarController.channels.refresh();
-        sidebarController.direct.refresh();
-        messages.setItems(messageManager.getMessageBuffer(currentChannel.getId()).getMessages());
-        addMessagesChangeListener();
-        try {
-            messageManager.getMessageBuffer(currentChannel.getId()).loadNextMessages();
-        } catch (OutOfMessagesException ignored) {} // TODO: Handle this exception
-
-        int messagesSize = messageManager.getMessageBuffer(channel.getId()).getMessages().size();
-        messages.scrollTo(messagesSize - 1);
+        for(Listener listener:listeners) listener.onChannelChange(channel);
     }
 
-    @Override
     public void createDM(Long userId){
         UserInfo currentUser = restClient.getCurrentUser();
         if(userId.equals(currentUser.getId())) return;
@@ -163,14 +211,12 @@ public class ChatViewController extends ViewController {
 
     }
 
-    @Override
     public void scrollToMessage(Message message) {
         Channel channel = channelManager.getChannelForMessage(message);
         if(channel == null) {
             throw new RuntimeException();
         }
         changeChannel(channel);
-        removeMessagesChangeListener();
         try {
             while (!messageManager.getMessageBuffer(channel.getId()).getMessages().contains(message)) {
                 messageManager.getMessageBuffer(channel.getId()).loadNextMessages();
@@ -179,75 +225,7 @@ public class ChatViewController extends ViewController {
         catch (OutOfMessagesException e) {
             throw new RuntimeException();
         }
-
-        Platform.runLater(() -> {
-            messages.scrollTo(message);
-            addMessagesChangeListener();
-        });
-    }
-
-    @FXML
-    public void setOnKeyPressed(KeyEvent e){
-        if(e.getCode() == KeyCode.ENTER){
-            onSendMessage();
-        }
-    }
-
-    private void setCellFactories() {
-        messages.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(Message item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else if (item != null) {
-                    setMaxWidth(param.getWidth());
-                    setMinWidth(param.getWidth() - 100);
-                    setPrefWidth(param.getWidth() - 100);
-
-                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    GridPane message = MessageFactory.createMessage(item.getContent(),
-                            item.getAuthorFirstName() + " " + item.getAuthorLastName(), item.getAuthorUsername(), param.getWidth());
-
-                    setGraphic(message);
-                    setOnMouseClicked(e->createDM(item.getAuthorID()));
-
-                }
-
-
-            }
-        });
-    }
-
-    @Override
-    public void initialize(java.net.URL location, ResourceBundle resources) {
-        headbarController.setHeadController(this);
-        sidebarController.setHeadController(this);
-        createDMDialogController.setHeadController(this);
-        createChannelDialogController.setHeadController(this);
-        setCellFactories();
-
-        backdrop.setVisible(false);
-        sidebarController.addDM.setVisible(true);
-        sidebarController.addChannel.setVisible(true);
-        closeDMDialog();
-        closeChannelDialog();
-
-        setMessagesScrollHandler();
-
-        Text placeholder = new Text("Hello! Choose your channel");
-        placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
-        messages.setPlaceholder(placeholder);
-        message.setDisable(true);
-
-        try{
-            socketClient.connect();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
+        Platform.runLater(() -> messages.scrollTo(message));
     }
 
     private void setMessagesScrollHandler() {
@@ -256,28 +234,69 @@ public class ChatViewController extends ViewController {
                     e.getDeltaY() > 0 &&
                     loadingMessagesAfterScroll.compareAndSet(false, true)
             ) {
-                removeMessagesChangeListener();
+                // removeMessagesChangeListener();
                 int prevSize = messages.getItems().size();
                 try {
-                    messageManager.getMessageBuffer(currentChannel.getId()).loadNextMessages();
+                    messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
                 } catch (OutOfMessagesException ex) {}
                 int currentSize = messages.getItems().size();
                 if(currentSize > 0)
                     messages.scrollTo(Math.max(currentSize - prevSize - 1, 0));
-                addMessagesChangeListener();
+                //addMessagesChangeListener();
                 loadingMessagesAfterScroll.set(false);
             }
         });
     }
 
-    private void addMessagesChangeListener() {
-        if(currentChannel != null)
-            messageManager.getMessageBuffer(currentChannel.getId()).getMessages().addListener(listChangeListener);
-    }
+    @Override
+    public void initialize(java.net.URL location, ResourceBundle resources) {
+            for (Listener listener : listeners) listener.onInitialize();
+            sidebarController.currentChannel.bind(currentChannel);
+            CellFactories.messageCellFactory(messages);
 
-    private void removeMessagesChangeListener() {
-        if(currentChannel != null)
-            messageManager.getMessageBuffer(currentChannel.getId()).getMessages().removeListener(listChangeListener);
-    }
+            sidebarController.addDM.setVisible(true);
+            sidebarController.addChannel.setVisible(true);
 
+            setMessagesScrollHandler();
+            if (currentChannel.get() != null) {
+                messages.setItems(messageManager.getMessageBuffer(currentChannel.getValue().getId()).getMessages());
+                //addMessagesChangeListener();
+                try {
+                    messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
+                } catch (OutOfMessagesException ignored) {
+                } // TODO: Handle this exception
+
+                int messagesSize = messageManager.getMessageBuffer(currentChannel.get().getId()).getMessages().size();
+                messages.scrollTo(messagesSize - 1);
+            }
+
+            Text placeholder = new Text("Hello! Choose your channel");
+            placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+            messages.setPlaceholder(placeholder);
+            message.setDisable(true);
+
+            createDMDialogController.addDMDialog.visibleProperty().bind(isCreateDMDialogOpen);
+            createChannelDialogController.addChannelDialog.visibleProperty().bind(isCreateChannelDialogOpen);
+
+
+            sidebarController.addListener(sidebarListener);
+            createChannelDialogController.addListener(createChannelDialogListener);
+            createDMDialogController.addListener(createDMDialogListener);
+            headbarController.setListener(headbarListener);
+
+            currentChannel.addListener(((observable, oldValue, newValue) -> {
+                if (oldValue != null)
+                    messageManager.getMessageBuffer(oldValue.getId()).getMessages().removeListener(listChangeListener);
+                if (newValue != null) {
+                    messageManager.getMessageBuffer(newValue.getId()).getMessages().addListener(listChangeListener);
+                    messages.setItems(messageManager.getMessageBuffer(currentChannel.getValue().getId()).getMessages());
+                    try {
+                        messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
+                    } catch (OutOfMessagesException ignored) {
+                    } // TODO: Handle this exception
+                    int messagesSize = messageManager.getMessageBuffer(newValue.getId()).getMessages().size();
+                    messages.scrollTo(messagesSize - 1);
+                }
+            }));
+    }
 }

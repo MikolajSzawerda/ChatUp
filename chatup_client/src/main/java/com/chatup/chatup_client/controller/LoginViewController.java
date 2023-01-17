@@ -12,9 +12,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,9 @@ import java.util.ResourceBundle;
 public class LoginViewController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(LoginViewController.class);
     private final MainApplication application;
+
+    @FXML
+    public AnchorPane loginView;
     @FXML
     public Text invalidCredentialsText;
     @FXML
@@ -38,8 +40,6 @@ public class LoginViewController implements Initializable {
     @FXML
     public PasswordField passwordField;
 
-    @FXML
-    public Rectangle backdrop;
 
     private final AuthClient authClient;
 
@@ -51,19 +51,16 @@ public class LoginViewController implements Initializable {
         logger.info("LoginViewController created");
     }
 
-
     public void onLoginButtonClicked(ActionEvent e) throws IOException {
-        backdrop.setVisible(true);
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
         boolean success = authClient.authenticate(username, password);
 
         if(success) {
-            application.switchToChatView(e, (Stage) loginButton.getScene().getWindow());
+            application.switchToChatView();
         }
         else {
-            backdrop.setVisible(false);
             invalidCredentialsText.setText("Invalid credentials");
             usernameField.clear();
             passwordField.clear();

@@ -19,7 +19,7 @@ public class MyButtonSkin2 extends ButtonSkin {
         fadeIn.setCycleCount(2);
         fadeIn.setAutoReverse(true);
         control.setOnAction(e->fadeIn.play());
-        fadeIn.setOnFinished(e->current.handle(e));
+        if(current != null) fadeIn.setOnFinished(e->current.handle(e));
 
         control.setOpacity(1.0);
         };
