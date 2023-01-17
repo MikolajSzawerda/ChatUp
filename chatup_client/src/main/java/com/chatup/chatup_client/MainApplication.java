@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContextInitializer;
@@ -38,6 +39,7 @@ public class MainApplication extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Roboto+Slab");
         stage.setTitle("ChatUp");
+        stage.getIcons().add(new Image("img/icon.png"));
         stage.setScene(scene);
         stage.show();
         this.stage = (Stage) scene.getWindow();
