@@ -1,7 +1,7 @@
 package com.chatup.chatup_client.web;
 
 import com.chatup.chatup_client.config.AppConfig;
-import com.chatup.chatup_client.model.messaging.IncomingMessage;
+import com.chatup.chatup_client.model.messaging.OutgoingMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -54,14 +54,17 @@ public class SocketClient {
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
         StompHeaders stompHeaders = new StompHeaders();
         headers.add("Authorization", "Bearer " + authClient.getToken());
+
+        connectionHandler.setExchangeEndpoint("/exchange/" + authClient.getToken());
         webSocketStompClient.connect(this.URL, headers, stompHeaders, this.connectionHandler).get();
+
         this.session = connectionHandler.getSession();
     }
 
     public void sendMessage(String topic, String message){
-        if(this.session!=null){
+        if(this.session != null){
             logger.info("Sending message {} to {}", message, topic);
-            this.session.send(topic, new IncomingMessage(message));
+            this.session.send(topic, new OutgoingMessage(message));
         }
     }
 }

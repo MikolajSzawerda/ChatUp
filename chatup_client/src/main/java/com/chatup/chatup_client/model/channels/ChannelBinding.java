@@ -1,5 +1,6 @@
-package com.chatup.chatup_client.model;
+package com.chatup.chatup_client.model.channels;
 
+import com.chatup.chatup_client.model.channels.Channel;
 import javafx.beans.binding.ObjectBinding;
 
 public class ChannelBinding extends ObjectBinding{

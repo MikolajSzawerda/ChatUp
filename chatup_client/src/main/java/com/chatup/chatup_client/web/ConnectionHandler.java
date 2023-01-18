@@ -1,10 +1,10 @@
 package com.chatup.chatup_client.web;
 
-import com.chatup.chatup_client.controller.ChatViewController;
 import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.manager.MessageManager;
-import com.chatup.chatup_client.model.Channel;
-import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.model.channels.Channel;
+import com.chatup.chatup_client.model.IncomingEvent;
+import com.chatup.chatup_client.model.messaging.Message;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,42 +15,28 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Type;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+
 
 @Component
 public class ConnectionHandler implements StompSessionHandler{
     final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
     private final MessageManager messageManager;
-    private final RestClient restClient;
     private final ChannelManager channelManager;
-    private String channelCreateTopic;
-    private void loadChannelCreateTopic() {
-        if(channelCreateTopic == null) {
-            channelCreateTopic = "/topic/create." + restClient.getCurrentUser().getUsername();
-        }
-    }
-    private final List<String> topics = new LinkedList<>();
-    public void addChannel(Channel channel) {
-        String topic = "/topic/channel." + channel.getId();
-        topics.add(topic);
-        addSubscription(topic);
-    }
+    private String exchangeEndpoint;
+    private StompSession session;
+
     @Autowired
-    public ConnectionHandler(MessageManager messageManager, RestClient restClient, ChannelManager channelManager) {
+    public ConnectionHandler(MessageManager messageManager, ChannelManager channelManager) {
         this.messageManager = messageManager;
-        this.restClient = restClient;
         this.channelManager = channelManager;
         logger.info("ConnectionHandler created");
     }
 
-    @PostConstruct
-    public void init() {
-        channelManager.setConnectionHandler(this);
-    }
+    public String getExchangeEndpoint() { return exchangeEndpoint; }
+    public void setExchangeEndpoint(String exchangeEndpoint) { this.exchangeEndpoint = exchangeEndpoint; }
+
+    public StompSession getSession() { return session; }
 
     public void addSubscription(String topic){
         if(this.session != null){
@@ -59,20 +45,17 @@ public class ConnectionHandler implements StompSessionHandler{
         }
     }
 
-    public StompSession getSession() {
-        return session;
-    }
-
-    private StompSession session;
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         this.session = session;
         logger.info("Session established");
-        this.topics.forEach(this::addSubscription);
-        loadChannelCreateTopic();
-        this.topics.add(channelCreateTopic);
-        addSubscription(channelCreateTopic);
-        logger.info("Initial subscriptions");
+
+        if(exchangeEndpoint != null) {
+            addSubscription(exchangeEndpoint);
+            logger.info("Subscribed to initial exchange endpoint");
+        } else {
+            logger.error("Initial exchange endpoint is not set");
+        }
     }
 
     @Override
@@ -82,32 +65,31 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public void handleTransportError(StompSession session, Throwable exception) {
+        logger.error("Transport error occurred");
 
     }
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        loadChannelCreateTopic();
-        if(Objects.equals(headers.getDestination(), channelCreateTopic)){
-            return Channel.class;
-        }
-        return Message.class;
+        return IncomingEvent.class;
     }
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        loadChannelCreateTopic();
-        if(Objects.equals(headers.getDestination(), channelCreateTopic)){
-            logger.info("Received channel");
-            channelManager.addChannel((Channel) payload);
-            return;
-        }
-        logger.info("Received message");
-        Platform.runLater(() -> {
-            synchronized (this) {
-                messageManager.addMessage((Message) payload);
+        synchronized (this){
+            IncomingEvent event = (IncomingEvent) payload;
+
+            if (event.getEventType().equals("message")) {
+                Platform.runLater(() -> messageManager.addMessage((Message) event.getEvent()));
+                logger.info("Received message");
+            } else if (event.getEventType().equals("channel_creation")) {
+                channelManager.addChannel((Channel) event.getEvent());
+                logger.info("Received channel");
+            } else {
+                logger.error("Received unknown event");
             }
-        });
+        }
     }
+
 }
 

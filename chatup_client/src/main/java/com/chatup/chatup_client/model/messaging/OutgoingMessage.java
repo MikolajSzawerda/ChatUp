@@ -1,7 +1,7 @@
 package com.chatup.chatup_client.model.messaging;
 
-public class IncomingMessage {
-    public IncomingMessage(String message) {
+public class OutgoingMessage {
+    public OutgoingMessage(String message) {
         this.message = message;
     }
 

@@ -1,14 +1,13 @@
 package com.chatup.chatup_client.manager;
 
 import com.chatup.chatup_client.manager.exception.OutOfMessagesException;
-import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.model.messaging.Message;
 import com.chatup.chatup_client.web.RestClient;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 
-import javax.management.ObjectInstance;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;

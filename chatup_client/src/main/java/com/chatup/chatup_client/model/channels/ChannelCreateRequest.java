@@ -1,4 +1,4 @@
-package com.chatup.chatup_client.model.messaging;
+package com.chatup.chatup_client.model.channels;
 
 import java.util.Set;
 

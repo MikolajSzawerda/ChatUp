@@ -1,3 +1,6 @@
 app:
   restURL: http://localhost:8080
   webSocketURL: ws://localhost:8080/chat
+  events:
+    message: message
+    channel-creation: channel_creation

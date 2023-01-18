@@ -4,7 +4,7 @@ import com.chatup.chatup_client.component.Animations;
 import com.chatup.chatup_client.component.CellFactories;
 import com.chatup.chatup_client.component.SearchAndAddUsersToChannel;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
-import com.chatup.chatup_client.model.UserInfo;
+import com.chatup.chatup_client.model.users.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;

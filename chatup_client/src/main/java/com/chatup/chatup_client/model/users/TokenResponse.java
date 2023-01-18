@@ -1,4 +1,4 @@
-package com.chatup.chatup_client.model.messaging;
+package com.chatup.chatup_client.model.users;
 
 
 public class TokenResponse {

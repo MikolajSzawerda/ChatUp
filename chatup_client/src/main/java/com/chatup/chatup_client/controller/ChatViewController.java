@@ -4,9 +4,9 @@ import com.chatup.chatup_client.component.CellFactories;
 import com.chatup.chatup_client.manager.ChannelManager;
 import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.manager.exception.OutOfMessagesException;
-import com.chatup.chatup_client.model.Channel;
-import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.model.UserInfo;
+import com.chatup.chatup_client.model.channels.Channel;
+import com.chatup.chatup_client.model.messaging.Message;
+import com.chatup.chatup_client.model.users.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import com.chatup.chatup_client.web.SocketClient;
 import javafx.application.Platform;
@@ -166,7 +166,7 @@ public class ChatViewController implements Initializable {
         if(currentChannel == null) return;
         logger.info("Text: {}", message.getText());
         if(!message.getText().equals("")){
-            socketClient.sendMessage("/app/channel."+currentChannel.getValue().getId(), message.getText());
+            socketClient.sendMessage("/app/" + currentChannel.getValue().getId(), message.getText());
             message.clear();
         }
     }

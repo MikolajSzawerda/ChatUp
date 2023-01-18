@@ -1,7 +1,7 @@
 package com.chatup.chatup_client.component;
 
-import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.model.UserInfo;
+import com.chatup.chatup_client.model.messaging.Message;
+import com.chatup.chatup_client.model.users.UserInfo;
 import javafx.geometry.Insets;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
@@ -29,7 +29,6 @@ public class CellFactories {
                     GridPane message = MessageFactory.createMessage(item.getContent(),
                             item.getAuthorFirstName() + " " + item.getAuthorLastName(), item.getAuthorUsername(), param.getWidth());
                     setGraphic(message);
-                    //setOnMouseClicked(e->createDM(item.getAuthorID()));
                 }
             }
         });

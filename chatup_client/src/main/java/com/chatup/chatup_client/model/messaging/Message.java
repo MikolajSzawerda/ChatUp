@@ -1,8 +1,10 @@
-package com.chatup.chatup_client.model;
+package com.chatup.chatup_client.model.messaging;
+
+import com.chatup.chatup_client.model.Event;
 
 import java.time.Instant;
 
-public class Message {
+public class Message implements Event {
     private Long messageID;
     private String content;
     private Long authorID;

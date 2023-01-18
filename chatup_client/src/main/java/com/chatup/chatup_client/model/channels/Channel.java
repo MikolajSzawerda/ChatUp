@@ -1,7 +1,8 @@
-package com.chatup.chatup_client.model;
+package com.chatup.chatup_client.model.channels;
 
-public class Channel
-{
+import com.chatup.chatup_client.model.Event;
+
+public class Channel implements Event {
     private Long id;
     private String name;
     private Boolean isPrivate;
