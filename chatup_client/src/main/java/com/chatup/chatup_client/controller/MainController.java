@@ -1,6 +1,8 @@
 package com.chatup.chatup_client.controller;
 
 import com.chatup.chatup_client.MainApplication;
+import com.chatup.chatup_client.manager.ChannelManager;
+import com.chatup.chatup_client.manager.MessageManager;
 import com.chatup.chatup_client.model.channels.Channel;
 import com.chatup.chatup_client.model.messaging.Message;
 import com.chatup.chatup_client.web.SocketClient;
@@ -23,17 +25,22 @@ public class MainController{
     final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     MainApplication application;
-
     SocketClient socketClient;
-
     DashboardViewController dashboardViewController;
-
     ChatViewController chatViewController;
+    private ChannelManager channelManager;
+    private MessageManager messageManager;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    MainController(SocketClient socketClient, ChatViewController chatViewController, DashboardViewController dashboardViewController, Application application){
+    MainController(
+            SocketClient socketClient, ChannelManager channelManager, MessageManager messageManager,
+            ChatViewController chatViewController, DashboardViewController dashboardViewController,
+            Application application
+    ){
         this.socketClient = socketClient;
+        this.channelManager = channelManager;
+        this.messageManager = messageManager;
         this.chatViewController = chatViewController;
         this.dashboardViewController = dashboardViewController;
         this.application = (MainApplication) application;
@@ -73,6 +80,9 @@ public class MainController{
             public void onLogOut(Stage stage) {
                 try {
                     dashboardViewController.unsubscribeAll();
+                    channelManager.clear();
+                    messageManager.clear();
+                    socketClient.close();
                     ((MainApplication) application).switchToLoginView();
                 }
                 catch (IOException e){

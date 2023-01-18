@@ -234,7 +234,7 @@ public class ChatViewController implements Initializable {
                     e.getDeltaY() > 0 &&
                     loadingMessagesAfterScroll.compareAndSet(false, true)
             ) {
-                // removeMessagesChangeListener();
+
                 int prevSize = messages.getItems().size();
                 try {
                     messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
@@ -242,7 +242,7 @@ public class ChatViewController implements Initializable {
                 int currentSize = messages.getItems().size();
                 if(currentSize > 0)
                     messages.scrollTo(Math.max(currentSize - prevSize - 1, 0));
-                //addMessagesChangeListener();
+
                 loadingMessagesAfterScroll.set(false);
             }
         });
@@ -260,11 +260,9 @@ public class ChatViewController implements Initializable {
             setMessagesScrollHandler();
             if (currentChannel.get() != null) {
                 messages.setItems(messageManager.getMessageBuffer(currentChannel.getValue().getId()).getMessages());
-                //addMessagesChangeListener();
                 try {
                     messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
-                } catch (OutOfMessagesException ignored) {
-                } // TODO: Handle this exception
+                } catch (OutOfMessagesException ignored) {}
 
                 int messagesSize = messageManager.getMessageBuffer(currentChannel.get().getId()).getMessages().size();
                 messages.scrollTo(messagesSize - 1);
@@ -292,8 +290,7 @@ public class ChatViewController implements Initializable {
                     messages.setItems(messageManager.getMessageBuffer(currentChannel.getValue().getId()).getMessages());
                     try {
                         messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
-                    } catch (OutOfMessagesException ignored) {
-                    } // TODO: Handle this exception
+                    } catch (OutOfMessagesException ignored) {}
                     int messagesSize = messageManager.getMessageBuffer(newValue.getId()).getMessages().size();
                     messages.scrollTo(messagesSize - 1);
                 }

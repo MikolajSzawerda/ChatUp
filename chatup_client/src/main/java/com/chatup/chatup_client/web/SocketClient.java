@@ -67,4 +67,9 @@ public class SocketClient {
             this.session.send(topic, new OutgoingMessage(message));
         }
     }
+
+    public void close() {
+        if(this.session != null)
+            this.session.disconnect();
+    }
 }

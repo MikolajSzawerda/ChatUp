@@ -76,18 +76,24 @@ public class ConnectionHandler implements StompSessionHandler{
 
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
-        synchronized (this){
-            IncomingEvent event = (IncomingEvent) payload;
+        IncomingEvent event = (IncomingEvent) payload;
 
-            if (event.getEventType().equals("message")) {
-                Platform.runLater(() -> messageManager.addMessage((Message) event.getEvent()));
-                logger.info("Received message");
-            } else if (event.getEventType().equals("channel_creation")) {
-                channelManager.addChannel((Channel) event.getEvent());
-                logger.info("Received channel");
-            } else {
-                logger.error("Received unknown event");
-            }
+        if (event.getEventType().equals("message")) {
+            Platform.runLater(() -> {
+                synchronized (this) {
+                    messageManager.addMessage((Message) event.getEvent());
+                }
+            });
+            logger.info("Received message");
+        } else if (event.getEventType().equals("channel_creation")) {
+            Platform.runLater(() -> {
+                synchronized (this) {
+                    channelManager.addChannel((Channel) event.getEvent());
+                }
+            });
+            logger.info("Received channel");
+        } else {
+            logger.error("Received unknown event");
         }
     }
 
