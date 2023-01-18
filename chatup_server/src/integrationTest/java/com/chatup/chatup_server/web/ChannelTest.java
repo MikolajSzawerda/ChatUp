@@ -8,8 +8,6 @@ import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.repository.ChannelRepository;
 import com.chatup.chatup_server.service.channels.ChannelCreateRequest;
 import com.chatup.chatup_server.service.channels.ChannelInfo;
-import com.chatup.chatup_server.service.channels.ChannelService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +42,6 @@ public class ChannelTest extends BaseInitializedDbTest {
     void initClient() {
         user1 = appUserRepository.findAppUserByUsername(USER_1);
         user2 = appUserRepository.findAppUserByUsername(USER_2);
-        client1 = socketClientFactory.getClient(USER_1, List.of(ChannelService.createBroadcastTopicName(user1)));
-        client2 = socketClientFactory.getClient(USER_2, List.of(ChannelService.createBroadcastTopicName(user2)));
-    }
-
-    @AfterEach
-    void closeConnections() {
-        client1.close();
-        client2.close();
     }
 
     @Test
@@ -102,6 +92,8 @@ public class ChannelTest extends BaseInitializedDbTest {
     void shouldBroadcastMessageAboutChannelCreation(){
         AppUser user1 = appUserRepository.findAppUserByUsername(USER_1);
         AppUser user2 = appUserRepository.findAppUserByUsername(USER_2);
+        client1 = socketClientFactory.getClient(USER_1);
+        client2 = socketClientFactory.getClient(USER_2);
         ChannelCreateRequest request = new ChannelCreateRequest(
                 null, true, true, new HashSet<>(){{
             add(user1.getId());
@@ -112,6 +104,8 @@ public class ChannelTest extends BaseInitializedDbTest {
 
         timedAssertEquals(1, client1.getEvents()::size);
         timedAssertEquals(1, client2.getEvents()::size);
+        client1.close();
+        client2.close();
     }
 
 

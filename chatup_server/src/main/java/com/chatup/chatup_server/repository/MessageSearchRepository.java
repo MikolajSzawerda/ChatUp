@@ -1,6 +1,5 @@
 package com.chatup.chatup_server.repository;
 
-import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.domain.Message;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.domain.Pageable;

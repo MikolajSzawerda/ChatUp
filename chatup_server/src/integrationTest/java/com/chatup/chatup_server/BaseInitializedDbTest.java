@@ -1,28 +1,34 @@
 package com.chatup.chatup_server;
 
 import com.chatup.chatup_server.domain.AppUser;
+import com.chatup.chatup_server.domain.Channel;
 import com.chatup.chatup_server.domain.Message;
 import com.chatup.chatup_server.repository.AppUserRepository;
+import com.chatup.chatup_server.repository.ChannelRepository;
 import com.chatup.chatup_server.service.JwtTokenService;
 import com.chatup.chatup_server.service.channels.ChannelCreateRequest;
 import com.chatup.chatup_server.service.channels.ChannelInfo;
+import com.chatup.chatup_server.service.messaging.BrokerService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
+import org.hibernate.Hibernate;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
-import org.hibernate.search.mapper.orm.session.SearchSession;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,13 +45,19 @@ public abstract class BaseInitializedDbTest extends BaseIntegrationTest{
     private JwtTokenService jwtTokenService;
     @Autowired
     private AppUserRepository appUserRepository;
+    @Autowired
+    private ChannelRepository channelRepository;
+    @Autowired
+    private BrokerService brokerService;
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
     @BeforeEach
+    @Transactional
     void initElastic(){
-        MassIndexer indexer = Search.session( entityManagerFactory.createEntityManager() )
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        MassIndexer indexer = Search.session(  entityManager)
                 .massIndexer( Message.class , AppUser.class)
                 .threadsToLoadObjects( 7 );
         try {
@@ -54,6 +66,29 @@ public abstract class BaseInitializedDbTest extends BaseIntegrationTest{
 
             throw new RuntimeException(e);
         }
+        List<Channel> channels = channelRepository
+                .findAll().stream()
+                .map(Channel::getId)
+                .map(id->entityManager.find(Channel.class, id))
+                .collect(Collectors.toList());
+        channels.forEach(c->Hibernate.initialize(c.getUsers()));
+        brokerService.addChannels(channels);
+    }
+
+    @AfterEach
+    void clearRabbit(){
+        channelRepository
+                .findAll()
+                .forEach(brokerService::removeChannel);
+    }
+
+
+
+    private Exchange createExchange(String name) {
+        return ExchangeBuilder
+                .fanoutExchange(name)
+                .durable(true)
+                .build();
     }
 
     protected String createUserToken(String username){

@@ -2,12 +2,13 @@ package com.chatup.chatup_server.service.channels;
 
 import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.domain.Channel;
+import com.chatup.chatup_server.service.messaging.Event;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public record ChannelInfo(Long id, String name, Boolean isPrivate, Boolean isDirectMessage) {
+public record ChannelInfo(Long id, String name, Boolean isPrivate, Boolean isDirectMessage) implements Event {
     public static ChannelInfo from(Long currentUserId, Channel channel){
         String channelName = channel.getName();
 

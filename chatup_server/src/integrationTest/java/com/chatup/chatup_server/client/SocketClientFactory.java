@@ -3,7 +3,6 @@ package com.chatup.chatup_server.client;
 import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.service.AuthService;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static java.lang.String.format;
@@ -24,10 +23,10 @@ public class SocketClientFactory {
         return authService.generateTokenForUser(user);
     }
 
-    public SocketClient getClient(String username, List<String> topics){
-        ConnectionHandler connectionHandler = new ConnectionHandler(topics);
-        StompSocketClient socketClient = new StompSocketClient(format(CHAT_ENDPOINT, port), connectionHandler);
+    public SocketClient getClient(String username){
         String userToken = getToken(username);
+        ConnectionHandler connectionHandler = new ConnectionHandler(userToken);
+        StompSocketClient socketClient = new StompSocketClient(format(CHAT_ENDPOINT, port), connectionHandler);
         try {
             socketClient.connect(userToken);
         } catch (ExecutionException | InterruptedException e) {

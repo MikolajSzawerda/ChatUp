@@ -9,6 +9,5 @@ public interface SocketClient {
     void sendMessage(String topic, String msg);
     List<OutgoingMessage> getMessages();
     List<ChannelInfo> getEvents();
-    void subscribe(String topic);
     void close();
 }
