@@ -1,6 +1,6 @@
 package com.chatup.chatup_client.component;
 
-import com.chatup.chatup_client.model.UserInfo;
+import com.chatup.chatup_client.model.users.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

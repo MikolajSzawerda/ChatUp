@@ -1,7 +1,7 @@
 package com.chatup_client;
 
 import com.chatup.chatup_client.manager.ChannelManager;
-import com.chatup.chatup_client.model.Channel;
+import com.chatup.chatup_client.model.channels.Channel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

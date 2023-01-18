@@ -1,10 +1,10 @@
 package com.chatup.chatup_client.web;
 
 import com.chatup.chatup_client.config.AppConfig;
-import com.chatup.chatup_client.model.Channel;
-import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.model.UserInfo;
-import com.chatup.chatup_client.model.messaging.ChannelCreateRequest;
+import com.chatup.chatup_client.model.channels.Channel;
+import com.chatup.chatup_client.model.messaging.Message;
+import com.chatup.chatup_client.model.users.UserInfo;
+import com.chatup.chatup_client.model.channels.ChannelCreateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,8 @@
 package com.chatup.chatup_client.controller;
 
 import com.chatup.chatup_client.component.AvatarFactory;
-import com.chatup.chatup_client.model.Message;
-import com.chatup.chatup_client.model.UserInfo;
+import com.chatup.chatup_client.model.messaging.Message;
+import com.chatup.chatup_client.model.users.UserInfo;
 import com.chatup.chatup_client.web.RestClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

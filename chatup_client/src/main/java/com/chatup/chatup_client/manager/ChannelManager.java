@@ -1,8 +1,7 @@
 package com.chatup.chatup_client.manager;
 
-import com.chatup.chatup_client.controller.ChatViewController;
-import com.chatup.chatup_client.model.Channel;
-import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.model.channels.Channel;
+import com.chatup.chatup_client.model.messaging.Message;
 import com.chatup.chatup_client.web.ConnectionHandler;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,20 +20,12 @@ import java.util.List;
 @Component
 public class ChannelManager {
     private final Logger logger = LoggerFactory.getLogger(ChannelManager.class);
-    private ConnectionHandler connectionHandler;
     private final boolean testMode;
     private List<Pair<String, Boolean>> waitingChannels = new ArrayList<>();
-    public void addWaitingChannel(String name, boolean isDM) {
-        waitingChannels.add(new Pair<>(name, isDM));
-    }
 
     @Autowired
     public ChannelManager(@Value("false") boolean testMode) {
         this.testMode = testMode;
-    }
-
-    public void setConnectionHandler(ConnectionHandler connectionHandler) {
-        this.connectionHandler = connectionHandler;
     }
 
     private final ObservableList<Channel> standardChannels = FXCollections.observableArrayList();
@@ -67,14 +58,7 @@ public class ChannelManager {
         Platform.runLater(() -> {
             listToAdd.sort(Comparator.comparing(Channel::getName));
         });
-        connectionHandler.addChannel(channel);
-//        for(Pair<String, Boolean> waitChannel : waitingChannels) {
-//            if(waitChannel.getKey().equals(channel.getName()) && waitChannel.getValue().equals(channel.getIsDirectMessage())) {
-//                chatViewController.changeChannel(channel);
-//                waitingChannels.remove(waitChannel);
-//                break;
-//            }
-//        }
+
     }
 
     public Channel getChannelForMessage(Message message) {

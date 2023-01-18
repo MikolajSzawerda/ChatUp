@@ -46,6 +46,7 @@ dependencies {
     implementation 'org.kordamp.ikonli:ikonli-fontawesome-pack:12.3.1'
     implementation "com.fasterxml.jackson:jackson-bom"
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.1'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 

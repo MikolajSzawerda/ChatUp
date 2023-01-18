@@ -6,7 +6,7 @@ import com.chatup.chatup_client.component.ChannelIconFactory;
 import com.chatup.chatup_client.component.skin.MyButtonSkin;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
 import com.chatup.chatup_client.manager.ChannelManager;
-import com.chatup.chatup_client.model.Channel;
+import com.chatup.chatup_client.model.channels.Channel;
 import com.chatup.chatup_client.web.RestClient;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;

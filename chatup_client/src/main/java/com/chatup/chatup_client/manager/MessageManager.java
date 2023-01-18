@@ -1,9 +1,7 @@
 package com.chatup.chatup_client.manager;
 
-import com.chatup.chatup_client.model.Channel;
-import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.model.messaging.Message;
 import com.chatup.chatup_client.web.RestClient;
-import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

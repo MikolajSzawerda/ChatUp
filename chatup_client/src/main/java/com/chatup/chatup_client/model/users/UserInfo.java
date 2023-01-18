@@ -1,4 +1,4 @@
-package com.chatup.chatup_client.model;
+package com.chatup.chatup_client.model.users;
 
 public class UserInfo {
     private Long id;
