@@ -103,7 +103,7 @@ public class ChatTest extends BaseInitializedDbTest {
     @Test
     void shouldReceiveOnlyWhenSubscribed() {
         //Given
-        Long id  = addNewChannel(createUserToken(USER_2), USER_2);
+        Long id  = addNewChannel(createUserToken(USER_2), USER_1, USER_2);
         SocketClient client3 = socketClientFactory.getClient(USER_3);
         SocketClient client4 = socketClientFactory.getClient(USER_4);
 
@@ -111,7 +111,7 @@ public class ChatTest extends BaseInitializedDbTest {
         client1.sendMessage("/app/"+id, "Test");
 
         //Then
-        timedAssertEquals(0, client1.getMessages()::size);
+        timedAssertEquals(1, client1.getMessages()::size);
         timedAssertEquals(1, client2.getMessages()::size);
         timedAssertEquals(0, client3.getMessages()::size);
         timedAssertEquals(0, client4.getMessages()::size);
