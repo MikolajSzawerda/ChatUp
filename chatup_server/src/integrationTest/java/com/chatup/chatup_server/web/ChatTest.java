@@ -2,21 +2,16 @@ package com.chatup.chatup_server.web;
 
 import com.chatup.chatup_server.BaseInitializedDbTest;
 import com.chatup.chatup_server.client.SocketClient;
-import com.chatup.chatup_server.client.SocketClientFactory;
 import com.chatup.chatup_server.repository.MessageRepository;
 import com.chatup.chatup_server.service.messaging.OutgoingMessage;
 import com.chatup.chatup_server.service.utils.InstantService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Instant;
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;

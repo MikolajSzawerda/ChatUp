@@ -8,8 +8,6 @@ import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.repository.ChannelRepository;
 import com.chatup.chatup_server.service.channels.ChannelCreateRequest;
 import com.chatup.chatup_server.service.channels.ChannelInfo;
-import com.chatup.chatup_server.service.channels.ChannelService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

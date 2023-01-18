@@ -7,7 +7,6 @@ import com.chatup.chatup_server.repository.ChannelRepository;
 import jakarta.persistence.EntityNotFoundException;
 import com.chatup.chatup_server.service.messaging.BrokerService;
 import com.chatup.chatup_server.service.messaging.OutgoingEvent;
-import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,6 @@ package com.chatup.chatup_server.client;
 import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.service.AuthService;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static java.lang.String.format;

@@ -17,7 +17,6 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -71,8 +70,7 @@ public abstract class BaseIntegrationTest {
                 .waitingFor(Wait
                         .forHttp("/_cluster/health")
                         .forStatusCode(200)
-                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)))
-                .withReuse(true);
+                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)));
         rabbitContainer = new RabbitMQContainer("rabbitmq:3.9-management")
                 .withExposedPorts(5672, 61613, 15672)
                 .withLogConsumer(new Slf4jLogConsumer(rabbitLogger))
