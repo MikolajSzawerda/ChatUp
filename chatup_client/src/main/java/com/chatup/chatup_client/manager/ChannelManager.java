@@ -22,7 +22,6 @@ import java.util.List;
 public class ChannelManager {
     private final Logger logger = LoggerFactory.getLogger(ChannelManager.class);
     private ConnectionHandler connectionHandler;
-    private ChatViewController chatViewController;
     private final boolean testMode;
     private List<Pair<String, Boolean>> waitingChannels = new ArrayList<>();
     public void addWaitingChannel(String name, boolean isDM) {
@@ -36,10 +35,6 @@ public class ChannelManager {
 
     public void setConnectionHandler(ConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
-    }
-
-    public void setChatViewController(ChatViewController chatViewController) {
-        this.chatViewController = chatViewController;
     }
 
     private final ObservableList<Channel> standardChannels = FXCollections.observableArrayList();
@@ -73,13 +68,13 @@ public class ChannelManager {
             listToAdd.sort(Comparator.comparing(Channel::getName));
         });
         connectionHandler.addChannel(channel);
-        for(Pair<String, Boolean> waitChannel : waitingChannels) {
-            if(waitChannel.getKey().equals(channel.getName()) && waitChannel.getValue().equals(channel.getIsDirectMessage())) {
-                chatViewController.changeChannel(channel);
-                waitingChannels.remove(waitChannel);
-                break;
-            }
-        }
+//        for(Pair<String, Boolean> waitChannel : waitingChannels) {
+//            if(waitChannel.getKey().equals(channel.getName()) && waitChannel.getValue().equals(channel.getIsDirectMessage())) {
+//                chatViewController.changeChannel(channel);
+//                waitingChannels.remove(waitChannel);
+//                break;
+//            }
+//        }
     }
 
     public Channel getChannelForMessage(Message message) {

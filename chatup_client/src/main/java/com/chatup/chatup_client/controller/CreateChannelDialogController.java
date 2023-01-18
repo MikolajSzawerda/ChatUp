@@ -1,6 +1,8 @@
 package com.chatup.chatup_client.controller;
 
-import com.chatup.chatup_client.component.AvatarFactory;
+import com.chatup.chatup_client.component.Animations;
+import com.chatup.chatup_client.component.CellFactories;
+import com.chatup.chatup_client.component.SearchAndAddUsersToChannel;
 import com.chatup.chatup_client.component.skin.MyButtonSkin2;
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.UserInfo;
@@ -9,20 +11,19 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
@@ -32,36 +33,46 @@ public class CreateChannelDialogController implements Initializable {
 
     private final ObservableList<UserInfo> usersInChannel;
     private final RestClient restClient;
-    private ViewController headController;
+    private final ArrayList<Listener> listeners= new ArrayList<>();
     @FXML
-    public TextField channelName;
+    private TextField channelName;
 
     @FXML
     public Pane addChannelDialog;
 
     @FXML
-    public Button closeChannelDialogButton;
+    private Button closeChannelDialogButton;
 
     @FXML
     public Button createChannelButton;
 
     @FXML
-    public ListView<UserInfo> searchUserResultsView;
+    private ListView<UserInfo> searchUserResultsView;
 
     @FXML
-    public  ListView<UserInfo> usersAddedToChannelList;
+    private  ListView<UserInfo> usersAddedToChannelList;
 
     @FXML
-    public TextField searchField;
+    private TextField searchField;
 
     @FXML
-    public CheckBox isPrivate;
+    private CheckBox isPrivate;
 
     @Autowired
     public CreateChannelDialogController(RestClient restClient) {
         this.restClient = restClient;
         this.usersInChannel = FXCollections.observableArrayList();
     }
+
+    public interface Listener{
+        void onCloseDialog();
+        void onChannelCreate(Channel channel);
+    }
+
+    void addListener(Listener listener){
+        listeners.add(listener);
+    }
+    void removeListener(Listener listener) {listeners.remove(listener);}
 
     @FXML
     public void addUserToChannel(){
@@ -72,30 +83,35 @@ public class CreateChannelDialogController implements Initializable {
             searchUserResultsView.setVisible(false);
         }
     }
-
-    public void show(){
-        addChannelDialog.setMaxHeight(130);
-        addChannelDialog.setVisible(true);
-        searchField.setText("");
-        searchUserResultsView.setVisible(false);
-        usersInChannel.clear();
-
-        UserInfo currentUser = restClient.getCurrentUser();
-        usersInChannel.add(currentUser);
-
-        FadeTransition ft = new FadeTransition(Duration.millis(200), addChannelDialog);
-        ft.setFromValue(0.0);
-        ft.setToValue(1.0);
-        ft.play();
+    @FXML
+    public void checkIsPrivate(){
+        if(isPrivate.isSelected()) {
+            addChannelDialog.setMaxHeight(130);
+            dialogRollDownAnimation(550.0);
+            buttonMoveAnimation(createChannelButton, 400.0);
+            buttonMoveAnimation(closeChannelDialogButton, 400.0);
+        }
+        else{
+            addChannelDialog.setMaxHeight(550);
+            dialogRollUpAnimation(135.0);
+            buttonMoveAnimation(createChannelButton, 0.0);
+            buttonMoveAnimation(closeChannelDialogButton, 0.0);
+        }
     }
 
-    public void close(){
-        addChannelDialog.setVisible(false);
-
-        FadeTransition ft = new FadeTransition(Duration.millis(200), addChannelDialog);
-        ft.setFromValue(1.0);
-        ft.setToValue(0.0);
+    @FXML
+    public void onCloseChannelDialogButton(){
+        FadeTransition ft = Animations.createFadeOutTransition(addChannelDialog);
         ft.play();
+        for(Listener listener:listeners){
+            listener.onCloseDialog();
+        }
+    }
+
+    @FXML
+    public void onSearchUserChannel(){
+        if(searchField.getText().length() == 0) searchUserResultsView.setVisible(false);
+        else SearchAndAddUsersToChannel.searchUsers(searchField, searchUserResultsView, restClient);
     }
 
     public void createChannel(){
@@ -105,151 +121,77 @@ public class CreateChannelDialogController implements Initializable {
 
         if(!channelName.getText().isEmpty()) {
             Channel newChannel =  restClient.createChannel(channelName.getText(), isPrivate.isSelected(), false, userIds);
-            headController.changeChannel(newChannel);
-            headController.closeChannelDialog();
+            for(var listener:listeners) listener.onChannelCreate(newChannel);
         }
     }
 
-    @FXML
-    public void checkIsPrivate(){
-        if(isPrivate.isSelected()) {
-            addChannelDialog.setMaxHeight(130);
-
-            Timeline timeline = new Timeline();
-            timeline.setCycleCount(1);
-            KeyValue kv = new KeyValue(addChannelDialog.maxHeightProperty(), 550.0);
-            KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
-            timeline.getKeyFrames().add(kf);
-
-            Timeline timelineCreateButton= new Timeline();
-            timelineCreateButton.setCycleCount(1);
-            KeyValue kv1 = new KeyValue(createChannelButton.translateYProperty(), 400.0);
-            KeyFrame kf1 = new KeyFrame(Duration.millis(500), kv1);
-            timelineCreateButton.getKeyFrames().add(kf1);
-
-            Timeline timelineCancelButton = new Timeline();
-            timelineCancelButton.setCycleCount(1);
-            KeyValue kv2 = new KeyValue(closeChannelDialogButton.translateYProperty(), 400.0);
-            KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
-            timelineCancelButton.getKeyFrames().add(kf2);
-
-            timeline.play();
-            timelineCancelButton.play();
-            timelineCreateButton.play();
-
-            timeline.setOnFinished(e-> {
-                searchField.setText("");
-                usersAddedToChannelList.setVisible(true);
-                searchField.setVisible(true);
-            });
-        }
-        else{
-            addChannelDialog.setMaxHeight(550);
-
-            searchField.setText("");
-            searchUserResultsView.setVisible(false);
-            usersAddedToChannelList.setVisible(false);
-            searchField.setVisible(false);
-
-            Timeline timeline = new Timeline();
-            timeline.setCycleCount(1);
-            KeyValue kv = new KeyValue(addChannelDialog.maxHeightProperty(), 130.0);
-            KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
-            timeline.getKeyFrames().add(kf);
-
-            Timeline timelineCreateButton= new Timeline();
-            timelineCreateButton.setCycleCount(1);
-            KeyValue kv1 = new KeyValue(createChannelButton.translateYProperty(), 0.0);
-            KeyFrame kf1 = new KeyFrame(Duration.millis(500), kv1);
-            timelineCreateButton.getKeyFrames().add(kf1);
-
-            Timeline timelineCancelButton = new Timeline();
-            timelineCancelButton.setCycleCount(1);
-            KeyValue kv2 = new KeyValue(closeChannelDialogButton.translateYProperty(), 0.0);
-            KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
-            timelineCancelButton.getKeyFrames().add(kf2);
-
-            timeline.play();
-            timelineCancelButton.play();
-            timelineCreateButton.play();
-
-        }
+    private void buttonMoveAnimation(Button button, Double endValue){
+        Timeline timeline= new Timeline();
+        timeline.setCycleCount(1);
+        KeyValue kv1 = new KeyValue(button.translateYProperty(), endValue);
+        KeyFrame kf1 = new KeyFrame(Duration.millis(500), kv1);
+        timeline.getKeyFrames().add(kf1);
+        timeline.play();
     }
 
-    @FXML
-    public void onCloseChannelDialogButton(){
-        FadeTransition ft = new FadeTransition(Duration.millis(200), addChannelDialog);
-        ft.setFromValue(1.0);
-        ft.setToValue(0.0);
-        ft.play();
-        headController.closeChannelDialog();
-    }
-
-    @FXML
-    public void onSearchUserChannel(){
-        if(searchField.getText().length() == 0) searchUserResultsView.setVisible(false);
-        else {
-            UserInfo currentUser = restClient.getCurrentUser();
-            searchUserResultsView.setVisible(true);
-            Collection<UserInfo> searchResultsCollection = restClient.searchUsers(searchField.getText());
-            searchResultsCollection.remove(currentUser);
-            ObservableList<UserInfo> searchResultsList = FXCollections.observableArrayList(searchResultsCollection);
-            searchUserResultsView.setItems(searchResultsList);
-            searchUserResultsView.prefHeightProperty().bind(Bindings.size((searchResultsList)).multiply(33));
-        }
-    }
-    public void setHeadController(ViewController headController){
-        this.headController=headController;
-    }
-    @Override
-    public void initialize(java.net.URL location, ResourceBundle resources){
-        addChannelDialog.setVisible(false);
-        searchField.setVisible(false);
+    private void dialogRollUpAnimation(Double endValue){
+        searchField.setText("");
         searchUserResultsView.setVisible(false);
         usersAddedToChannelList.setVisible(false);
-        usersAddedToChannelList.setItems(usersInChannel);
-        closeChannelDialogButton.setOnAction(e->onCloseChannelDialogButton());
-        closeChannelDialogButton.setSkin(new MyButtonSkin2(closeChannelDialogButton));
+        searchField.setVisible(false);
+        Timeline timeline = dialogRollAnimation(endValue);
+        timeline.play();
+    }
 
-        createChannelButton.setOnAction(e->createChannel());
-       createChannelButton.setSkin(new MyButtonSkin2(createChannelButton));
-        usersAddedToChannelList.setCellFactory(param -> new ListCell<>() {
-            @Override
-            protected void updateItem(UserInfo item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else if (item != null) {
-
-                    Insets padding = new Insets(0, 5, 0, 0);
-                    StackPane avatar = AvatarFactory.createAvatar(item.getFirstName()+" "+item.getLastName(), 13.0, padding);
-                    setText(item.getFirstName()+" "+item.getLastName());
-                    setGraphic(avatar);
-
-
-                }
-            }
+    private void dialogRollDownAnimation(Double endValue){
+        Timeline timeline = dialogRollAnimation(endValue);
+        timeline.setOnFinished(e-> {
+            searchField.setText("");
+            usersAddedToChannelList.setVisible(true);
+            searchField.setVisible(true);
         });
+        timeline.play();
+    }
 
-        searchUserResultsView.setCellFactory(param -> new ListCell<>() {
-             @Override
-             protected void updateItem(UserInfo item, boolean empty) {
-                 super.updateItem(item, empty);
-                 if (empty) {
-                     setText(null);
-                     setGraphic(null);
-                 } else if (item != null) {
+    private Timeline dialogRollAnimation(Double endValue){
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        KeyValue kv = new KeyValue(addChannelDialog.maxHeightProperty(), endValue);
+        KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+        timeline.getKeyFrames().add(kf);
+        return timeline;
+    }
 
-                     Insets padding = new Insets(0, 5, 0, 0);
-                     StackPane avatar = AvatarFactory.createAvatar(item.getFirstName()+" "+item.getLastName(), 13.0, padding);
-                     setText(item.getFirstName()+" "+item.getLastName());
-                     setGraphic(avatar);
+    @Override
+    public void initialize(java.net.URL location, ResourceBundle resources){
+            usersInChannel.clear();
+            usersInChannel.add(restClient.getCurrentUser());
 
+            searchField.setVisible(false);
+            searchUserResultsView.setVisible(false);
 
-                 }
-             }
-         });
+            usersAddedToChannelList.setVisible(false);
+            usersAddedToChannelList.setItems(usersInChannel);
+
+            addChannelDialog.setVisible(false);
+            addChannelDialog.setMaxHeight(135.0);
+
+            closeChannelDialogButton.setSkin(new MyButtonSkin2(closeChannelDialogButton));
+            createChannelButton.setOnAction(e -> createChannel());
+            createChannelButton.setSkin(new MyButtonSkin2(createChannelButton));
+
+            CellFactories.userCellFactory(searchUserResultsView);
+            CellFactories.userCellFactory(usersAddedToChannelList);
+
+            addChannelDialog.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (true) {
+                    channelName.setText("");
+                    searchField.setText("");
+                    searchUserResultsView.setVisible(false);
+                    FadeTransition ft = Animations.createFadeInTransition(addChannelDialog);
+                    ft.play();
+                }
+            });
 
     }
 }
