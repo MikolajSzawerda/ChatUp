@@ -2,9 +2,11 @@ package com.chatup.chatup_client.manager;
 
 import com.chatup.chatup_client.model.Channel;
 import com.chatup.chatup_client.model.Message;
+import com.chatup.chatup_client.web.RestClient;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,18 +17,21 @@ public class MessageManager {
     private final Logger logger = LoggerFactory.getLogger(MessageManager.class);
     private final HashMap<Long, MessageBuffer> buffers = new HashMap<>();
     private final boolean testMode;
+    private final RestClient restClient;
 
-    public MessageManager(@Value("false") boolean testMode) {
+    @Autowired
+    public MessageManager(@Value("false") boolean testMode, RestClient restClient) {
         this.testMode = testMode;
+        this.restClient = restClient;
         logger.info("Message manager initialized");
     }
 
-    public MessageBuffer getMessageBuffer(Channel channel) {
-        if(buffers.containsKey(channel.getId())) {
-            return buffers.get(channel.getId());
+    public MessageBuffer getMessageBuffer(Long channelID) {
+        if(buffers.containsKey(channelID)) {
+            return buffers.get(channelID);
         } else {
-            MessageBuffer buffer = new MessageBuffer(testMode);
-            buffers.put(channel.getId(), buffer);
+            MessageBuffer buffer = new MessageBuffer(testMode, restClient, channelID, logger);
+            buffers.put(channelID, buffer);
             return buffer;
         }
     }
@@ -35,26 +40,9 @@ public class MessageManager {
         if(buffers.containsKey(msg.getChannelID())) {
             buffers.get(msg.getChannelID()).addMessage(msg);
         } else {
-            MessageBuffer buffer = new MessageBuffer(testMode);
+            MessageBuffer buffer = new MessageBuffer(testMode, restClient, msg.getChannelID(), logger);
             buffer.addMessage(msg);
             buffers.put(msg.getChannelID(), buffer);
         }
-        if(testMode) {
-            checkForDuplicates(msg);
-            return;
-        }
-        Platform.runLater(() -> checkForDuplicates(msg));
     }
-
-    public void checkForDuplicates(Message originalMessage) {
-        for(MessageBuffer buffer : buffers.values()) {
-            for(Message msg : buffer.getMessages()) {
-                if(msg.getMessageID().equals(originalMessage.getMessageID()) && msg != originalMessage ) { // comparing using != intentional
-                    logger.warn("Duplicate message found: " + msg + " and " + originalMessage);
-                    msg.setDuplicateFlag(true);
-                    originalMessage.setDuplicateFlag(true);
-                }
-                }
-        }
-        }
     }

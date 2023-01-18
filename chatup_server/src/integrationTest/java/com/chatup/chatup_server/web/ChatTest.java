@@ -31,32 +31,14 @@ public class ChatTest extends BaseInitializedDbTest {
     @Autowired
     private MessageRepository messageRepository;
 
-
-    SocketClient client1;
-    SocketClient client2;
-    private static final Long CHANNEL = 3L;
-
-    @BeforeEach
-    void initClient() {
-        client1 = socketClientFactory.getClient(USER_1);
-        client2 = socketClientFactory.getClient(USER_2);
-    }
-
-    @AfterEach
-    void closeConnections() {
-        client1.close();
-        client2.close();
-    }
-
-
     @Test
     void shouldManageConnections() {
         //Given
         int userCount = simpUserRegistry.getUserCount();
 
         //When
-        SocketClient client1 = socketClientFactory.getClient(USER_3);
-        SocketClient client2 = socketClientFactory.getClient(USER_4);
+        SocketClient client1 = socketClientFactory.getClient(USER_1);
+        SocketClient client2 = socketClientFactory.getClient(USER_2);
 
         //Then
         timedAssertEquals(userCount+2, simpUserRegistry::getUserCount);
@@ -67,19 +49,21 @@ public class ChatTest extends BaseInitializedDbTest {
 
         //Then
         timedAssertEquals(userCount, simpUserRegistry::getUserCount);
-
     }
 
     @Test
     void shouldBroadcastAndPreserveMessages() {
         //Given
         String msg = "Test";
+        Long channel = 3L;
         Instant time = Instant.ofEpochSecond(2137420L);
         when(instantService.getNow()).thenReturn(time);
         long messageCount = messageRepository.count();
+        SocketClient client1 = socketClientFactory.getClient(USER_1);
+        SocketClient client2 = socketClientFactory.getClient(USER_2);
 
         //When
-        client1.sendMessage("/app/"+CHANNEL, msg);
+        client1.sendMessage("/app/"+channel, msg);
 
         //Then
         timedAssertEquals(1, client2.getMessages()::size);
@@ -87,23 +71,28 @@ public class ChatTest extends BaseInitializedDbTest {
         assertEquals(msg, message.content());
         assertEquals(USER_1, message.authorUsername());
         assertEquals(time, message.timeCreated());
-        assertEquals(CHANNEL, message.channelID());
+        assertEquals(channel, message.channelID());
 
         timedAssertEquals(1, client1.getMessages()::size);
         message = client1.getMessages().get(0);
         assertEquals(msg, message.content());
         assertEquals(USER_1, message.authorUsername());
         assertEquals(time, message.timeCreated());
-        assertEquals(CHANNEL, message.channelID());
+        assertEquals(channel, message.channelID());
         timedAssertEquals(1, client1.getMessages()::size);
 
         assertEquals(messageCount+1, messageRepository.count());
+
+        client1.close();
+        client2.close();
     }
 
     @Test
     void shouldReceiveOnlyWhenSubscribed() {
         //Given
-        Long id  = addNewChannel(createUserToken(USER_2), USER_2);
+        Long id  = addNewChannel(createUserToken(USER_2), USER_2, USER_1);
+        SocketClient client1 = socketClientFactory.getClient(USER_1);
+        SocketClient client2 = socketClientFactory.getClient(USER_2);
         SocketClient client3 = socketClientFactory.getClient(USER_3);
         SocketClient client4 = socketClientFactory.getClient(USER_4);
 
@@ -111,10 +100,15 @@ public class ChatTest extends BaseInitializedDbTest {
         client1.sendMessage("/app/"+id, "Test");
 
         //Then
-        timedAssertEquals(0, client1.getMessages()::size);
+        timedAssertEquals(1, client1.getMessages()::size);
         timedAssertEquals(1, client2.getMessages()::size);
         timedAssertEquals(0, client3.getMessages()::size);
         timedAssertEquals(0, client4.getMessages()::size);
+
+        client1.close();
+        client2.close();
+        client3.close();
+        client4.close();
     }
 
 

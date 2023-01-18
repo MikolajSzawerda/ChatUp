@@ -23,7 +23,6 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -45,25 +44,14 @@ public class ChannelTest extends BaseInitializedDbTest {
     void initClient() {
         user1 = appUserRepository.findAppUserByUsername(USER_1);
         user2 = appUserRepository.findAppUserByUsername(USER_2);
-        client1 = socketClientFactory.getClient(USER_1);
-        client2 = socketClientFactory.getClient(USER_2);
-    }
-
-    @AfterEach
-    void closeConnections() {
-        client1.close();
-        client2.close();
     }
 
     @Test
     public void shouldCreateChannel() {
-        AppUser user = appUserRepository.findAppUserByUsername(USER_1);
         Long oldChannelCount = channelRepository.count();
         String channelName = "xyz";
         ChannelCreateRequest request = new ChannelCreateRequest(
-                channelName, false, false, new HashSet<>(){{
-                    add(user.getId());
-            }}
+                channelName, false, false, new HashSet<>()
         );
 
         ResponseEntity<ChannelInfo> response = getCreateChannelRequest(createUserToken(USER_1), request);
@@ -106,6 +94,8 @@ public class ChannelTest extends BaseInitializedDbTest {
     void shouldBroadcastMessageAboutChannelCreation(){
         AppUser user1 = appUserRepository.findAppUserByUsername(USER_1);
         AppUser user2 = appUserRepository.findAppUserByUsername(USER_2);
+        client1 = socketClientFactory.getClient(USER_1);
+        client2 = socketClientFactory.getClient(USER_2);
         ChannelCreateRequest request = new ChannelCreateRequest(
                 null, true, true, new HashSet<>(){{
             add(user1.getId());
@@ -116,6 +106,8 @@ public class ChannelTest extends BaseInitializedDbTest {
 
         timedAssertEquals(1, client1.getEvents()::size);
         timedAssertEquals(1, client2.getEvents()::size);
+        client1.close();
+        client2.close();
     }
 
 

@@ -71,4 +71,8 @@ public class BrokerService {
                 .bind(createExchange(child))
                 .to(createExchange(root));
     }
+
+    public void removeChannel(Channel channel) {
+        amqpAdmin.deleteExchange(channel.getId().toString());
+    }
 }

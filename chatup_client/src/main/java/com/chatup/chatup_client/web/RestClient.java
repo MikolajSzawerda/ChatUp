@@ -67,18 +67,25 @@ public class RestClient {
                 .block();
     }
 
-    public Collection<Message> getLastFeed(Channel channel) {
-        return getAsCollection("/last-feed/" + channel.getId(), Message.class);
+    public Collection<Message> getLastFeed(Long channelID) {
+        return getAsCollection("/last-feed/" + channelID, Message.class);
     }
 
-    public Collection<Message> getFeedFrom(Channel channel, Message message, int page) {
-        return getAsCollection("/feed/" + channel.getId() + "?fromMessageID=" + message.getMessageID() + "&page=" + page, Message.class);
+    public Collection<Message> getFeedFrom(Long channelID, Long messageID, int page) {
+        return getAsCollection("/feed/" + channelID + "?fromMessageID=" + messageID + "&page=" + page, Message.class);
     }
 
-    public Collection<Message> getFeedFrom(Channel channel, Message message) {
-        return getAsCollection("/feed/" + channel.getId() + "?fromMessageID=" + message.getMessageID(), Message.class);
+    public Collection<Message> getFeedFrom(Long channelID, Long messageID) {
+        return getAsCollection("/feed/" + channelID + "?fromMessageID=" + messageID, Message.class);
     }
 
+    public Collection<UserInfo> searchUsers(String searchName){
+        return getAsCollection("/search/users?name=" + searchName, UserInfo.class);
+    }
+
+    public String getToken(){
+        return authClient.getToken();
+    }
     public UserInfo getCurrentUser() {
         return getAsClass("/me", UserInfo.class);
     }
@@ -87,6 +94,10 @@ public class RestClient {
     }
     public Collection<Channel> listChannels() {
         return getAsCollection("/channel/list", Channel.class);
+    }
+
+    public Collection<Message> searchMessages(String messagePhrase) {
+        return getAsCollection("/search/messages?phrase=" + messagePhrase, Message.class);
     }
 
 }

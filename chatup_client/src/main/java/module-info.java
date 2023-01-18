@@ -25,7 +25,7 @@ module com.chatup.chatup_client {
     exports com.chatup.chatup_client;
     exports com.chatup.chatup_client.controller;
     exports com.chatup.chatup_client.model;
-    opens com.chatup.chatup_client.controller to javafx.fxml;
+    opens com.chatup.chatup_client.controller to javafx.fxml, spring.core;
     exports com.chatup.chatup_client.manager;
     exports com.chatup.chatup_client.component.skin;
     opens com.chatup.chatup_client.component.skin to javafx.fxml;

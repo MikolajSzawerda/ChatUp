@@ -100,6 +100,7 @@ INSERT INTO users(user_id, first_name, last_name, username, password, status, is
 INSERT INTO users(user_id, first_name, last_name, username, password, status, is_enabled) VALUES (99, 'Aniela', 'Jaworska', 'aniela.jaworska.99', '$2b$12$HOLXcnBmU3pf2ldyaANWFeL37JsP1MJfgoeoWeR9rwkDnEUqUgLni', 'n', true);
 ALTER SEQUENCE user_sequence RESTART WITH 100;
 
+
 INSERT INTO channels(channel_id, name, is_private, is_direct_message) VALUES (0, 'Kanał pierwszy', false, false);
 INSERT INTO channels(channel_id, name, is_private, is_direct_message) VALUES (1, 'Kanał drugi', false, false);
 INSERT INTO channels(channel_id, name, is_private, is_direct_message) VALUES (2, 'DM', true, true);
@@ -112,3 +113,4 @@ INSERT INTO channels_users(channel_id, user_id) VALUES (2, 0);
 INSERT INTO channels_users(channel_id, user_id) VALUES (0, 1);
 INSERT INTO channels_users(channel_id, user_id) VALUES (1, 1);
 INSERT INTO channels_users(channel_id, user_id) VALUES (2, 1);
+

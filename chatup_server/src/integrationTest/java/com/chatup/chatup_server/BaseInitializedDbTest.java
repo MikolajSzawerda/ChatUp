@@ -78,6 +78,13 @@ public abstract class BaseInitializedDbTest extends BaseIntegrationTest{
         brokerService.addChannels(channels);
     }
 
+    @AfterEach
+    void clearRabbit(){
+        channelRepository
+                .findAll()
+                .forEach(brokerService::removeChannel);
+    }
+
 
 
     private Exchange createExchange(String name) {
@@ -99,7 +106,7 @@ public abstract class BaseInitializedDbTest extends BaseIntegrationTest{
                 .collect(Collectors.toSet());
 
         ChannelCreateRequest request = new ChannelCreateRequest(
-                null, false, false, userIds
+                null, true, false, userIds
         );
 
         return getCreateChannelRequest(token, request).getBody().id();

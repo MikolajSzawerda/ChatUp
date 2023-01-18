@@ -71,7 +71,8 @@ public abstract class BaseIntegrationTest {
                 .waitingFor(Wait
                         .forHttp("/_cluster/health")
                         .forStatusCode(200)
-                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)));
+                        .withStartupTimeout(Duration.of(1, ChronoUnit.MINUTES)))
+                .withReuse(true);
         rabbitContainer = new RabbitMQContainer("rabbitmq:3.9-management")
                 .withExposedPorts(5672, 61613, 15672)
                 .withLogConsumer(new Slf4jLogConsumer(rabbitLogger))

@@ -2,9 +2,9 @@ package com.chatup.chatup_server.service.channels;
 
 import com.chatup.chatup_server.domain.AppUser;
 import com.chatup.chatup_server.domain.Channel;
-import com.chatup.chatup_server.domain.exceptions.InvalidRequestException;
 import com.chatup.chatup_server.repository.AppUserRepository;
 import com.chatup.chatup_server.repository.ChannelRepository;
+import jakarta.persistence.EntityNotFoundException;
 import com.chatup.chatup_server.service.messaging.BrokerService;
 import com.chatup.chatup_server.service.messaging.OutgoingEvent;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -37,23 +37,31 @@ public class ChannelService {
         this.CHANNEL_CREATION_FLAG = channel_flag;
     }
 
-    public Channel createChannel(ChannelCreateRequest channelRequest) throws InvalidRequestException {
+    public Channel createChannel(ChannelCreateRequest channelRequest){
         if (channelRequest.is_direct_message()) {
             if (channelRequest.user_ids().size() != 2)
-                throw new InvalidRequestException("Direct message must contain exactly 2 users.");
+                throw new IllegalArgumentException("Direct message must contain exactly 2 users.");
 
             if (!channelRequest.is_private())
-                throw new InvalidRequestException("Direct message channel must be private.");
+                throw new IllegalArgumentException("Direct message channel must be private.");
         }
 
         List<Long> userIds = new ArrayList<>(channelRequest.user_ids());
         Set<AppUser> channelUsers = new HashSet<>();
-        for (Long userId : userIds) {
-            Optional<AppUser> optionalUser = appUserRepository.findById(userId);
-            if (optionalUser.isEmpty())
-                throw new InvalidRequestException("Provided invalid userId.");
 
-            channelUsers.add(optionalUser.get());
+        if (channelRequest.is_private()) {
+            for (Long userId : userIds) {
+                Optional<AppUser> optionalUser = appUserRepository.findById(userId);
+                if (optionalUser.isEmpty())
+                        throw new EntityNotFoundException("Invalid userId: " + userId);
+
+                channelUsers.add(optionalUser.get());
+            }
+        } else {
+            if (userIds.size() != 0)
+                throw new IllegalArgumentException("Public channels shouldn't have specified members.");
+
+            channelUsers = new HashSet<>(appUserRepository.findAll());
         }
 
         if (channelRequest.is_direct_message()) {
@@ -62,7 +70,6 @@ public class ChannelService {
                 return prevChannel.get();
             }
         }
-
         Channel channel = channelRepository.save(
                 new Channel(channelRequest.name(), channelRequest.is_private(),
                         channelRequest.is_direct_message(), channelUsers, Collections.emptyList())

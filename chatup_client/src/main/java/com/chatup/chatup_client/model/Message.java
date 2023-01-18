@@ -12,7 +12,6 @@ public class Message {
     private Long channelID;
     private Instant timeCreated;
     private Boolean isDeleted;
-    private Boolean duplicateFlag = false;
 
     public Message(Message other) {
         this.messageID = other.getMessageID();
@@ -24,7 +23,6 @@ public class Message {
         this.channelID = other.getChannelID();
         this.timeCreated = other.getTimeCreated();
         this.isDeleted = other.getIsDeleted();
-        this.duplicateFlag = other.getDuplicateFlag();
     }
 
     public Message() {}
@@ -107,22 +105,6 @@ public class Message {
 
     public boolean equals(Object obj) {
         if(!(obj instanceof Message other)) return false;
-        return getMessageID().equals(other.getMessageID())
-                && getAuthorID().equals(other.getAuthorID())
-                && getChannelID().equals(other.getChannelID())
-                && getTimeCreated().equals(other.getTimeCreated())
-                && getIsDeleted().equals(other.getIsDeleted())
-                && getContent().equals(other.getContent())
-                && getAuthorUsername().equals(other.getAuthorUsername())
-                && getAuthorFirstName().equals(other.getAuthorFirstName())
-                && getAuthorLastName().equals(other.getAuthorLastName());
-    }
-
-    public Boolean getDuplicateFlag() {
-        return duplicateFlag;
-    }
-
-    public void setDuplicateFlag(Boolean duplicateFlag) {
-        this.duplicateFlag = duplicateFlag;
+        return getMessageID().equals(other.getMessageID());
     }
 }
