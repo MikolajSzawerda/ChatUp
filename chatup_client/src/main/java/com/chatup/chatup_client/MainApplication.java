@@ -14,6 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class MainApplication extends Application {
     ConfigurableApplicationContext context;
@@ -39,7 +40,7 @@ public class MainApplication extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Roboto+Slab");
         stage.setTitle("ChatUp");
-        stage.getIcons().add(new Image("img/icon.png"));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/icon.png"))));
         stage.setScene(scene);
         stage.show();
         this.stage = (Stage) scene.getWindow();
