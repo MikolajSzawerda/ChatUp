@@ -21,14 +21,13 @@ import java.util.List;
 public class ChannelManager {
     private final Logger logger = LoggerFactory.getLogger(ChannelManager.class);
     private final boolean testMode;
-    private List<Pair<String, Boolean>> waitingChannels = new ArrayList<>();
+    private final ObservableList<Channel> standardChannels = FXCollections.observableArrayList();
+    private final ObservableList<Channel> directMessages = FXCollections.observableArrayList();
 
     @Autowired
     public ChannelManager(@Value("false") boolean testMode) {
         this.testMode = testMode;
     }
-
-    private final ObservableList<Channel> standardChannels = FXCollections.observableArrayList();
 
     public ObservableList<Channel> getStandardChannels() {
         return standardChannels;
@@ -37,8 +36,6 @@ public class ChannelManager {
     public ObservableList<Channel> getDirectMessages() {
         return directMessages;
     }
-
-    private final ObservableList<Channel> directMessages = FXCollections.observableArrayList();
 
     public void addChannel(Channel channel) {
         ObservableList<Channel> listToAdd;
@@ -73,5 +70,10 @@ public class ChannelManager {
             }
         }
         return null;
+    }
+
+    public void clear() {
+        standardChannels.clear();
+        directMessages.clear();
     }
 }

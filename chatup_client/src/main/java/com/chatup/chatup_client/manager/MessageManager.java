@@ -43,4 +43,8 @@ public class MessageManager {
             buffers.put(msg.getChannelID(), buffer);
         }
     }
+
+    public void clear() {
+        buffers.clear();
     }
+}
