@@ -2,20 +2,16 @@ package com.chatup.chatup_client.manager;
 
 import com.chatup.chatup_client.model.channels.Channel;
 import com.chatup.chatup_client.model.messaging.Message;
-import com.chatup.chatup_client.web.ConnectionHandler;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 @Component
 public class ChannelManager {
@@ -52,9 +48,7 @@ public class ChannelManager {
             return;
         }
         listToAdd.add(channel);
-        Platform.runLater(() -> {
-            listToAdd.sort(Comparator.comparing(Channel::getName));
-        });
+        Platform.runLater(() -> listToAdd.sort(Comparator.comparing(Channel::getName)));
 
     }
 

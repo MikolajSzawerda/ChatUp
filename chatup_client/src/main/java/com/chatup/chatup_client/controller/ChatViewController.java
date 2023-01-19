@@ -179,6 +179,9 @@ public class ChatViewController implements Initializable {
         }
     }
 
+    public void onAvatarClick(Long userID) {
+        createDM(userID);
+    }
 
     public void subscribeAll(){
         headbarController.setListener(headbarListener);
@@ -251,56 +254,56 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
-            for (Listener listener : listeners) listener.onInitialize();
-            sidebarController.currentChannel.bind(currentChannel);
-            CellFactories.messageCellFactory(messages);
+        for (Listener listener : listeners) listener.onInitialize();
+        sidebarController.currentChannel.bind(currentChannel);
+        CellFactories.messageCellFactory(messages, this::onAvatarClick);
 
-            sidebarController.addDM.setVisible(true);
-            sidebarController.addChannel.setVisible(true);
+        sidebarController.addDM.setVisible(true);
+        sidebarController.addChannel.setVisible(true);
 
-            setMessagesScrollHandler();
-            if (currentChannel.get() != null) {
-                messages.setItems(messageManager.getMessageBuffer(currentChannel.getValue().getId()).getMessages());
+        setMessagesScrollHandler();
+        if (currentChannel.get() != null) {
+            messages.setItems(messageManager.getMessageBuffer(currentChannel.getValue().getId()).getMessages());
 
-                int messagesSize = messageManager.getMessageBuffer(currentChannel.get().getId()).getMessages().size();
+            int messagesSize = messageManager.getMessageBuffer(currentChannel.get().getId()).getMessages().size();
+
+            if(messagesSize > 0)
+                Platform.runLater(() -> messages.scrollTo(messagesSize - 1));
+        } else {
+            Text placeholder = new Text("Hello! Choose your channel");
+            placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+            messages.setPlaceholder(placeholder);
+            message.setDisable(true);
+        }
+
+        createDMDialogController.addDMDialog.visibleProperty().bind(isCreateDMDialogOpen);
+        createChannelDialogController.addChannelDialog.visibleProperty().bind(isCreateChannelDialogOpen);
+
+        sidebarController.addListener(sidebarListener);
+        createChannelDialogController.addListener(createChannelDialogListener);
+        createDMDialogController.addListener(createDMDialogListener);
+        headbarController.setListener(headbarListener);
+
+        currentChannel.addListener(((observable, oldValue, newValue) -> {
+            if (oldValue != null)
+                messageManager.getMessageBuffer(oldValue.getId()).getMessages().removeListener(listChangeListener);
+            if (newValue != null) {
+                ObservableList<Message> channelMessages = messageManager
+                        .getMessageBuffer(newValue.getId())
+                        .getMessages();
+                channelMessages.addListener(listChangeListener);
+                messages.setItems(channelMessages);
+
+                if(channelMessages.size() == 0) {
+                    try {
+                        messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
+                    } catch (OutOfMessagesException ignored) {}
+                }
+                int messagesSize = messageManager.getMessageBuffer(newValue.getId()).getMessages().size();
 
                 if(messagesSize > 0)
-                    Platform.runLater(() -> messages.scrollTo(messagesSize - 1));
-            } else {
-                Text placeholder = new Text("Hello! Choose your channel");
-                placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
-                messages.setPlaceholder(placeholder);
-                message.setDisable(true);
+                    messages.scrollTo(messagesSize - 1);
             }
-
-            createDMDialogController.addDMDialog.visibleProperty().bind(isCreateDMDialogOpen);
-            createChannelDialogController.addChannelDialog.visibleProperty().bind(isCreateChannelDialogOpen);
-
-            sidebarController.addListener(sidebarListener);
-            createChannelDialogController.addListener(createChannelDialogListener);
-            createDMDialogController.addListener(createDMDialogListener);
-            headbarController.setListener(headbarListener);
-
-            currentChannel.addListener(((observable, oldValue, newValue) -> {
-                if (oldValue != null)
-                    messageManager.getMessageBuffer(oldValue.getId()).getMessages().removeListener(listChangeListener);
-                if (newValue != null) {
-                    ObservableList<Message> channelMessages = messageManager
-                            .getMessageBuffer(newValue.getId())
-                            .getMessages();
-                    channelMessages.addListener(listChangeListener);
-                    messages.setItems(channelMessages);
-
-                    if(channelMessages.size() == 0) {
-                        try {
-                            messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
-                        } catch (OutOfMessagesException ignored) {}
-                    }
-                    int messagesSize = messageManager.getMessageBuffer(newValue.getId()).getMessages().size();
-
-                    if(messagesSize > 0)
-                        messages.scrollTo(messagesSize - 1);
-                }
-            }));
+        }));
     }
 }
