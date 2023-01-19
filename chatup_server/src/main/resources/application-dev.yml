@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/chat
+    url: jdbc:postgresql://db:5432/chat
     username: postgres
     password: password
   jpa:
@@ -11,6 +11,9 @@ spring:
       ddl-auto: create-drop
     properties:
       hibernate:
+        search:
+          backend:
+            hosts: elasticsearch:9200
         dialect: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     defer-datasource-initialization: true
@@ -19,8 +22,9 @@ spring:
       data-locations: classpath:data.sql
       mode: always
   rabbitmq:
+    host: rabbitmq
     relay-port: 61613
-    relay-host: localhost
+    relay-host: rabbitmq
 
 
 app:
