@@ -14,6 +14,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -260,22 +261,20 @@ public class ChatViewController implements Initializable {
             setMessagesScrollHandler();
             if (currentChannel.get() != null) {
                 messages.setItems(messageManager.getMessageBuffer(currentChannel.getValue().getId()).getMessages());
-                try {
-                    messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
-                } catch (OutOfMessagesException ignored) {}
 
                 int messagesSize = messageManager.getMessageBuffer(currentChannel.get().getId()).getMessages().size();
-                messages.scrollTo(messagesSize - 1);
-            }
 
-            Text placeholder = new Text("Hello! Choose your channel");
-            placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
-            messages.setPlaceholder(placeholder);
-            message.setDisable(true);
+                if(messagesSize > 0)
+                    Platform.runLater(() -> messages.scrollTo(messagesSize - 1));
+            } else {
+                Text placeholder = new Text("Hello! Choose your channel");
+                placeholder.setFont(Font.font("Roboto Slab", FontPosture.REGULAR, 20));
+                messages.setPlaceholder(placeholder);
+                message.setDisable(true);
+            }
 
             createDMDialogController.addDMDialog.visibleProperty().bind(isCreateDMDialogOpen);
             createChannelDialogController.addChannelDialog.visibleProperty().bind(isCreateChannelDialogOpen);
-
 
             sidebarController.addListener(sidebarListener);
             createChannelDialogController.addListener(createChannelDialogListener);
@@ -286,13 +285,21 @@ public class ChatViewController implements Initializable {
                 if (oldValue != null)
                     messageManager.getMessageBuffer(oldValue.getId()).getMessages().removeListener(listChangeListener);
                 if (newValue != null) {
-                    messageManager.getMessageBuffer(newValue.getId()).getMessages().addListener(listChangeListener);
-                    messages.setItems(messageManager.getMessageBuffer(currentChannel.getValue().getId()).getMessages());
-                    try {
-                        messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
-                    } catch (OutOfMessagesException ignored) {}
+                    ObservableList<Message> channelMessages = messageManager
+                            .getMessageBuffer(newValue.getId())
+                            .getMessages();
+                    channelMessages.addListener(listChangeListener);
+                    messages.setItems(channelMessages);
+
+                    if(channelMessages.size() == 0) {
+                        try {
+                            messageManager.getMessageBuffer(currentChannel.getValue().getId()).loadNextMessages();
+                        } catch (OutOfMessagesException ignored) {}
+                    }
                     int messagesSize = messageManager.getMessageBuffer(newValue.getId()).getMessages().size();
-                    messages.scrollTo(messagesSize - 1);
+
+                    if(messagesSize > 0)
+                        messages.scrollTo(messagesSize - 1);
                 }
             }));
     }
