@@ -36,9 +36,11 @@ services:
       - "./rabbit_enabled_plugins:/etc/rabbitmq/enabled_plugins"
   app:
     build: .
+    restart: always
     depends_on:
       - db
       - elasticsearch
+      - rabbitmq
     ports:
       - "8080:8080"
     command: java -jar build/libs/chatup_server-0.0.1-SNAPSHOT.jar
