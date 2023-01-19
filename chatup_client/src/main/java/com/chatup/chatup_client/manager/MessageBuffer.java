@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 
 public class MessageBuffer {
     private final boolean testMode;
@@ -25,10 +24,6 @@ public class MessageBuffer {
 
     private Long messageLoaded;
     private boolean initialized;
-    private List<Object> registeredGUIObjects;
-    public void registerGUIObject(Object obj) {
-        registeredGUIObjects.add(obj);
-    }
 
 
     public ObservableList<Message> getMessages() {
@@ -58,12 +53,6 @@ public class MessageBuffer {
         });
     }
 
-    public void loadNextMessagesGUI(Object guiObject) throws OutOfMessagesException {
-        if(registeredGUIObjects.contains(guiObject)) {
-            registeredGUIObjects.remove(guiObject);
-            loadNextMessages();
-        }
-    }
     public void loadNextMessages() throws OutOfMessagesException {
         synchronized (this) {
             Collection<Message> messages;

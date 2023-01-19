@@ -184,7 +184,7 @@ public class CreateChannelDialogController implements Initializable {
             CellFactories.userCellFactory(usersAddedToChannelList);
 
             addChannelDialog.visibleProperty().addListener((observable, oldValue, newValue) -> {
-                if (true) {
+                if (newValue) {
                     channelName.setText("");
                     searchField.setText("");
                     searchUserResultsView.setVisible(false);

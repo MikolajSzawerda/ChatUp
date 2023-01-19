@@ -1,5 +1,7 @@
 package com.chatup.chatup_client.model.users;
 
+import java.util.Objects;
+
 public class UserInfo {
     private Long id;
     private String username;
@@ -44,7 +46,7 @@ public class UserInfo {
 
     public boolean equals(Object obj) {
         if(!(obj instanceof UserInfo other)) return false;
-        return  getId() == other.getId()
+        return Objects.equals(getId(), other.getId())
                 && getUsername().equals(other.getUsername())
                 && getFirstName().equals(other.getFirstName())
                 && getLastName().equals(other.getLastName());

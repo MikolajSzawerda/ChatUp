@@ -36,7 +36,7 @@ public class MyButtonSkin extends ButtonSkin {
         };
         control.setBackground(new Background(new BackgroundFill(new Color(0, 0 ,0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
         control.setOnAction(e->animation.play());
-        if(current != null) animation.setOnFinished(e->current.handle(e));
+        if(current != null) animation.setOnFinished(current::handle);
 
     }
 }
