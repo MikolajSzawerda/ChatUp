@@ -72,4 +72,8 @@ public class SocketClient {
         if(this.session != null)
             this.session.disconnect();
     }
+
+    public boolean isConnected() {
+        return this.session != null;
+    }
 }

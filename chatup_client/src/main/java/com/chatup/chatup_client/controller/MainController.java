@@ -49,11 +49,15 @@ public class MainController{
             @Override
             public void onInitialize() {
                 chatViewController.currentChannel.bind(currentChannel);
-                try{ socketClient.connect();}
-                catch (ExecutionException | InterruptedException e)
-                { throw new RuntimeException(e);}
-            }
 
+                if(!socketClient.isConnected()) {
+                    try {
+                        socketClient.connect();
+                    } catch (ExecutionException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
 
             @Override
             public void onChannelChange(Channel channel) {
