@@ -1,5 +1,6 @@
 package com.chatup.chatup_client.component;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.layout.GridPane;
@@ -9,7 +10,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class MessageFactory {
-    public static GridPane createMessage(String text, String authorName, String authorUsername, Double width){
+    public static GridPane createMessage(String text, String authorName, String authorUsername, Double width, EventHandler avatarClickHandler){
         GridPane message  = new GridPane();
         Text authorTextName = new Text(authorName);
         Text authorTextUser = new Text("\t" + "(" + authorUsername+")");
@@ -29,7 +30,9 @@ public class MessageFactory {
         message.add(authorTextUser, 2, 0, 1, 1);
         message.add(message_content, 1, 2, 2, 2);
         //to change in future
-
+        if(avatarClickHandler != null) {
+            avatar.setOnMouseClicked(avatarClickHandler);
+        }
         if (message_content.getWrappingWidth() < message_content.getText().length() * 7) {
             message.setVgap(5);
         }
