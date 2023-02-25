@@ -28,3 +28,5 @@ Passwords are equal to the usernames.
 - Frontend: Desktop app in JavaFX
 - Backend: Spring, PostgreSQL, RabbitMQ, Elasticsearch
 - Java17
+
+![](docs/img/chart.png)
