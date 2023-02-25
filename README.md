@@ -1,37 +1,30 @@
-# 22Z PAP Projekt - Zespół 2.
+# Chatup
 
-Skład:
-- Dawid Kaszyński
-- Jan Kowalczewski
-- Kajetan Rożej
-- Mikołaj Szawerda
+## Description
+Messaging app (like Slack or Mattermost) developed in <b>Spring</b> and <b>JavaFX</b> for the purposes of the Application Programming (PAP) course at the Warsaw University of Technology. Main functionalities are creating channels(public/private/dms), real-time chat (<b>RabbitMQ</b>) and efficient full-text search provided by <b>Elasticsearch</b>. User authentication is implemented using Spring Security and JWTs. 
 
-### Treść zadania
+![](docs/img/home.png)
 
-Aplikacja udostępniająca wewnętrzny komunikator dla organizacji.  
+Authors:
+- [Mikołaj Szawerda](https://github.com/MikolajSzawerda)
+- [Dawid Kaszyński](https://github.com/dawidkasz)
+- [Jan Kowalczewski](https://github.com/jkowalc)
+- [Kajetan Rożej](https://github.com/Kajotello)
 
-### Technologie
-
-- Frontend: Aplikacja okienkowa JavaFX  
-- Backend: Spring + PostgreSQL
-- Java wersja 17
-
-## Instalacja
-
+## Installation
 #### chatup_server
-- W folderze chatup_server wykonać polecenie `docker compose build`
-- Następnie `docker compose up` w celu uruchomienia serwera
+Run `docker compose build`. Then use`docker compose up` in order to start the server
 
 #### chatup_client
-- W folderze chatup_client wykonać polecenie `./gradlew build`, aby zbudować klienta lokalnie
-- Klienta można uruchomić za pomocą `java -jar build/libs/chatup_client-1.0-SNAPSHOT.jar`
+You can use gradle, e.g. run `./gradlew build`.
+Build can be found in `build/libs/chatup_client-1.0-SNAPSHOT.jar`.
+Run the application by typing `java -jar build/libs/chatup_client-1.0-SNAPSHOT.jar`.
 
-## Polecenie
+For the development purposes, you can use one of the predefined users 
+from [data.sql](chatup_server/src/main/resources/data.sql) script to log in. 
+Passwords are equal to the usernames.
 
-Każdy zespół powinien przygotować niewielką aplikację umożliwiającą
-tworzenie, edycję i wyszukiwanie informacji w bazie danych. Główny nacisk położony jest na projektowanie interfejsu użytkownika w
-wybranej technologii. Nie bez znaczenia pozostaną aspekty takie jak:
-zarządzanie źródłami, tworzenie testów (jednostkowych /
-integracyjnych) oraz wykorzystanie narzędzi ciągłej integracji.
-
-
+### Technologies
+- Frontend: Desktop app in JavaFX
+- Backend: Spring, PostgreSQL, RabbitMQ, Elasticsearch
+- Java17
